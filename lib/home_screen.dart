@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String>imageList=[];
   List<Products>newproducts=[];
   List<String>banners=[];
+  TextEditingController _cont= TextEditingController();
   PersistentTabController _controller=PersistentTabController();
   @override
   Widget build(BuildContext context) {
@@ -38,8 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar:AppBar(
 
         backgroundColor: primarycolor,
-        title:Text('Hamro Gadgets'),
-        centerTitle:true,
+title:Text('Hamro Gadgets',style:TextStyle(color:Colors.white)),
+centerTitle: true,
+//       actions: [
+//
+//         Center(child: Container(width:width*0.5,child: TextFormField(controller:_cont,decoration: InputDecoration(filled: true,fillColor: Colors.white,prefixIcon: Icon(Icons.search,color:Colors.grey),hintText: 'Search here',hintStyle: TextStyle(color:Colors.grey)),)))
+//       ],
       ),
       drawer: CustomDrawer(),
 
@@ -54,18 +59,9 @@ body:SingleChildScrollView(
 
 
           StreamBuilder(
-
-
-
-        stream:FirebaseFirestore.instance.collection('FullLengthBanner').snapshots(),
-
-
-
-        builder:(BuildContext context,AsyncSnapshot<QuerySnapshot> snap){
-
-
-
-          if(snap.hasData&&!snap.hasError&&snap.data!=null){
+              stream:FirebaseFirestore.instance.collection('FullLengthBanner').snapshots(),
+              builder:(BuildContext context,AsyncSnapshot<QuerySnapshot> snap){
+                if(snap.hasData&&!snap.hasError&&snap.data!=null){
 
 
 
@@ -263,7 +259,7 @@ body:SingleChildScrollView(
 
 
 
-        stream:FirebaseFirestore.instance.collection('Products').where('newProduct',isEqualTo: true).snapshots(),
+        stream:FirebaseFirestore.instance.collection('Products').where('newProduct',isEqualTo: true).where('status',isEqualTo:'active').snapshots(),
 
 
 
@@ -341,7 +337,7 @@ body:SingleChildScrollView(
 
         return Container(
 
-          height:height*0.3,
+          height:height*0.4,
 
 
 
@@ -359,7 +355,7 @@ body:SingleChildScrollView(
 
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ProductCard(item.imageurls[0], item.name, item.mp, item.disprice,item.description,item.details,item.imageurls,item.rating,item.specs),
+                child: ProductCard(item.imageurls[0], item.name, item.mp, item.disprice,item.description,item.details,item.imageurls,item.rating,item.specs,item.quantity),
               );
 
             }
@@ -500,7 +496,7 @@ body:SingleChildScrollView(
 
               return Container(
 
-                height:height*0.3,
+                height:height*0.4,
 
 
 
@@ -518,7 +514,7 @@ body:SingleChildScrollView(
 
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: ProductCard(item.imageurls[0], item.name, item.mp, item.disprice,item.description,item.details,item.imageurls,item.rating,item.specs),
+                        child: ProductCard(item.imageurls[0], item.name, item.mp, item.disprice,item.description,item.details,item.imageurls,item.rating,item.specs,item.quantity),
                       );
 
                     }
@@ -671,7 +667,7 @@ banners.add(snap.data.docs[i]['imageURL']);
               print(newproducts[0].imageurls.length);
 
               return Container(
-                height:height*0.3,
+                height:height*0.4,
 
                 child: ListView.builder(
                     itemCount: newproducts.length,
@@ -681,7 +677,7 @@ banners.add(snap.data.docs[i]['imageURL']);
                       var item =newproducts[index];
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: ProductCard(item.imageurls[0], item.name, item.mp, item.disprice,item.description,item.details,item.imageurls,item.rating,item.specs),
+                        child: ProductCard(item.imageurls[0], item.name, item.mp, item.disprice,item.description,item.details,item.imageurls,item.rating,item.specs,item.quantity),
                       );
                     }
                 ),
@@ -753,7 +749,7 @@ banners.add(snap.data.docs[i]['imageURL']);
               print(newproducts[0].imageurls.length);
 
               return Container(
-                height:height*0.3,
+                height:height*0.4,
 
                 child: ListView.builder(
                     itemCount: newproducts.length,
@@ -763,7 +759,7 @@ banners.add(snap.data.docs[i]['imageURL']);
                       var item =newproducts[index];
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: ProductCard(item.imageurls[0], item.name, item.mp, item.disprice,item.description,item.details,item.imageurls,item.rating,item.specs),
+                        child: ProductCard(item.imageurls[0], item.name, item.mp, item.disprice,item.description,item.details,item.imageurls,item.rating,item.specs,item.quantity),
                       );
                     }
                 ),

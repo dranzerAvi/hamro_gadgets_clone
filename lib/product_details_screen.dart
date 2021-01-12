@@ -1,6 +1,8 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:getflutter/components/carousel/gf_carousel.dart';
 import 'package:hamro_gadgets/Bookmarks.dart';
 
 import 'package:hamro_gadgets/Constants/cart.dart';
@@ -307,11 +309,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   first() async {
 
     qty = await getQuantity(widget.name, );
+
+
     present = await checkInWishlist();
     print('-------------%%%%%$present');
   }
 String urlUniv;
   String url2;
+  var qty2=1;
 
   @override
   void initState() {
@@ -331,372 +336,641 @@ String urlUniv;
     double width= MediaQuery.of(context).size.width;
     var heightOfStack = MediaQuery.of(context).size.height / 2.8;
     var aPieceOfTheHeightOfStack = heightOfStack - heightOfStack / 3.5;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: primarycolor,
-        elevation:0.0,
-        title:Text('Hamro Gadgets',style:TextStyle(color:Colors.white)),
-        centerTitle: true,
-        leading: InkWell(onTap: () => Navigator.pop(context),
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
-            )),
-        actions:[
-          InkWell(
-            onTap: (){},
-            child:Icon(Icons.share,color:Colors.white)
-          ),
-          SizedBox(width:8),
-          InkWell(onTap:(){
-            Navigator.push(context,MaterialPageRoute(builder:(context)=>BookmarksScreen()));
-          },
-            child:Padding(
-              padding: const EdgeInsets.only(right:5.0),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Icon(
-                    Icons.shopping_cart,
-                    color: Colors.white,
-                  ),
-                  total != null
-                      ? total > 0
-                      ? Positioned(
-                    bottom: MediaQuery.of(context).size.height * 0.04,
-                    left: MediaQuery.of(context).size.height * 0.013,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 2.0),
-                      child: CircleAvatar(
-                        radius: 6.0,
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        child: Text(
-                          total.toString(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 8.0,
+    return DefaultTabController(
+      length:3,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: primarycolor,
+          elevation:0.0,
+          title:Text('Hamro Gadgets',style:TextStyle(color:Colors.white)),
+          centerTitle: true,
+          leading: InkWell(onTap: () => Navigator.pop(context),
+              child: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              )),
+          actions:[
+            InkWell(
+              onTap: (){},
+              child:Icon(Icons.share,color:Colors.white)
+            ),
+            SizedBox(width:8),
+            InkWell(onTap:(){
+              Navigator.push(context,MaterialPageRoute(builder:(context)=>BookmarksScreen()));
+            },
+              child:Padding(
+                padding: const EdgeInsets.only(right:5.0),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Icon(
+                      Icons.shopping_cart,
+                      color: Colors.white,
+                    ),
+                    total != null
+                        ? total > 0
+                        ? Positioned(
+                      bottom: MediaQuery.of(context).size.height * 0.04,
+                      left: MediaQuery.of(context).size.height * 0.013,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 2.0),
+                        child: CircleAvatar(
+                          radius: 6.0,
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          child: Text(
+                            total.toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 8.0,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  )
-                      : Container()
-                      : Container(),
-                ],
-              ),
+                    )
+                        : Container()
+                        : Container(),
+                  ],
+                ),
+              )
+            ),
+            SizedBox(
+              width: 14,
             )
-          ),
-          SizedBox(
-            width: 14,
-          )
-        ]
-      ),
-      body:SafeArea(
-        child:Container(
-          child:Column(
-            children:[
-              Expanded(
-                child:ListView(
-                  shrinkWrap: true,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16.0,8,8,2),
-                      child: Text(widget.name,textAlign: TextAlign.left,style:TextStyle(color:Colors.black.withOpacity(0.8),fontSize:height*0.03,fontWeight: FontWeight.w500)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal:16.0),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            child:FancyShimmerImage(
-                              shimmerDuration: Duration(seconds: 2),
-                              imageUrl: urlUniv,
-                              width: MediaQuery.of(context).size.width,
-                              height: heightOfStack,
-                              boxFit: BoxFit.fill,
-                            )
-                          ),
-
-                        ],
+          ]
+        ),
+        body:SafeArea(
+          child:Container(
+            child:Column(
+              children:[
+                Expanded(
+                  child:ListView(
+                    shrinkWrap: true,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16.0,8,8,2),
+                        child: Text(widget.name,textAlign: TextAlign.left,style:TextStyle(color:Colors.black.withOpacity(0.8),fontSize:height*0.03,fontWeight: FontWeight.w500)),
                       ),
-                    ),
-                    Container(
-                      height:100,
-                      child:Row(
-                        children:[
-                          SizedBox(width:14),
-                          Expanded(
-                            flex:1,
-                            child:InkWell(
-                              onTap:(){
-                                setState(() {
-                                  urlUniv=widget.detailsurls[0];
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal:16.0),
+                        child: Stack(
+                          children: [
+//                            Positioned(
+//                              child:FancyShimmerImage(
+//                                shimmerDuration: Duration(seconds: 2),
+//                                imageUrl: urlUniv,
+//                                width: MediaQuery.of(context).size.width,
+//                                height: heightOfStack,
+//                                boxFit: BoxFit.fill,
+//                              )
+//                            ),
+                            Row(
 
-                                });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Container(
-                                  height: 65,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(5)),
-                                      border: Border.all(
-                                        width: 2,
-                                        color: urlUniv !=
-                                            widget.detailsurls[0]
+                              children: [
 
-                                            ? Colors.transparent
-                                            : primarycolor
-                                      )),
-                                  child: ClipRRect(
-                                    borderRadius:
-                                    BorderRadius.circular(4.0),
-                                    child: FancyShimmerImage(
-                                      shimmerDuration:
-                                      Duration(seconds: 2),
-                                      imageUrl:
-                                      widget.detailsurls[0],
+                                GFCarousel(
+
+
+
+                                  items:widget.detailsurls.map((url){return Container(
+
+
+
+                                    child: Padding(
+
+
+
+                                      padding: const EdgeInsets.all(1.0),
+
+
+
+                                      child: FancyShimmerImage(
+
+
+
+                                        shimmerDuration: Duration(seconds: 2),
+
+
+
+                                        imageUrl: '$url',
+
+
+
+                                        width: 10000.0,
+
+
+
+                                      ),
+
+
+
                                     ),
-                                  ),
-                                ),
-                              ),
-                            )),
-                          Expanded(
-                              flex: 1,
-                              child: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    urlUniv = url2;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Container(
-                                      height: 65,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5)),
-                                          border: Border.all(
-                                            width: 2,
-                                            color: urlUniv != url2
-                                                ? Colors.transparent
-                                                : primarycolor
-                                          )),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                        BorderRadius.circular(4.0),
-                                        child: FancyShimmerImage(
-                                          shimmerDuration:
-                                          Duration(seconds: 2),
-                                          // height: 80,
-                                          imageUrl: url2,
-                                        ),
-                                      )),
-                                ),
-                              )),
-                          //just to push
-                          Expanded(
-                            flex:2,
-                            child:Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0) ,
-                              child: Container(
 
-                                decoration:BoxDecoration(
-                                  color:primarycolor,
-                                  border:Border.all(
-                                    width:2,
-                                    color:primarycolor
-                                  ),
-                                  borderRadius:BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10)
-                                  )
+
+
+                                  );
+
+
+
+                                  },
+
+
+
+                                  ).toList(),
+
+
+
+                                  onPageChanged: (index) {
+
+
+
+                                    setState(() {
+
+
+
+                                      //                                    print('change');
+
+
+
+                                    });
+
+
+
+                                  },
+
+
+
+                                  viewportFraction: 1.0,
+
+
+
+                                  aspectRatio:
+
+
+
+                                  (MediaQuery.of(context).size.width / 25) /
+
+
+
+                                      (MediaQuery.of(context).size.width /
+
+
+
+                                          40),
+
+
+
+                                  autoPlay: true,
+
+
+
+                                  pagination: true,
+
+
+
+                                  passiveIndicator: Colors.grey.withOpacity(0.4),
+
+
+
+                                  activeIndicator: Colors.black.withOpacity(0.3),
+
+
+
+                                  pauseAutoPlayOnTouch: Duration(seconds: 8),
+
+
+
+                                  pagerSize: 8,
+
+
+
                                 ),
-                                child:Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                              ],
+                            )
+
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left:12.0),
+                        child: Align(
+                          alignment:Alignment.topLeft,
+                          child: RatingBar.builder(
+                            initialRating: double.parse(widget.rating),
+                            minRating: 0,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            itemSize: 15,
+
+                            itemBuilder: (context, _) => Icon(
+
+                              Icons.star,
+                              color: Colors.amber,
+
+
+                            ),
+                            onRatingUpdate: (rating) {
+                              print(rating);
+                            },
+                          ),
+                        ),
+                      ),
+//                      Container(
+//                        height:100,
+//
+//                        child:Row(
+//                          children:[
+//                            SizedBox(width:14),
+//                            Expanded(
+//                              flex:1,
+//                              child:InkWell(
+//                                onTap:(){
+//                                  setState(() {
+//                                    urlUniv=widget.detailsurls[0];
+//
+//                                  });
+//                                },
+//                                child: Padding(
+//                                  padding: const EdgeInsets.all(4.0),
+//                                  child: Container(
+//                                    height: 65,
+//                                    width:width*0.1,
+//                                    decoration: BoxDecoration(
+//                                        borderRadius: BorderRadius.all(
+//                                            Radius.circular(5)),
+//                                        border: Border.all(
+//                                          width: 2,
+//                                          color: urlUniv !=
+//                                              widget.detailsurls[0]
+//
+//                                              ? Colors.transparent
+//                                              : primarycolor
+//                                        )),
+//                                    child: ClipRRect(
+//                                      borderRadius:
+//                                      BorderRadius.circular(4.0),
+//                                      child: FancyShimmerImage(
+//                                        shimmerDuration:
+//                                        Duration(seconds: 2),
+//                                        imageUrl:
+//                                        widget.detailsurls[0],
+//                                      ),
+//                                    ),
+//                                  ),
+//                                ),
+//                              )),
+//                            Expanded(
+//                                flex: 1,
+//                                child: InkWell(
+//                                  onTap: () {
+//                                    setState(() {
+//                                      urlUniv = url2;
+//                                    });
+//                                  },
+//                                  child: Padding(
+//                                    padding: const EdgeInsets.all(4.0),
+//                                    child: Container(
+//                                        height: 65,
+//                                        decoration: BoxDecoration(
+//                                            borderRadius: BorderRadius.all(
+//                                                Radius.circular(5)),
+//                                            border: Border.all(
+//                                              width: 2,
+//                                              color: urlUniv != url2
+//                                                  ? Colors.transparent
+//                                                  : primarycolor
+//                                            )),
+//                                        child: ClipRRect(
+//                                          borderRadius:
+//                                          BorderRadius.circular(4.0),
+//                                          child: FancyShimmerImage(
+//                                            shimmerDuration:
+//                                            Duration(seconds: 2),
+//                                            // height: 80,
+//                                            imageUrl: url2,
+//                                          ),
+//                                        )),
+//                                  ),
+//                                )),
+//                            //just to push
+////                            Expanded(
+////                              flex:2,
+////                              child:Padding(
+////                                padding: const EdgeInsets.symmetric(
+////                                    vertical: 8.0) ,
+////                                child: Container(
+////
+////                                  decoration:BoxDecoration(
+////                                    color:primarycolor,
+////                                    border:Border.all(
+////                                      width:2,
+////                                      color:primarycolor
+////                                    ),
+////                                    borderRadius:BorderRadius.only(
+////                                      topLeft: Radius.circular(10),
+////                                      bottomLeft: Radius.circular(10)
+////                                    )
+////                                  ),
+////                                  child:Column(
+////                                    mainAxisAlignment: MainAxisAlignment.center,
+////                                    children: [
+////                                      Text('Rs. ${widget.disprice.toString()}',textAlign: TextAlign.left,style:TextStyle(color:Colors.white,fontSize:height*0.03,fontWeight: FontWeight.w600)),
+////
+////
+////                                    ],
+////                                  )
+////                                ),
+////                              )
+////                            )
+//                              ]),
+//
+//                            ),
+                      TabBar(
+                        labelColor: primarycolor,
+                          indicatorColor: primarycolor,
+                          tabs:[
+                        Tab(child:Text('About product',style:TextStyle(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.w500)),),
+                        Tab(child: Text('Specs',style:TextStyle(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.w500))),
+                        Tab(child: Text('Other Details',style:TextStyle(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.w500))),
+                      ]),
+                      Container(
+                        height:height*0.4,
+                        width:width*0.9,
+                        child: TabBarView(
+
+                          children: [
+                            Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child:Text(widget.description,style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500))
+                            ),
+                            Container(
+                              child:Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text('Rs. ${widget.disprice.toString()}',textAlign: TextAlign.left,style:TextStyle(color:Colors.white,fontSize:height*0.03,fontWeight: FontWeight.w600)),
-
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
+                                      child: Align(alignment:Alignment.topLeft,child: Text('Model:${widget.specs[0].model}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500))),
+                                    ),
+                                    Padding(
+                                        padding: const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
+                                        child:Align(alignment:Alignment.topLeft,child: Text('CPU:${widget.specs[0].cpu}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500)))
+                                    ),
+                                    Padding(
+                                        padding: const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
+                                        child:Align(alignment:Alignment.topLeft,child: Text('RAM :${widget.specs[0].ram}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500)))
+                                    ),
+                                    Padding(
+                                        padding:const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
+                                        child:Align(alignment:Alignment.topLeft,child: Text('Storage:${widget.specs[0].storage}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500)))
+                                    ),
 
                                   ],
-                                )
-                              ),
+                                ),
+                              )
+                            ),
+                            Container(
+                              child:Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                        padding:const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
+                                        child:Align(alignment:Alignment.topLeft,child: Text('Display:${widget.details[0].display}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500)))
+                                    ),
+                                    Padding(
+                                        padding:const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
+                                        child:Align(alignment:Alignment.topLeft,child: Text('Graphic:${widget.details[0].graphic}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500)))
+                                    ),
+
+                                  ],
+                                ),
+                              )
                             )
-                          )
-                            ]),
 
-                          ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0,8,8,2),
-                      child: Text('About this product',style:TextStyle(color:primarycolor,fontSize:height*0.025,fontWeight: FontWeight.w500)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
-                      child:Text(widget.description,style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500))
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
-                      child: Text('Specs',style:TextStyle(color:primarycolor,fontSize:height*0.025,fontWeight: FontWeight.w500)),
-                    )  ,
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
-                      child: Text('Model:${widget.specs[0].model}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
-                      child:Text('CPU:${widget.specs[0].cpu}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500))
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
-                      child:Text('RAM :${widget.specs[0].ram}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500))
-                    ),
-                    Padding(
-                      padding:const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
-                      child:Text('Storage:${widget.specs[0].storage}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500))
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
-                      child: Text('Other Details',style:TextStyle(color:primarycolor,fontSize:height*0.025,fontWeight: FontWeight.w500)),
-                    )  ,
-                    Padding(
-                        padding:const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
-                        child:Text('Display:${widget.details[0].display}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500))
-                    ),
-                    Padding(
-                        padding:const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
-                        child:Text('Graphic:${widget.details[0].graphic}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500))
-                    ),
-                  SizedBox(height:height*0.03),
-                  ]
+                          ],
+                        ),
+                      ),
+
+
+                    SizedBox(height:height*0.03),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FancyShimmerImage(
+                          shimmerDuration: Duration(seconds: 2),
+                          imageUrl: widget.detailsurls[1],
+                          width: MediaQuery.of(context).size.width,
+                          height: heightOfStack,
+                          boxFit: BoxFit.fill,
+                        ),
                       )
-                    ),
-              Row(
-                children: [
-                  present==false||present==null?
-                      InkWell(
-                        onTap:()async{
-                          var temp = await _queryWishlist(
-                              widget.name);
-                          print(temp);
-                          if (temp == null)
-                            addToWishlist(
-                              context,
-                              name: widget.name,
-                              imgUrl: widget.detailsurls[0],
-                              price: widget.disprice.toString(),
-                            );
-                          else
-                            setState(() {
-                              print('Item already exists');
-                              present = true;
-                            });
-                        },
-                        child:Container(width:MediaQuery.of(context).size.width*0.5,height:height*0.1,color: Colors.white,child:Padding(
-                          padding: const EdgeInsets.only(top:20.0,left:8.0),
-                          child: Text('Save for later',textAlign:TextAlign.center,style:TextStyle(color:primarycolor,fontSize: height*0.025,fontWeight: FontWeight.w500
-                          )),
-                        ))
+                    ]
 
-                      ):InkWell(onTap:(){Navigator.push(context,MaterialPageRoute(builder:(context)=>WishlistScreen()));},child: Container(width:MediaQuery.of(context).size.width*0.5,height:height*0.1,color: Colors.white,child:Padding(
-                    padding: const EdgeInsets.only(top:20.0,left:8.0),
-                        child: Text('Saved in Wishlist',style:TextStyle(color:primarycolor,fontSize: height*0.025,fontWeight: FontWeight.w500)),
-                      ))),
-                      qty==0||qty==null?InkWell(
-                       onTap:()async{
-    addToCart(context,
-    name: widget.name,
-    imgUrl: widget.detailsurls[0],
-    price: (widget
-        .disprice)
-        .toString(),
-    qty: 1);
+                        )
+                      ),
 
-    },
-    child:Container(width:MediaQuery.of(context).size.width*0.5,height:height*0.1,color: primarycolor,child:Padding(
-      padding: const EdgeInsets.only(top:20.0,left:40.0),
-      child: Text('Add to Cart',style:TextStyle(color:Colors.white,fontSize: height*0.025,fontWeight: FontWeight.w500)),
-    ))
-    ):Padding(
-      padding: const EdgeInsets.only(top:10.0,left:40.0),
-      child: Container(decoration:BoxDecoration(borderRadius:BorderRadius.all(Radius.circular(5)),
-                          color:primarycolor,
+
+
+           Row(
+                  children: [
+                  qty!=0?qty!=null? Padding(
+                        padding: const EdgeInsets.only(top:10.0,left:40.0),
+                        child: Container(height:height*0.07,width:width*0.16,decoration:BoxDecoration(borderRadius:BorderRadius.all(Radius.circular(5)),
+                          color:Colors.grey.withOpacity(0.3),
 
                         ),
                           child:Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              InkWell(
-                                onTap:()async{
-                                  await getAllItems();
-                                  for(var v in cartItems){
-                                    if(v.productName==widget.name){
-                                      var newQty=v.qty+1;
-                                      updateItem(
-                                          id: v.id,
-                                          name: v.productName,
-                                          imgUrl: v.imgUrl,
-                                          price: v.price,
-                                          qty: newQty,
-                                          );
-                                    }
-                                  }
-                                },
-                                child:Icon(
-                                  Icons.add,
-                                  color:Colors.white,
-                                ),
 
+                              Padding(
+                                padding: const EdgeInsets.only(left:2.0),
+                                child: Text(qty.toString(),style:TextStyle(color:Colors.black)),
                               ),
-                              Text(qty.toString(),
-                                style:TextStyle(color:Colors.white)
-                              ),
-                              InkWell(
-                                onTap: () async {
-                                  await getAllItems();
-
-                                  for (var v in cartItems) {
-                                    if (v.productName ==
-                                        widget
-                                            .name) {
-                                      if (v.qty == 1) {
-                                        removeItem(
-                                            v.productName);
-                                      } else {
-                                        var newQty = v.qty - 1;
-                                        updateItem(
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  InkWell(
+                                    onTap:()async{
+                                      await getAllItems();
+                                      for(var v in cartItems){
+                                        if(v.productName==widget.name){
+                                          var newQty=v.qty+1;
+                                          updateItem(
                                             id: v.id,
                                             name: v.productName,
                                             imgUrl: v.imgUrl,
                                             price: v.price,
                                             qty: newQty,
-                                            );
+                                          );
+                                        }
                                       }
-                                    }
-                                  }
-                                },
-                                child: Icon(
-                                  Icons.remove,
-                                  color: Colors.white,
-                                ),
-                              )
+                                    },
+                                    child:Icon(
+                                      Icons.keyboard_arrow_up,
+                                      color:Colors.black,
+                                    ),
+
+                                  ),
+
+                                  InkWell(
+                                    onTap: () async {
+                                      await getAllItems();
+
+                                      for (var v in cartItems) {
+                                        if (v.productName ==
+                                            widget
+                                                .name) {
+                                          if (v.qty == 1) {
+                                            removeItem(
+                                                v.productName);
+                                          } else {
+                                            var newQty = v.qty - 1;
+                                            updateItem(
+                                              id: v.id,
+                                              name: v.productName,
+                                              imgUrl: v.imgUrl,
+                                              price: v.price,
+                                              qty: newQty,
+                                            );
+                                          }
+                                        }
+                                      }
+                                    },
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Colors.black,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ],
-                          ),
-                          height:30,
-                          width:100,
+                          )
+
+                        ),   ):Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top:10.0,left:40.0),
+                        child: Container(height:height*0.07,width:width*0.16,decoration:BoxDecoration(borderRadius:BorderRadius.all(Radius.circular(5)),
+                          color:Colors.grey.withOpacity(0.3),
+
                         ),
-    )
-                ],
-              ),
+                            child:Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left:2.0),
+                                  child: Text(qty2.toString(),style:TextStyle(color:Colors.black)),
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    InkWell(
+                                      onTap:()async{
+                                        await getAllItems();
+                                        setState(() {
+                                          qty2=qty2+1
+;                                        });
+                                      },
+                                      child:Icon(
+                                        Icons.keyboard_arrow_up,
+                                        color:Colors.black,
+                                      ),
+
+                                    ),
+
+                                    InkWell(
+                                      onTap: () async {
+                                       setState(() {
+                                         (qty2>1) ?qty2=qty2-1:qty2;
+                                       });
+                                      },
+                                      child: Icon(
+                                        Icons.keyboard_arrow_down,
+                                        color: Colors.black,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            )
+
+                        ),   )
+                    ],
+                  ):Container(),
+//                      children: [
+//                        present==false||present==null?
+//                            InkWell(
+//                              onTap:()async{
+//                                var temp = await _queryWishlist(
+//                                    widget.name);
+//                                print(temp);
+//                                if (temp == null)
+//                                  addToWishlist(
+//                                    context,
+//                                    name: widget.name,
+//                                    imgUrl: widget.detailsurls[0],
+//                                    price: widget.disprice.toString(),
+//                                  );
+//                                else
+//                                  setState(() {
+//                                    print('Item already exists');
+//                                    present = true;
+//                                  });
+//                              },
+//                              child:Container(width:MediaQuery.of(context).size.width*0.5,height:height*0.1,color: Colors.white,child:Padding(
+//                                padding: const EdgeInsets.only(top:20.0,left:8.0),
+//                                child: Text('Save for later',textAlign:TextAlign.center,style:TextStyle(color:primarycolor,fontSize: height*0.025,fontWeight: FontWeight.w500
+//                                )),
+//                              ))
+//
+//                            ):InkWell(onTap:(){Navigator.push(context,MaterialPageRoute(builder:(context)=>WishlistScreen()));},child: Container(width:MediaQuery.of(context).size.width*0.5,height:height*0.1,color: Colors.white,child:Padding(
+//                          padding: const EdgeInsets.only(top:20.0,left:8.0),
+//                              child: Text('Saved in Wishlist',style:TextStyle(color:primarycolor,fontSize: height*0.025,fontWeight: FontWeight.w500)),
+//                            ))),
+SizedBox(width:width*0.18),qty==0||qty==null?InkWell(
+                               onTap:()async{
+      addToCart(context,
+      name: widget.name,
+      imgUrl: widget.detailsurls[0],
+      price: (widget
+          .disprice)
+          .toString(),
+      qty: qty2);
+
+      },
+      child:Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(width:MediaQuery.of(context).size.width*0.5,height:height*0.07,decoration:BoxDecoration(color:primarycolor,borderRadius: BorderRadius.all(Radius.circular(20))),child:Center(child: Text('Add to Cart',style:TextStyle(color:Colors.white,fontSize: height*0.025,fontWeight: FontWeight.w500)))),
+      )
+      ):Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(width:MediaQuery.of(context).size.width*0.5,height:height*0.07,decoration:BoxDecoration(color:primarycolor,borderRadius: BorderRadius.all(Radius.circular(20))),child:Center(child: Text('Already added in cart',style:TextStyle(color:Colors.white,fontSize: height*0.022,fontWeight: FontWeight.w500)))),
+                    ),
+                        ],
+                      ),
+
+                    Container(
+                      height:height*0.04,
+    color:Colors.lightBlueAccent.withOpacity(0.1),
+                      width:width,
+                      child:Center(child: Text(' Rs.${widget.disprice.toString()}',style:TextStyle(color:Colors.black,fontWeight: FontWeight.bold)))
+                    ),
+
+
                   ],
+
+                ),
+          ),
+                  )
                 )
-              )
 
-          )
+            );
 
-        );
+
+
 
   }
 }

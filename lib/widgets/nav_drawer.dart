@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:getflutter/components/drawer/gf_drawer.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
 import 'package:hamro_gadgets/allcategories.dart';
+import 'package:hamro_gadgets/wishlist.dart';
 
 class CustomDrawer extends StatefulWidget {
   @override
@@ -117,7 +118,7 @@ Navigator.push(context,MaterialPageRoute(builder:(context)=>AllCategories()),);
               ),
             ),
             onTap: () {
-
+          Navigator.push(context,MaterialPageRoute(builder:(context)=>WishlistScreen()));
             },
           ),
           Container(
