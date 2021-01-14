@@ -7,11 +7,12 @@ class DatabaseHelper {
   static final _databaseVersion = 1;
   static final table = 'Cart';
   static final columnId = 'id';
+
   static final columnProductName = 'productName';
+  static final columnProductDescription = 'productDesc';
   static final columnImageUrl = 'imgUrl';
   static final columnPrice = 'price';
   static final columnQuantity = 'qty';
-
 
 //  static final columnDetail = 'details';
 
@@ -42,6 +43,7 @@ class DatabaseHelper {
           CREATE TABLE $table (
             $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
             $columnProductName TEXT NOT NULL,
+            $columnProductDescription TEXT NOT NULL,
             $columnImageUrl TEXT NOT NULL,
             $columnPrice TEXT NOT NULL,
             $columnQuantity INTEGER NOT NULL
@@ -55,6 +57,7 @@ class DatabaseHelper {
           CREATE TABLE $table (
             $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
             $columnProductName TEXT NOT NULL,
+            $columnProductDescription TEXT NOT NULL,
             $columnImageUrl TEXT NOT NULL,
             $columnPrice TEXT NOT NULL,
             $columnQuantity INTEGER NOT NULL
@@ -72,6 +75,7 @@ class DatabaseHelper {
     Database db = await instance.database;
     return await db.insert(table, {
       'productName': item.productName,
+      'productDesc': item.productDesc,
       'imgUrl': item.imgUrl,
       'price': item.price,
       'qty': item.qty,
@@ -86,17 +90,13 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> queryRows(name) async {
     Database db = await instance.database;
     var x = await db
-        .query(table,
-        where:
-        "$columnProductName LIKE '%$name%' ")
+        .query(table, where: "$columnProductName LIKE '%$name%' ")
         .catchError((e) {
       print(e);
     });
     print(x.toString());
     return await db
-        .query(table,
-        where:
-        "$columnProductName LIKE '%$name%' ")
+        .query(table, where: "$columnProductName LIKE '%$name%' ")
         .catchError((e) {
       print(e);
     });
@@ -118,18 +118,15 @@ class DatabaseHelper {
     Database db = await instance.database;
     String productName = item.toMap()['productName'];
 
-
     return await db.update(table, item.toMap(),
-        where: '$columnProductName=?  ',
-        whereArgs: [productName]);
+        where: '$columnProductName=?  ', whereArgs: [productName]);
   }
 
   // Deletes the row specified by the id. The number of affected rows is
   // returned. This should be 1 as long as the row exists.
   Future<int> delete(String name) async {
     Database db = await instance.database;
-    return await db.delete(table,
-        where: '$columnProductName=? ',
-        whereArgs: [name]);
+    return await db
+        .delete(table, where: '$columnProductName=? ', whereArgs: [name]);
   }
 }

@@ -11,25 +11,24 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     Firebase.initializeApp().whenComplete(() {
       print("completed");
-      setState(() {});});
-    new Future.delayed(Duration(seconds:3),()async{
-      SharedPreferences prefs=await SharedPreferences.getInstance();
-      var islogin=prefs.getString('isLogged');
+      setState(() {});
+    });
+    new Future.delayed(Duration(seconds: 3), () async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var islogin = prefs.getString('isLogged');
 
-      if(islogin==null){
+      if (islogin == null) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => LoginScreen(),
+            builder: (context) => HomeScreen(),
           ),
         );
-      }
-      else{
+      } else {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -37,19 +36,18 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
         );
       }
-
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body:Center(
-        child:Image(
-          image:AssetImage('assets/images/hamrologo.jpeg'),width:MediaQuery.of(context).size.width*0.5,
-        )
-      )
-    );
+        backgroundColor: Colors.white,
+        body: Center(
+            child: Image(
+          image: AssetImage('assets/images/hamrologo.jpeg'),
+          width: MediaQuery.of(context).size.width * 0.5,
+        )));
   }
 }
