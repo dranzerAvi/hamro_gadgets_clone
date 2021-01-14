@@ -73,7 +73,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
         ),
         elevation:0.0,
         centerTitle:true,
-        title:Text('My Cart', style:TextStyle(color:Colors.black.withOpacity(0.8))),
+        title:Text('Shopping Cart', style:TextStyle(color:Colors.black.withOpacity(0.8))),
         actions: [
           Column(
             children: [

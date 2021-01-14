@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getflutter/components/carousel/gf_carousel.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hamro_gadgets/Bookmarks.dart';
 
 import 'package:hamro_gadgets/Constants/cart.dart';
@@ -24,7 +25,8 @@ class ProductDetailsScreen extends StatefulWidget {
   List<String>detailsurls=[];
   String rating;
   List<Specs>specs=[];
-  ProductDetailsScreen(this. imageUrl,this.name,this.mp,this.disprice,this.description,this.details,this.detailsurls,this.rating,this.specs);
+  int quantity;
+  ProductDetailsScreen(this. imageUrl,this.name,this.mp,this.disprice,this.description,this.details,this.detailsurls,this.rating,this.specs,this.quantity);
   @override
   _ProductDetailsScreenState createState() => _ProductDetailsScreenState();
 }
@@ -34,6 +36,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   static List<bool> check = [false, false, false, false, false];
   final dbHelperWishlist = DatabaseHelper2.instance;
   Cart item;
+  bool isWishlist=false;
   int total=0;
   Wishlist itemWishlist;
   var length;
@@ -338,6 +341,7 @@ String urlUniv;
     var aPieceOfTheHeightOfStack = heightOfStack - heightOfStack / 3.5;
     return DefaultTabController(
       length:3,
+
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: primarycolor,
@@ -407,14 +411,9 @@ String urlUniv;
                   child:ListView(
                     shrinkWrap: true,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0,8,8,2),
-                        child: Text(widget.name,textAlign: TextAlign.left,style:TextStyle(color:Colors.black.withOpacity(0.8),fontSize:height*0.03,fontWeight: FontWeight.w500)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal:16.0),
-                        child: Stack(
-                          children: [
+
+                      Stack(
+                        children: [
 //                            Positioned(
 //                              child:FancyShimmerImage(
 //                                shimmerDuration: Duration(seconds: 2),
@@ -424,9 +423,40 @@ String urlUniv;
 //                                boxFit: BoxFit.fill,
 //                              )
 //                            ),
-                            Row(
-
+                          Container(
+                            height:height*0.3,
+                            width:width,
+                            child: Row(
+mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
+                                isWishlist?Padding(
+                                  padding: const EdgeInsets.only(top:20.0),
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: InkWell(onTap:()async{
+                                      setState(() {
+                                        isWishlist=!isWishlist;
+                                      });
+                                      removeItemWishlist(widget.name);
+
+                                    }
+    ,child:Image.asset('assets/images/added.png',height:height*0.03,width:width*0.08)),
+                                  ),
+                                ):Padding(
+                                  padding: const EdgeInsets.only(top:20.0),
+                                  child: Align(
+                                    alignment:Alignment.topLeft,
+                                    child: InkWell(onTap:(){
+                                        setState(() {
+                                          isWishlist=!isWishlist;
+                                          addToWishlist(context,name:widget.name,price:widget.disprice.toString(),imgUrl: widget.imageUrl);
+
+                                        });
+
+                                    },
+                                      child:Image.asset('assets/images/remove.png',height:height*0.03,width:width*0.08)),
+                                  ),
+                                ),
 
                                 GFCarousel(
 
@@ -456,7 +486,7 @@ String urlUniv;
 
 
 
-                                        width: 10000.0,
+                                        width: width*0.9,
 
 
 
@@ -508,7 +538,7 @@ String urlUniv;
 
 
 
-                                  (MediaQuery.of(context).size.width / 25) /
+                                  (MediaQuery.of(context).size.width / 28) /
 
 
 
@@ -546,36 +576,12 @@ String urlUniv;
 
                                 ),
                               ],
-                            )
-
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left:12.0),
-                        child: Align(
-                          alignment:Alignment.topLeft,
-                          child: RatingBar.builder(
-                            initialRating: double.parse(widget.rating),
-                            minRating: 0,
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            itemCount: 5,
-                            itemSize: 15,
-
-                            itemBuilder: (context, _) => Icon(
-
-                              Icons.star,
-                              color: Colors.amber,
-
-
                             ),
-                            onRatingUpdate: (rating) {
-                              print(rating);
-                            },
-                          ),
-                        ),
+                          )
+
+                        ],
                       ),
+
 //                      Container(
 //                        height:100,
 //
@@ -686,71 +692,167 @@ String urlUniv;
 //                              ]),
 //
 //                            ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Align(alignment:Alignment.topLeft,child: Text(widget.name,textAlign: TextAlign.left,style:GoogleFonts.poppins(color:Colors.black.withOpacity(0.8),fontSize:height*0.03,fontWeight: FontWeight.w500))),
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.only(left:8.0),
+                        child: Align(
+                          alignment:Alignment.topLeft,
+                          child: RatingBar.builder(
+                            initialRating: double.parse(widget.rating),
+                            minRating: 0,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            itemSize: 20,
+
+                            itemBuilder: (context, _) => Icon(
+
+                              Icons.star,
+                              color: Colors.amber,
+
+
+                            ),
+                            onRatingUpdate: (rating) {
+                              print(rating);
+                            },
+                          ),
+                        ),
+                      ),
+                      widget.quantity>0?Align(alignment:Alignment.topLeft,child: Row(children:[ Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Icon(Icons.check_circle,color: Colors.green,size: height*0.02,),
+                      ),Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text('In Stock',style:GoogleFonts.poppins(color:Colors.green)),
+                      )])):Align(alignment:Alignment.topLeft,child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Icon(Icons.cancel,color: Colors.red,size: height*0.02,),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Align(
+                              alignment:Alignment.topLeft,
+                              child: Text('Out of stock',style:GoogleFonts.poppins(color:Colors.red),
+
+                            ),
+                          ))],
+                      )),
+                      Row(
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text('Rs.${(widget.mp).toString()}',style:GoogleFonts.poppins(fontSize:height*0.017,decoration: TextDecoration.lineThrough,fontWeight: FontWeight.w400)),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text('Rs.${(widget.disprice).toString()}',style:GoogleFonts.poppins(fontSize:height*0.023,fontWeight: FontWeight.w500,color:primarycolor)),
+                              ),
+                            ],
+                          ),
+                          Container(decoration:BoxDecoration(shape:BoxShape.circle,color:Colors.red),child: Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Align(alignment:Alignment.bottomRight,child: Text('${((int.parse(widget.mp.toString()) - int.parse(widget.disprice.toString())) / int.parse(widget.mp.toString()) * 100).toStringAsFixed(0)}%\nOFF',style: TextStyle(color:Colors.white),)),
+                          )),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Align(alignment:Alignment.topLeft,child: Text('Be the first one to review this product',style:GoogleFonts.poppins(color:primarycolor,fontSize:height*0.015,fontWeight: FontWeight.w400))),
+                      ),
                       TabBar(
+                       labelPadding: EdgeInsets.only(right:0,left:12),
                         labelColor: primarycolor,
                           indicatorColor: primarycolor,
+                          isScrollable: true,
+                         indicatorPadding:EdgeInsets.only(right:0,left:12),
                           tabs:[
-                        Tab(child:Text('About product',style:TextStyle(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.w500)),),
-                        Tab(child: Text('Specs',style:TextStyle(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.w500))),
-                        Tab(child: Text('Other Details',style:TextStyle(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.w500))),
+                        Tab(child:Text('About product',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.015,fontWeight: FontWeight.w500)),),
+                            Tab(child: Text('Details',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.015,fontWeight: FontWeight.w500))),
+                        Tab(child: Text('Specs',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.015,fontWeight: FontWeight.w500))),
+
                       ]),
-                      Container(
-                        height:height*0.4,
-                        width:width*0.9,
-                        child: TabBarView(
+                      SingleChildScrollView(
+                        child: Container(
+                          height:height*0.5,
+                          width:width*0.9,
+                          child: TabBarView(
 
-                          children: [
-                            Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child:Text(widget.description,style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500))
-                            ),
-                            Container(
-                              child:Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
-                                      child: Align(alignment:Alignment.topLeft,child: Text('Model:${widget.specs[0].model}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500))),
-                                    ),
-                                    Padding(
-                                        padding: const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
-                                        child:Align(alignment:Alignment.topLeft,child: Text('CPU:${widget.specs[0].cpu}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500)))
-                                    ),
-                                    Padding(
-                                        padding: const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
-                                        child:Align(alignment:Alignment.topLeft,child: Text('RAM :${widget.specs[0].ram}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500)))
-                                    ),
-                                    Padding(
-                                        padding:const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
-                                        child:Align(alignment:Alignment.topLeft,child: Text('Storage:${widget.specs[0].storage}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500)))
-                                    ),
+                            children: [
+                              Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child:SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
 
-                                  ],
-                                ),
-                              )
-                            ),
-                            Container(
-                              child:Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                        padding:const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
-                                        child:Align(alignment:Alignment.topLeft,child: Text('Display:${widget.details[0].display}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500)))
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(widget.description,style:GoogleFonts.poppins(color:Colors.black.withOpacity(0.6),fontWeight: FontWeight.w500,fontSize:height*0.018)),
+                                        ),
+                                      ],
                                     ),
-                                    Padding(
-                                        padding:const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
-                                        child:Align(alignment:Alignment.topLeft,child: Text('Graphic:${widget.details[0].graphic}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500)))
+                                  )
+                              ),
+                              Container(
+                                  child:Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+
+
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Align(alignment:Alignment.topLeft,child: Text('Display:${widget.details[0].display}',style:GoogleFonts.poppins(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500))),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Align(alignment:Alignment.topLeft,child: Text('Graphic:${widget.details[0].graphic}',style:GoogleFonts.poppins(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500))),
+                                        ),
+
+                                      ],
                                     ),
+                                  )
+                              ),
 
-                                  ],
-                                ),
-                              )
-                            )
+                              Container(
+                                child:Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
 
-                          ],
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Align(alignment:Alignment.topLeft,child: Text('Model:${widget.specs[0].model}',style:GoogleFonts.poppins(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500))),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Align(alignment:Alignment.topLeft,child: Text('CPU:${widget.specs[0].cpu}',style:GoogleFonts.poppins(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500))),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Align(alignment:Alignment.topLeft,child: Text('RAM :${widget.specs[0].ram}',style:GoogleFonts.poppins(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500))),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Align(alignment:Alignment.topLeft,child: Text('Storage:${widget.specs[0].storage}',style:TextStyle(color:Colors.black.withOpacity(0.8),fontWeight: FontWeight.w500))),
+                                      ),
+
+                                    ],
+                                  ),
+                                )
+                              ),
+
+                            ],
+                          ),
                         ),
                       ),
 

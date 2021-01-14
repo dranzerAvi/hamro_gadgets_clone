@@ -173,7 +173,7 @@ class _ProductCardState extends State<ProductCard> {
           height:height*0.5,
       child: InkWell(
         onTap: (){
-          Navigator.push(context,MaterialPageRoute(builder:(context)=>  ProductDetailsScreen(widget.imageUrl,widget.name,widget.mp,widget.disprice,widget.description,widget.details,widget.detailsurls,widget.rating,widget.specs)));
+          Navigator.push(context,MaterialPageRoute(builder:(context)=>  ProductDetailsScreen(widget.imageUrl,widget.name,widget.mp,widget.disprice,widget.description,widget.details,widget.detailsurls,widget.rating,widget.specs,widget.quantity)));
 
         },
         child: Container(
