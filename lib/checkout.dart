@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hamro_gadgets/Constants/cart.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
+import 'package:hamro_gadgets/home_screen.dart';
 import 'package:hamro_gadgets/services/database_helper.dart';
 
 class Checkout extends StatefulWidget {
@@ -19,6 +20,8 @@ class _CheckoutState extends State<Checkout> {
   TextEditingController _zip=TextEditingController();
   TextEditingController _phnNo=TextEditingController();
 TextEditingController _address2=TextEditingController();
+String state='Haryana';
+String country='India';
 
 
   List<Cart> cartItems = [];
@@ -155,6 +158,10 @@ TextEditingController _address2=TextEditingController();
             Column(
               children:[
                 Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Align(alignment:Alignment.topLeft,child: Text('Shipping Address',style:GoogleFonts.poppins(color:Colors.black,fontWeight: FontWeight.bold,fontSize: height*0.03))),
+                ),
+                Padding(
                   padding: const EdgeInsets.only(top:8.0,left:8.0,),
                   child: Row(children:[
                     Text('Email Address',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
@@ -168,7 +175,10 @@ TextEditingController _address2=TextEditingController();
                     child: TextFormField(controller:_email,decoration: InputDecoration(border: InputBorder.none,hintText: 'Your email'),),
                   )),
                 ),
-                Divider(color:Colors.grey),
+                Padding(
+                  padding: const EdgeInsets.only(left:8.0,right:12),
+                  child: Divider(color:Colors.grey),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(top:8.0,left:8.0,),
                   child: Row(children:[
@@ -241,20 +251,32 @@ TextEditingController _address2=TextEditingController();
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
-                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
+                  child: Container( width:height*0.8,decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
                     padding: const EdgeInsets.only(left:8.0),
-                    child:new DropdownButton<String>(
-                      items: <String>['Lorem Ipsum', 'Lorem Ipsum', 'Lorem Ipsum', 'Lorem Ipsum'].map((String value) {
-                        return new DropdownMenuItem<String>(
-                          value: value,
-                          child: new Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (val) {
-
-                      },
+                    child:DropdownButtonHideUnderline(
+                      child: new DropdownButton<String>(
+                        value: state,
+                        items: <String>['Haryana', 'Chandigarh', 'Uttar Pradesh', 'Kerala'].map((String value) {
+                          return new DropdownMenuItem<String>(
+                            value: value,
+                            child: new Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (val) {
+                          setState(() {
+                            state=val;
+                          });
+                        },
+                      ),
                     )
                   )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
+                  child: Row(children:[
+                    Text('Zip/Postal Code',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
+                    Text('*',style:TextStyle(color:Colors.red)),
+                  ]),
                 ),
 
                 Padding(
@@ -265,69 +287,163 @@ TextEditingController _address2=TextEditingController();
                   )),
                 ),
                 Padding(
+                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
+                  child: Row(children:[
+                    Text('Country',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
+                    Text('*',style:TextStyle(color:Colors.red)),
+                  ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
+                  child: Container( width:height*0.8,decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
+                      padding: const EdgeInsets.only(left:8.0),
+                      child:DropdownButtonHideUnderline(
+                        child: new DropdownButton<String>(
+                          value: country,
+                          items: <String>['India', 'United States', 'United Kingdom', 'Thailand'].map((String value) {
+                            return new DropdownMenuItem<String>(
+                              value: value,
+                              child: new Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (val) {
+                            setState(() {
+                              country=val;
+                            });
+                          },
+                        ),
+                      )
+                  )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
+                  child: Row(children:[
+                    Text('Phone Number',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
+                    Text('*',style:TextStyle(color:Colors.red)),
+                  ]),
+                ),
+                Padding(
                   padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
                   child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
                     padding: const EdgeInsets.only(left:8.0),
                     child: TextFormField(controller:_phnNo,decoration: InputDecoration(border: InputBorder.none),),
                   )),
                 ),
+
               ]
             ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding:EdgeInsets.only(top:height*0.015,left:width*0.07),
-                child: Text('Items',textAlign:TextAlign.left,style:TextStyle(color:Colors.black.withOpacity(0.8),fontSize: height*0.025,fontWeight: FontWeight.w500)),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                  onTap:(){
+                    Navigator.push(context,MaterialPageRoute(builder:(context)=>HomeScreen()));
+                  },
+                  child:Container(
+                      height:height*0.06,
+                      width:width*0.8,
+                      decoration:BoxDecoration(color:primarycolor,borderRadius: BorderRadius.all(Radius.circular(20))),
+                      child:Padding(
+                        padding: const EdgeInsets.only(top:12.0),
+                        child: Text('Next',textAlign:TextAlign.center,style:GoogleFonts.poppins(color:Colors.white,fontWeight: FontWeight.w500,fontSize: height*0.022)),
+                      )
+                  )
               ),
             ),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.29,
-              child: ListView.builder(
-                  itemCount: cartItems.length,
-                  itemBuilder: (BuildContext ctxt, int i) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
+//            Align(
+//              alignment: Alignment.topLeft,
+//              child: Padding(
+//                padding:EdgeInsets.only(top:height*0.015,left:width*0.07),
+//                child: Text('Items',textAlign:TextAlign.left,style:TextStyle(color:Colors.black.withOpacity(0.8),fontSize: height*0.025,fontWeight: FontWeight.w500)),
+//              ),
+//            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.4,
+                decoration: BoxDecoration(color:secondarycolor),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Align(alignment:Alignment.topLeft,child: Text('Order Summary',style:GoogleFonts.poppins(color:Colors.black,fontWeight:FontWeight.bold,fontSize: height*0.025))),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left:12.0,right:12.0),
+                        child: Divider(color:Colors.grey),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
-                            Container(
-                              child: FancyShimmerImage(
-                                imageUrl: cartItems[i].imgUrl,
-                                shimmerDuration: Duration(seconds: 2),
-                              ),
-                              height: 80,
-                              width: 80,
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Container(
-                              width:
-                              MediaQuery.of(context).size.width * 0.2,
-                              child: Text(
-                                cartItems[i].productName,
-                                style: TextStyle(fontSize: 15),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'Qty: ${cartItems[i].qty.toString()}',
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'Price: Rs ${cartItems[i].price.toString()}',
-                              style: TextStyle(fontSize: 15),
-                            )
+                            Text('${cartItems.length.toString()}',style:GoogleFonts.poppins(color:primarycolor,fontSize:height*0.017,fontWeight: FontWeight.bold)),
+                            (cartItems.length>1)?Text(' Items in Cart',style:GoogleFonts.poppins(color:Colors.grey,fontSize:height*0.017,fontWeight: FontWeight.w500)):Text(' Item in Cart',style:GoogleFonts.poppins(color:Colors.grey,fontSize:height*0.017,fontWeight: FontWeight.w500))
                           ],
                         ),
                       ),
-                    );
-                  }),
+
+                      Container(
+                        height:height*0.29,
+                        width:width*0.9,
+                        child: ListView.builder(
+                            itemCount: cartItems.length,
+                            itemBuilder: (BuildContext ctxt, int i) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      child: FancyShimmerImage(
+                                        imageUrl: cartItems[i].imgUrl,
+                                        shimmerDuration: Duration(seconds: 2),
+                                      ),
+                                      height: 80,
+                                      width: 80,
+                                    ),
+
+                                    Column(
+                                      mainAxisAlignment:MainAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width:
+                                          MediaQuery.of(context).size.width * 0.5,
+                                          child: Text(
+                                            cartItems[i].productName,
+                                            style: TextStyle(fontSize: 15),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+
+                                            Text(
+                                              'Qty: ${cartItems[i].qty.toString()}',
+                                              style: TextStyle(fontSize: 15),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              'Price: Rs ${cartItems[i].price.toString()}',
+                                              style: TextStyle(fontSize: 15),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+
+                                  ],
+                                ),
+                              );
+                            }),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
             SizedBox(height:height*0.02),
             Align(
