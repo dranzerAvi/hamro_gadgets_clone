@@ -311,7 +311,7 @@ class _ProductCardState extends State<ProductCard> {
                           child: Align(
                               alignment: Alignment.bottomRight,
                               child: Text(
-                                '- ${((int.parse(widget.mp.toString()) - int.parse(widget.disprice.toString())) / int.parse(widget.mp.toString()) * 100).toStringAsFixed(0)}%\nOFF',
+                                ' - ${((int.parse(widget.mp.toString()) - int.parse(widget.disprice.toString())) / int.parse(widget.mp.toString()) * 100).toStringAsFixed(0)}%\nOFF',
                                 style: TextStyle(color: Colors.white),
                               )),
                         )),

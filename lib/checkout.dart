@@ -11,6 +11,14 @@ class Checkout extends StatefulWidget {
 }
 
 class _CheckoutState extends State<Checkout> {
+  TextEditingController _email=TextEditingController();
+  TextEditingController _first=TextEditingController();
+  TextEditingController _last=TextEditingController();
+  TextEditingController _city=TextEditingController();
+  TextEditingController _zip=TextEditingController();
+  TextEditingController _phnNo=TextEditingController();
+TextEditingController _address2=TextEditingController();
+
 
   List<Cart> cartItems = [];
   final addressController = TextEditingController();
@@ -143,6 +151,67 @@ class _CheckoutState extends State<Checkout> {
         child: Column(
 
           children: [
+            Column(
+              children:[
+                Padding(
+                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
+                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
+                    padding: const EdgeInsets.only(left:8.0),
+                    child: TextFormField(controller:_email,decoration: InputDecoration(border: InputBorder.none,hintText: 'Your email'),),
+                  )),
+                ),
+                Divider(color:Colors.grey),
+                Padding(
+                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
+                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
+                    padding: const EdgeInsets.only(left:8.0),
+                    child: TextFormField(controller:_first,decoration: InputDecoration(border: InputBorder.none,hintText: 'First Name'),),
+                  )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
+                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
+                    padding: const EdgeInsets.only(left:8.0),
+                    child: TextFormField(controller:_last,decoration: InputDecoration(border: InputBorder.none,hintText: 'Last Name'),),
+                  )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
+                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
+                    padding: const EdgeInsets.only(left:8.0),
+                    child: TextFormField(controller:addressController,decoration: InputDecoration(border: InputBorder.none,),),
+                  )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
+                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
+                    padding: const EdgeInsets.only(left:8.0),
+                    child: TextFormField(controller:_address2,decoration: InputDecoration(border: InputBorder.none,),),
+                  )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
+                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
+                    padding: const EdgeInsets.only(left:8.0),
+                    child: TextFormField(controller:_city,decoration: InputDecoration(border: InputBorder.none,),),
+                  )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
+                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
+                    padding: const EdgeInsets.only(left:8.0),
+                    child: TextFormField(controller:_zip,decoration: InputDecoration(border: InputBorder.none,),),
+                  )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
+                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
+                    padding: const EdgeInsets.only(left:8.0),
+                    child: TextFormField(controller:_phnNo,decoration: InputDecoration(border: InputBorder.none),),
+                  )),
+                ),
+              ]
+            ),
             Align(
               alignment: Alignment.topLeft,
               child: Padding(

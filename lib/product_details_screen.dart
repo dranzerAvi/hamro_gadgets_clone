@@ -197,6 +197,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       DatabaseHelper.columnImageUrl: imgUrl,
       DatabaseHelper.columnPrice: price,
       DatabaseHelper.columnQuantity: qty,
+      DatabaseHelper.columnProductDescription: productDesc,
     };
 
     Cart item = Cart.fromMap(row);
