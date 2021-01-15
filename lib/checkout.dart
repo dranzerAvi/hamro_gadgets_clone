@@ -1,6 +1,7 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hamro_gadgets/Constants/cart.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
 import 'package:hamro_gadgets/services/database_helper.dart';
@@ -154,6 +155,13 @@ TextEditingController _address2=TextEditingController();
             Column(
               children:[
                 Padding(
+                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
+                  child: Row(children:[
+                    Text('Email Address',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
+                    Text('*',style:TextStyle(color:Colors.red)),
+                  ]),
+                ),
+                Padding(
                   padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
                   child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
                     padding: const EdgeInsets.only(left:8.0),
@@ -162,11 +170,25 @@ TextEditingController _address2=TextEditingController();
                 ),
                 Divider(color:Colors.grey),
                 Padding(
+                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
+                  child: Row(children:[
+                    Text('First Name',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
+                    Text('*',style:TextStyle(color:Colors.red)),
+                  ]),
+                ),
+                Padding(
                   padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
                   child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
                     padding: const EdgeInsets.only(left:8.0),
                     child: TextFormField(controller:_first,decoration: InputDecoration(border: InputBorder.none,hintText: 'First Name'),),
                   )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
+                  child: Row(children:[
+                    Text('Last Name',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
+                    Text('*',style:TextStyle(color:Colors.red)),
+                  ]),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
@@ -176,6 +198,13 @@ TextEditingController _address2=TextEditingController();
                   )),
                 ),
                 Padding(
+                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
+                  child: Row(children:[
+                    Text('Full Address',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
+                    Text('*',style:TextStyle(color:Colors.red)),
+                  ]),
+                ),
+                Padding(
                   padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
                   child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
                     padding: const EdgeInsets.only(left:8.0),
@@ -183,11 +212,18 @@ TextEditingController _address2=TextEditingController();
                   )),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
+                  padding: const EdgeInsets.only(right:12.0,left:8.0),
                   child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
                     padding: const EdgeInsets.only(left:8.0),
                     child: TextFormField(controller:_address2,decoration: InputDecoration(border: InputBorder.none,),),
                   )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
+                  child: Row(children:[
+                    Text('City',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
+                    Text('*',style:TextStyle(color:Colors.red)),
+                  ]),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
@@ -196,6 +232,31 @@ TextEditingController _address2=TextEditingController();
                     child: TextFormField(controller:_city,decoration: InputDecoration(border: InputBorder.none,),),
                   )),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
+                  child: Row(children:[
+                    Text('State/Province',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
+                    Text('*',style:TextStyle(color:Colors.red)),
+                  ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
+                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
+                    padding: const EdgeInsets.only(left:8.0),
+                    child:new DropdownButton<String>(
+                      items: <String>['Lorem Ipsum', 'Lorem Ipsum', 'Lorem Ipsum', 'Lorem Ipsum'].map((String value) {
+                        return new DropdownMenuItem<String>(
+                          value: value,
+                          child: new Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (val) {
+
+                      },
+                    )
+                  )),
+                ),
+
                 Padding(
                   padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
                   child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
