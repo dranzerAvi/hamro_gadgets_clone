@@ -392,7 +392,7 @@ String country='India';
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Container(
                                       child: FancyShimmerImage(
@@ -402,13 +402,13 @@ String country='India';
                                       height: 80,
                                       width: 80,
                                     ),
-
+                                     SizedBox(width:width*0.02),
                                     Column(
                                       mainAxisAlignment:MainAxisAlignment.start,
                                       children: [
                                         Container(
                                           width:
-                                          MediaQuery.of(context).size.width * 0.5,
+                                          MediaQuery.of(context).size.width * 0.6,
                                           child: Text(
                                             cartItems[i].productName,
                                             style: TextStyle(fontSize: 15),
@@ -416,19 +416,22 @@ String country='India';
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
+                                        SizedBox(height:10),
                                         Row(
+
                                           children: [
 
                                             Text(
                                               'Qty: ${cartItems[i].qty.toString()}',
-                                              style: TextStyle(fontSize: 15),
+                                              style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),
+
                                             ),
                                             SizedBox(
                                               width: 10,
                                             ),
                                             Text(
                                               'Price: Rs ${cartItems[i].price.toString()}',
-                                              style: TextStyle(fontSize: 15),
+                                              style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
                                             )
                                           ],
                                         ),
@@ -446,43 +449,31 @@ String country='India';
               ),
             ),
             SizedBox(height:height*0.02),
-            Align(
-              alignment:Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('Delivery Address',style:TextStyle(color:Colors.black.withOpacity(0.8),fontSize: height*0.025,fontWeight: FontWeight.w500)),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField( decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius:
-                      BorderRadius.circular(2),
-                      borderSide:
-                      BorderSide(color: Colors.grey)),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius:
-                      BorderRadius.circular(2),
-                      borderSide:
-                      BorderSide(color: Colors.grey)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius:
-                      BorderRadius.circular(2),
-                      borderSide: BorderSide(
-                          color: primarycolor)),
-                  hintText: 'Your address'),
-                maxLines: 4,
-                controller: addressController,),
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('Bill',style:TextStyle(color:Colors.black.withOpacity(0.8),fontSize: height*0.025,fontWeight: FontWeight.w500)),
-              ),
-            ),
-            Bill(),
+
+//            Padding(
+//              padding: const EdgeInsets.all(8.0),
+//              child: TextFormField( decoration: InputDecoration(
+//                  border: OutlineInputBorder(
+//                      borderRadius:
+//                      BorderRadius.circular(2),
+//                      borderSide:
+//                      BorderSide(color: Colors.grey)),
+//                  enabledBorder: OutlineInputBorder(
+//                      borderRadius:
+//                      BorderRadius.circular(2),
+//                      borderSide:
+//                      BorderSide(color: Colors.grey)),
+//                  focusedBorder: OutlineInputBorder(
+//                      borderRadius:
+//                      BorderRadius.circular(2),
+//                      borderSide: BorderSide(
+//                          color: primarycolor)),
+//                  hintText: 'Your address'),
+//                maxLines: 4,
+//                controller: addressController,),
+//            ),
+
+
 
             Align(
               alignment:Alignment.topLeft,
