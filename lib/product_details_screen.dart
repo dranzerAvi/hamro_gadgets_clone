@@ -529,45 +529,41 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         child: ListView(shrinkWrap: true, children: [
                       Stack(
                         children: [
-//
                           Container(
                             height: height * 0.45,
                             width: MediaQuery.of(context).size.width,
-                            child: Expanded(
-                              child: GFCarousel(
-                                items: widget.detailsurls.map(
-                                  (url) {
-                                    return Container(
-                                      width: width,
-                                      height: 180,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(1.0),
-                                        child: FancyShimmerImage(
-                                          shimmerDuration: Duration(seconds: 2),
-                                          imageUrl: '$url',
-                                          width: 10000.0,
-                                        ),
+                            child: GFCarousel(
+                              items: widget.detailsurls.map(
+                                (url) {
+                                  return Container(
+                                    width: width,
+                                    height: 180,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(1.0),
+                                      child: FancyShimmerImage(
+                                        shimmerDuration: Duration(seconds: 2),
+                                        imageUrl: '$url',
+                                        width: 10000.0,
                                       ),
-                                    );
-                                  },
-                                ).toList(),
-                                onPageChanged: (index) {
-                                  setState(() {
-                                    //                                    print('change');
-                                  });
+                                    ),
+                                  );
                                 },
-                                viewportFraction: 1.0,
-                                aspectRatio:
-                                    (MediaQuery.of(context).size.width / 28) /
-                                        (MediaQuery.of(context).size.width /
-                                            40),
-                                autoPlay: true,
-                                pagination: true,
-                                passiveIndicator: Colors.grey.withOpacity(0.4),
-                                activeIndicator: Colors.black.withOpacity(0.3),
-                                pauseAutoPlayOnTouch: Duration(seconds: 8),
-                                pagerSize: 8,
-                              ),
+                              ).toList(),
+                              onPageChanged: (index) {
+                                setState(() {
+                                  //                                    print('change');
+                                });
+                              },
+                              viewportFraction: 1.0,
+                              aspectRatio:
+                                  (MediaQuery.of(context).size.width / 28) /
+                                      (MediaQuery.of(context).size.width / 40),
+                              autoPlay: true,
+                              pagination: true,
+                              passiveIndicator: Colors.grey.withOpacity(0.4),
+                              activeIndicator: Colors.black.withOpacity(0.3),
+                              pauseAutoPlayOnTouch: Duration(seconds: 8),
+                              pagerSize: 8,
                             ),
                           ),
                           isWishlist
@@ -857,11 +853,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 decoration: BoxDecoration(
                                     shape: BoxShape.circle, color: Colors.red),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(6.0),
+                                  padding: const EdgeInsets.all(10.0),
                                   child: Align(
                                       alignment: Alignment.bottomRight,
                                       child: Text(
-                                        '- ${((int.parse(widget.mp.toString()) - int.parse(widget.disprice.toString())) / int.parse(widget.mp.toString()) * 100).toStringAsFixed(0)}%\nOFF',
+                                        '- ${((int.parse(widget.mp.toString()) - int.parse(widget.disprice.toString())) / int.parse(widget.mp.toString()) * 100).toStringAsFixed(0)}%',
                                         style: TextStyle(color: Colors.white),
                                       )),
                                 )),
@@ -908,7 +904,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ]),
                       SingleChildScrollView(
                         child: Container(
-                          height: height * 0.5,
+                          height: height * 0.4,
                           width: width * 0.9,
                           child: TabBarView(
                             children: [

@@ -13,16 +13,15 @@ class Checkout extends StatefulWidget {
 }
 
 class _CheckoutState extends State<Checkout> {
-  TextEditingController _email=TextEditingController();
-  TextEditingController _first=TextEditingController();
-  TextEditingController _last=TextEditingController();
-  TextEditingController _city=TextEditingController();
-  TextEditingController _zip=TextEditingController();
-  TextEditingController _phnNo=TextEditingController();
-TextEditingController _address2=TextEditingController();
-String state='Haryana';
-String country='India';
-
+  TextEditingController _email = TextEditingController();
+  TextEditingController _first = TextEditingController();
+  TextEditingController _last = TextEditingController();
+  TextEditingController _city = TextEditingController();
+  TextEditingController _zip = TextEditingController();
+  TextEditingController _phnNo = TextEditingController();
+  TextEditingController _address2 = TextEditingController();
+  String state = 'Haryana';
+  String country = 'India';
 
   List<Cart> cartItems = [];
   final addressController = TextEditingController();
@@ -120,9 +119,7 @@ String country='India';
 //                  SizedBox(
 //                    width: MediaQuery.of(context).size.width * 0.03,
 //                  ),
-                  Text(
-                     
-                       'Rs. ${((totalAmount() * 0.18) + totalAmount())}'),
+                  Text('Rs. ${((totalAmount() * 0.18) + totalAmount())}'),
                 ],
               ),
               SizedBox(
@@ -134,221 +131,389 @@ String country='India';
       ),
     );
   }
+
   @override
   void initState() {
     getAllItems();
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    double height=MediaQuery.of(context).size.height;
-    double width=MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar:AppBar(
-
-        backgroundColor: primarycolor,
-        title:Text('Hamro Gadgets'),
-        centerTitle:true,
-      ),
-      body:SingleChildScrollView(
-        child: Column(
-
-          children: [
-            Column(
-              children:[
+        appBar: AppBar(
+          backgroundColor: primarycolor,
+          title: Text('Hamro Gadgets'),
+          centerTitle: true,
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Column(children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Align(alignment:Alignment.topLeft,child: Text('Shipping Address',style:GoogleFonts.poppins(color:Colors.black,fontWeight: FontWeight.bold,fontSize: height*0.03))),
+                  child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text('Shipping Address',
+                          style: GoogleFonts.poppins(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: height * 0.03))),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
-                  child: Row(children:[
-                    Text('Email Address',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
-                    Text('*',style:TextStyle(color:Colors.red)),
+                  padding: const EdgeInsets.only(
+                    top: 8.0,
+                    left: 8.0,
+                  ),
+                  child: Row(children: [
+                    Text('Email Address',
+                        style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontSize: height * 0.02,
+                            fontWeight: FontWeight.bold)),
+                    Text('*', style: TextStyle(color: Colors.red)),
                   ]),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
-                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
-                    padding: const EdgeInsets.only(left:8.0),
-                    child: TextFormField(controller:_email,decoration: InputDecoration(border: InputBorder.none,hintText: 'Your email'),),
-                  )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left:8.0,right:12),
-                  child: Divider(color:Colors.grey),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
-                  child: Row(children:[
-                    Text('First Name',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
-                    Text('*',style:TextStyle(color:Colors.red)),
-                  ]),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
-                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
-                    padding: const EdgeInsets.only(left:8.0),
-                    child: TextFormField(controller:_first,decoration: InputDecoration(border: InputBorder.none,hintText: 'First Name'),),
-                  )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
-                  child: Row(children:[
-                    Text('Last Name',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
-                    Text('*',style:TextStyle(color:Colors.red)),
-                  ]),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
-                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
-                    padding: const EdgeInsets.only(left:8.0),
-                    child: TextFormField(controller:_last,decoration: InputDecoration(border: InputBorder.none,hintText: 'Last Name'),),
-                  )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
-                  child: Row(children:[
-                    Text('Full Address',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
-                    Text('*',style:TextStyle(color:Colors.red)),
-                  ]),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
-                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
-                    padding: const EdgeInsets.only(left:8.0),
-                    child: TextFormField(controller:addressController,decoration: InputDecoration(border: InputBorder.none,),),
-                  )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right:12.0,left:8.0),
-                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
-                    padding: const EdgeInsets.only(left:8.0),
-                    child: TextFormField(controller:_address2,decoration: InputDecoration(border: InputBorder.none,),),
-                  )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
-                  child: Row(children:[
-                    Text('City',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
-                    Text('*',style:TextStyle(color:Colors.red)),
-                  ]),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
-                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
-                    padding: const EdgeInsets.only(left:8.0),
-                    child: TextFormField(controller:_city,decoration: InputDecoration(border: InputBorder.none,),),
-                  )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
-                  child: Row(children:[
-                    Text('State/Province',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
-                    Text('*',style:TextStyle(color:Colors.red)),
-                  ]),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
-                  child: Container( width:height*0.8,decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
-                    padding: const EdgeInsets.only(left:8.0),
-                    child:DropdownButtonHideUnderline(
-                      child: new DropdownButton<String>(
-                        value: state,
-                        items: <String>['Haryana', 'Chandigarh', 'Uttar Pradesh', 'Kerala'].map((String value) {
-                          return new DropdownMenuItem<String>(
-                            value: value,
-                            child: new Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (val) {
-                          setState(() {
-                            state=val;
-                          });
-                        },
-                      ),
-                    )
-                  )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
-                  child: Row(children:[
-                    Text('Zip/Postal Code',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
-                    Text('*',style:TextStyle(color:Colors.red)),
-                  ]),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
-                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
-                    padding: const EdgeInsets.only(left:8.0),
-                    child: TextFormField(controller:_zip,decoration: InputDecoration(border: InputBorder.none,),),
-                  )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
-                  child: Row(children:[
-                    Text('Country',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
-                    Text('*',style:TextStyle(color:Colors.red)),
-                  ]),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
-                  child: Container( width:height*0.8,decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
-                      padding: const EdgeInsets.only(left:8.0),
-                      child:DropdownButtonHideUnderline(
-                        child: new DropdownButton<String>(
-                          value: country,
-                          items: <String>['India', 'United States', 'United Kingdom', 'Thailand'].map((String value) {
-                            return new DropdownMenuItem<String>(
-                              value: value,
-                              child: new Text(value),
-                            );
-                          }).toList(),
-                          onChanged: (val) {
-                            setState(() {
-                              country=val;
-                            });
-                          },
+                  padding: const EdgeInsets.only(
+                      left: 8.0, top: 12.0, bottom: 12.0, right: 12.0),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          border: Border.all(color: Colors.grey, width: 1)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: TextFormField(
+                          controller: _email,
+                          decoration: InputDecoration(
+                              border: InputBorder.none, hintText: 'Your email'),
                         ),
-                      )
-                  )),
+                      )),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top:8.0,left:8.0,),
-                  child: Row(children:[
-                    Text('Phone Number',style:GoogleFonts.poppins(color:Colors.black,fontSize:height*0.02,fontWeight: FontWeight.bold)),
-                    Text('*',style:TextStyle(color:Colors.red)),
+                  padding: const EdgeInsets.only(left: 8.0, right: 12),
+                  child: Divider(color: Colors.grey),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 8.0,
+                    left: 8.0,
+                  ),
+                  child: Row(children: [
+                    Text('First Name',
+                        style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontSize: height * 0.02,
+                            fontWeight: FontWeight.bold)),
+                    Text('*', style: TextStyle(color: Colors.red)),
                   ]),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left:8.0,top:12.0,bottom: 12.0,right:12.0),
-                  child: Container(decoration:BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),border:Border.all(color:Colors.grey,width: 1)),child: Padding(
-                    padding: const EdgeInsets.only(left:8.0),
-                    child: TextFormField(controller:_phnNo,decoration: InputDecoration(border: InputBorder.none),),
-                  )),
+                  padding: const EdgeInsets.only(
+                      left: 8.0, top: 12.0, bottom: 12.0, right: 12.0),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          border: Border.all(color: Colors.grey, width: 1)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: TextFormField(
+                          controller: _first,
+                          decoration: InputDecoration(
+                              border: InputBorder.none, hintText: 'First Name'),
+                        ),
+                      )),
                 ),
-
-              ]
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                  onTap:(){
-                    Navigator.push(context,MaterialPageRoute(builder:(context)=>HomeScreen()));
-                  },
-                  child:Container(
-                      height:height*0.06,
-                      width:width*0.8,
-                      decoration:BoxDecoration(color:primarycolor,borderRadius: BorderRadius.all(Radius.circular(20))),
-                      child:Padding(
-                        padding: const EdgeInsets.only(top:12.0),
-                        child: Text('Next',textAlign:TextAlign.center,style:GoogleFonts.poppins(color:Colors.white,fontWeight: FontWeight.w500,fontSize: height*0.022)),
-                      )
-                  )
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 8.0,
+                    left: 8.0,
+                  ),
+                  child: Row(children: [
+                    Text('Last Name',
+                        style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontSize: height * 0.02,
+                            fontWeight: FontWeight.bold)),
+                    Text('*', style: TextStyle(color: Colors.red)),
+                  ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 8.0, top: 12.0, bottom: 12.0, right: 12.0),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          border: Border.all(color: Colors.grey, width: 1)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: TextFormField(
+                          controller: _last,
+                          decoration: InputDecoration(
+                              border: InputBorder.none, hintText: 'Last Name'),
+                        ),
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 8.0,
+                    left: 8.0,
+                  ),
+                  child: Row(children: [
+                    Text('Full Address',
+                        style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontSize: height * 0.02,
+                            fontWeight: FontWeight.bold)),
+                    Text('*', style: TextStyle(color: Colors.red)),
+                  ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 8.0, top: 12.0, bottom: 12.0, right: 12.0),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          border: Border.all(color: Colors.grey, width: 1)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: TextFormField(
+                          controller: addressController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 12.0, left: 8.0),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          border: Border.all(color: Colors.grey, width: 1)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: TextFormField(
+                          controller: _address2,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 8.0,
+                    left: 8.0,
+                  ),
+                  child: Row(children: [
+                    Text('City',
+                        style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontSize: height * 0.02,
+                            fontWeight: FontWeight.bold)),
+                    Text('*', style: TextStyle(color: Colors.red)),
+                  ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 8.0, top: 12.0, bottom: 12.0, right: 12.0),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          border: Border.all(color: Colors.grey, width: 1)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: TextFormField(
+                          controller: _city,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 8.0,
+                    left: 8.0,
+                  ),
+                  child: Row(children: [
+                    Text('State/Province',
+                        style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontSize: height * 0.02,
+                            fontWeight: FontWeight.bold)),
+                    Text('*', style: TextStyle(color: Colors.red)),
+                  ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 8.0, top: 12.0, bottom: 12.0, right: 12.0),
+                  child: Container(
+                      width: height * 0.8,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          border: Border.all(color: Colors.grey, width: 1)),
+                      child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: DropdownButtonHideUnderline(
+                            child: new DropdownButton<String>(
+                              value: state,
+                              items: <String>[
+                                'Haryana',
+                                'Chandigarh',
+                                'Uttar Pradesh',
+                                'Kerala'
+                              ].map((String value) {
+                                return new DropdownMenuItem<String>(
+                                  value: value,
+                                  child: new Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (val) {
+                                setState(() {
+                                  state = val;
+                                });
+                              },
+                            ),
+                          ))),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 8.0,
+                    left: 8.0,
+                  ),
+                  child: Row(children: [
+                    Text('Zip/Postal Code',
+                        style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontSize: height * 0.02,
+                            fontWeight: FontWeight.bold)),
+                    Text('*', style: TextStyle(color: Colors.red)),
+                  ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 8.0, top: 12.0, bottom: 12.0, right: 12.0),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          border: Border.all(color: Colors.grey, width: 1)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: TextFormField(
+                          controller: _zip,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 8.0,
+                    left: 8.0,
+                  ),
+                  child: Row(children: [
+                    Text('Country',
+                        style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontSize: height * 0.02,
+                            fontWeight: FontWeight.bold)),
+                    Text('*', style: TextStyle(color: Colors.red)),
+                  ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 8.0, top: 12.0, bottom: 12.0, right: 12.0),
+                  child: Container(
+                      width: height * 0.8,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          border: Border.all(color: Colors.grey, width: 1)),
+                      child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: DropdownButtonHideUnderline(
+                            child: new DropdownButton<String>(
+                              value: country,
+                              items: <String>[
+                                'India',
+                                'United States',
+                                'United Kingdom',
+                                'Thailand'
+                              ].map((String value) {
+                                return new DropdownMenuItem<String>(
+                                  value: value,
+                                  child: new Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (val) {
+                                setState(() {
+                                  country = val;
+                                });
+                              },
+                            ),
+                          ))),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 8.0,
+                    left: 8.0,
+                  ),
+                  child: Row(children: [
+                    Text('Phone Number',
+                        style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontSize: height * 0.02,
+                            fontWeight: FontWeight.bold)),
+                    Text('*', style: TextStyle(color: Colors.red)),
+                  ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 8.0, top: 12.0, bottom: 12.0, right: 12.0),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          border: Border.all(color: Colors.grey, width: 1)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: TextFormField(
+                          controller: _phnNo,
+                          decoration: InputDecoration(border: InputBorder.none),
+                        ),
+                      )),
+                ),
+              ]),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen()));
+                    },
+                    child: Container(
+                        height: height * 0.06,
+                        width: width * 0.8,
+                        decoration: BoxDecoration(
+                            color: primarycolor,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 12.0),
+                          child: Text('Next',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: height * 0.022)),
+                        ))),
               ),
-            ),
 //            Align(
 //              alignment: Alignment.topLeft,
 //              child: Padding(
@@ -356,99 +521,130 @@ String country='India';
 //                child: Text('Items',textAlign:TextAlign.left,style:TextStyle(color:Colors.black.withOpacity(0.8),fontSize: height*0.025,fontWeight: FontWeight.w500)),
 //              ),
 //            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.4,
-                decoration: BoxDecoration(color:secondarycolor),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Align(alignment:Alignment.topLeft,child: Text('Order Summary',style:GoogleFonts.poppins(color:Colors.black,fontWeight:FontWeight.bold,fontSize: height*0.025))),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left:12.0,right:12.0),
-                        child: Divider(color:Colors.grey),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Text('${cartItems.length.toString()}',style:GoogleFonts.poppins(color:primarycolor,fontSize:height*0.017,fontWeight: FontWeight.bold)),
-                            (cartItems.length>1)?Text(' Items in Cart',style:GoogleFonts.poppins(color:Colors.grey,fontSize:height*0.017,fontWeight: FontWeight.w500)):Text(' Item in Cart',style:GoogleFonts.poppins(color:Colors.grey,fontSize:height*0.017,fontWeight: FontWeight.w500))
-                          ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  decoration: BoxDecoration(color: secondarycolor),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text('Order Summary',
+                                  style: GoogleFonts.poppins(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: height * 0.025))),
                         ),
-                      ),
-
-                      Container(
-                        height:height*0.29,
-                        width:width*0.9,
-                        child: ListView.builder(
-                            itemCount: cartItems.length,
-                            itemBuilder: (BuildContext ctxt, int i) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      child: FancyShimmerImage(
-                                        imageUrl: cartItems[i].imgUrl,
-                                        shimmerDuration: Duration(seconds: 2),
-                                      ),
-                                      height: 80,
-                                      width: 80,
-                                    ),
-                                     SizedBox(width:width*0.02),
-                                    Column(
-                                      mainAxisAlignment:MainAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          width:
-                                          MediaQuery.of(context).size.width * 0.6,
-                                          child: Text(
-                                            cartItems[i].productName,
-                                            style: TextStyle(fontSize: 15),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 12.0, right: 12.0),
+                          child: Divider(color: Colors.grey),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Text('${cartItems.length.toString()}',
+                                  style: GoogleFonts.poppins(
+                                      color: primarycolor,
+                                      fontSize: height * 0.017,
+                                      fontWeight: FontWeight.bold)),
+                              (cartItems.length > 1)
+                                  ? Text(' Items in Cart',
+                                      style: GoogleFonts.poppins(
+                                          color: Colors.grey,
+                                          fontSize: height * 0.017,
+                                          fontWeight: FontWeight.w500))
+                                  : Text(' Item in Cart',
+                                      style: GoogleFonts.poppins(
+                                          color: Colors.grey,
+                                          fontSize: height * 0.017,
+                                          fontWeight: FontWeight.w500))
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: height * 0.29,
+                          width: width * 0.9,
+                          child: ListView.builder(
+                              itemCount: cartItems.length,
+                              itemBuilder: (BuildContext ctxt, int i) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        child: FancyShimmerImage(
+                                          imageUrl: cartItems[i].imgUrl,
+                                          shimmerDuration: Duration(seconds: 2),
                                         ),
-                                        SizedBox(height:10),
-                                        Row(
-
+                                        height: 80,
+                                        width: 80,
+                                      ),
+                                      SizedBox(width: width * 0.02),
+                                      Container(
+                                        height: 80,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
                                           children: [
-
-                                            Text(
-                                              'Qty: ${cartItems[i].qty.toString()}',
-                                              style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),
-
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.6,
+                                              child: Text(
+                                                cartItems[i].productName,
+                                                style: TextStyle(fontSize: 15),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
                                             ),
-                                            SizedBox(
-                                              width: 10,
+                                            Spacer(),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Qty: ${cartItems[i].qty.toString()}',
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                SizedBox(
+                                                  width: 15,
+                                                ),
+                                                Text(
+                                                  'Price: Rs ${cartItems[i].price.toString()}',
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Spacer()
+                                              ],
                                             ),
-                                            Text(
-                                              'Price: Rs ${cartItems[i].price.toString()}',
-                                              style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
-                                            )
                                           ],
                                         ),
-                                      ],
-                                    ),
-
-                                  ],
-                                ),
-                              );
-                            }),
-                      ),
-                    ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(height:height*0.02),
+              SizedBox(height: height * 0.02),
 
 //            Padding(
 //              padding: const EdgeInsets.all(8.0),
@@ -473,24 +669,50 @@ String country='India';
 //                controller: addressController,),
 //            ),
 
-
-
-            Align(
-              alignment:Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('Choose payment method',style:TextStyle(color:Colors.black.withOpacity(0.8),fontSize: height*0.025,fontWeight: FontWeight.w500)),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Choose payment method',
+                      style: TextStyle(
+                          color: Colors.black.withOpacity(0.8),
+                          fontSize: height * 0.025,
+                          fontWeight: FontWeight.w500)),
+                ),
               ),
-            ),
-            SizedBox(height:height*0.02),
-            InkWell(onTap:(){},child: Container(height:height*0.08,width:width*0.9,decoration:BoxDecoration(color: primarycolor,borderRadius: BorderRadius.all(Radius.circular(5.0))),child:Center(child: Text('Cash on Delivery',style:TextStyle(fontSize: height*0.025,fontWeight: FontWeight.bold,color:Colors.white))))),
-            SizedBox(height:height*0.02),
-            InkWell(onTap:(){},child: Container(height:height*0.08,width:width*0.9,decoration:BoxDecoration(color: primarycolor,borderRadius: BorderRadius.all(Radius.circular(5.0))),child:Center(child: Text('Pay online',style:TextStyle(fontSize: height*0.025,fontWeight: FontWeight.bold,color:Colors.white))))),
-            SizedBox(height:height*0.02),
-          ],
-        ),
-      )
-    );
+              SizedBox(height: height * 0.02),
+              InkWell(
+                  onTap: () {},
+                  child: Container(
+                      height: height * 0.08,
+                      width: width * 0.9,
+                      decoration: BoxDecoration(
+                          color: primarycolor,
+                          borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                      child: Center(
+                          child: Text('Cash on Delivery',
+                              style: TextStyle(
+                                  fontSize: height * 0.025,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white))))),
+              SizedBox(height: height * 0.02),
+              InkWell(
+                  onTap: () {},
+                  child: Container(
+                      height: height * 0.08,
+                      width: width * 0.9,
+                      decoration: BoxDecoration(
+                          color: primarycolor,
+                          borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                      child: Center(
+                          child: Text('Pay online',
+                              style: TextStyle(
+                                  fontSize: height * 0.025,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white))))),
+              SizedBox(height: height * 0.02),
+            ],
+          ),
+        ));
   }
 }
-    

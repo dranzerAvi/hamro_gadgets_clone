@@ -307,11 +307,11 @@ class _ProductCardState extends State<ProductCard> {
                         decoration: BoxDecoration(
                             shape: BoxShape.circle, color: Colors.red),
                         child: Padding(
-                          padding: const EdgeInsets.all(6.0),
+                          padding: const EdgeInsets.all(10.0),
                           child: Align(
                               alignment: Alignment.bottomRight,
                               child: Text(
-                                ' - ${((int.parse(widget.mp.toString()) - int.parse(widget.disprice.toString())) / int.parse(widget.mp.toString()) * 100).toStringAsFixed(0)}%\nOFF',
+                                ' - ${((int.parse(widget.mp.toString()) - int.parse(widget.disprice.toString())) / int.parse(widget.mp.toString()) * 100).toStringAsFixed(0)}%',
                                 style: TextStyle(color: Colors.white),
                               )),
                         )),

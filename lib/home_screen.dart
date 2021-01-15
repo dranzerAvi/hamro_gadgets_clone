@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getflutter/components/carousel/gf_carousel.dart';
@@ -9,7 +8,6 @@ import 'package:hamro_gadgets/Constants/products.dart';
 import 'package:hamro_gadgets/Constants/screens.dart';
 import 'package:hamro_gadgets/services/database_helper.dart';
 import 'package:hamro_gadgets/widgets/ProductCard.dart';
-import 'package:hamro_gadgets/widgets/bottom_nav_bar.dart';
 import 'package:hamro_gadgets/widgets/custom_floating_button.dart';
 import 'package:hamro_gadgets/widgets/nav_drawer.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -38,7 +36,25 @@ class _HomeScreenState extends State<HomeScreen> {
           currentScreen: HomeScreen(), tab_no: HomeScreen.TAB_NO)),
       appBar: AppBar(
         backgroundColor: primarycolor,
-        title: Text('Hamro Gadgets', style: TextStyle(color: Colors.white)),
+        title: Container(
+          width: width * 0.7,
+          height: 40,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+          ),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+        ),
         centerTitle: true,
 //       actions: [
 //
