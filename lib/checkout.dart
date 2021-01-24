@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hamro_gadgets/Constants/cart.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
 import 'package:hamro_gadgets/home_screen.dart';
 import 'package:hamro_gadgets/services/database_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Checkout extends StatefulWidget {
   @override
@@ -44,6 +47,11 @@ class _CheckoutState extends State<Checkout> {
       sum += (double.parse(cartItems[i].price) * cartItems[i].qty);
     }
     return sum;
+  }
+  User user;
+
+  getUserDetails() async {
+    user = FirebaseAuth.instance.currentUser;
   }
 
   Widget Bill() {
@@ -130,6 +138,51 @@ class _CheckoutState extends State<Checkout> {
         ),
       ),
     );
+  }
+  String orderid;
+  void placeOrder() async{
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    orderid= prefs.getString('Orderid');
+    await getUserDetails();
+    List items = [];
+    List prices = [];
+    List quantities = [];
+    List image=[];
+    for (var v in cartItems) {
+      print(v.productName);
+      items.add(v.productName);
+      prices.add(v.price);
+      quantities.add(v.qty);
+      image.add(v.imgUrl);
+    }
+    Map<String,dynamic> address={'city':_city.text,'fulladdress':'${addressController.text},${_address2.text}','phonenumber':'+91${_phnNo.text}','postalcode':_zip.text,'state':state} ;
+
+    final databaseReference = FirebaseFirestore.instance;
+    databaseReference.collection('Orders').doc(orderid).set({
+      'Address':address,
+      'GrandTotal':totalAmount() + (totalAmount() * 0.1 + 20),
+      'Items':items,
+      'Price':prices,
+      'Qty':quantities,
+      'Status':'Order Placed',
+      'TimeStamp':Timestamp.now(),
+      'UserID':user.uid,
+      'imgUrl':image,
+      'orderid':orderid
+
+
+    });
+removeAll();
+    Fluttertoast.showToast(
+        msg: 'Your order has been placed', toastLength: Toast.LENGTH_SHORT);
+Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScreen()));
+
+  }
+  void removeAll() async {
+    // Assuming that the number of rows is the id for the last row.
+    for (var v in cartItems) {
+      final rowsDeleted = await dbHelper.delete(v.productName);
+    }
   }
 
   @override
@@ -412,52 +465,52 @@ class _CheckoutState extends State<Checkout> {
                         ),
                       )),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 8.0,
-                    left: 8.0,
-                  ),
-                  child: Row(children: [
-                    Text('Country',
-                        style: GoogleFonts.poppins(
-                            color: Colors.black,
-                            fontSize: height * 0.02,
-                            fontWeight: FontWeight.bold)),
-                    Text('*', style: TextStyle(color: Colors.red)),
-                  ]),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 8.0, top: 12.0, bottom: 12.0, right: 12.0),
-                  child: Container(
-                      width: height * 0.8,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(4)),
-                          border: Border.all(color: Colors.grey, width: 1)),
-                      child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: DropdownButtonHideUnderline(
-                            child: new DropdownButton<String>(
-                              value: country,
-                              items: <String>[
-                                'India',
-                                'United States',
-                                'United Kingdom',
-                                'Thailand'
-                              ].map((String value) {
-                                return new DropdownMenuItem<String>(
-                                  value: value,
-                                  child: new Text(value),
-                                );
-                              }).toList(),
-                              onChanged: (val) {
-                                setState(() {
-                                  country = val;
-                                });
-                              },
-                            ),
-                          ))),
-                ),
+//                Padding(
+//                  padding: const EdgeInsets.only(
+//                    top: 8.0,
+//                    left: 8.0,
+//                  ),
+//                  child: Row(children: [
+//                    Text('Country',
+//                        style: GoogleFonts.poppins(
+//                            color: Colors.black,
+//                            fontSize: height * 0.02,
+//                            fontWeight: FontWeight.bold)),
+//                    Text('*', style: TextStyle(color: Colors.red)),
+//                  ]),
+//                ),
+//                Padding(
+//                  padding: const EdgeInsets.only(
+//                      left: 8.0, top: 12.0, bottom: 12.0, right: 12.0),
+//                  child: Container(
+//                      width: height * 0.8,
+//                      decoration: BoxDecoration(
+//                          borderRadius: BorderRadius.all(Radius.circular(4)),
+//                          border: Border.all(color: Colors.grey, width: 1)),
+//                      child: Padding(
+//                          padding: const EdgeInsets.only(left: 8.0),
+//                          child: DropdownButtonHideUnderline(
+//                            child: new DropdownButton<String>(
+//                              value: country,
+//                              items: <String>[
+//                                'India',
+//                                'United States',
+//                                'United Kingdom',
+//                                'Thailand'
+//                              ].map((String value) {
+//                                return new DropdownMenuItem<String>(
+//                                  value: value,
+//                                  child: new Text(value),
+//                                );
+//                              }).toList(),
+//                              onChanged: (val) {
+//                                setState(() {
+//                                  country = val;
+//                                });
+//                              },
+//                            ),
+//                          ))),
+//                ),
                 Padding(
                   padding: const EdgeInsets.only(
                     top: 8.0,
@@ -488,32 +541,32 @@ class _CheckoutState extends State<Checkout> {
                       )),
                 ),
               ]),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeScreen()));
-                    },
-                    child: Container(
-                        height: height * 0.06,
-                        width: width * 0.8,
-                        decoration: BoxDecoration(
-                            color: primarycolor,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 12.0),
-                          child: Text('Next',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: height * 0.022)),
-                        ))),
-              ),
+//              Padding(
+//                padding: const EdgeInsets.all(8.0),
+//                child: InkWell(
+//                    onTap: () {
+//                      Navigator.push(
+//                          context,
+//                          MaterialPageRoute(
+//                              builder: (context) => HomeScreen()));
+//                    },
+//                    child: Container(
+//                        height: height * 0.06,
+//                        width: width * 0.8,
+//                        decoration: BoxDecoration(
+//                            color: primarycolor,
+//                            borderRadius:
+//                                BorderRadius.all(Radius.circular(20))),
+//                        child: Padding(
+//                          padding: const EdgeInsets.only(top: 12.0),
+//                          child: Text('Next',
+//                              textAlign: TextAlign.center,
+//                              style: GoogleFonts.poppins(
+//                                  color: Colors.white,
+//                                  fontWeight: FontWeight.w500,
+//                                  fontSize: height * 0.022)),
+//                        ))),
+//              ),
 //            Align(
 //              alignment: Alignment.topLeft,
 //              child: Padding(
@@ -607,29 +660,32 @@ class _CheckoutState extends State<Checkout> {
                                               ),
                                             ),
                                             Spacer(),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Qty: ${cartItems[i].qty.toString()}',
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                SizedBox(
-                                                  width: 15,
-                                                ),
-                                                Text(
-                                                  'Price: Rs ${cartItems[i].price.toString()}',
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                Spacer()
-                                              ],
+                                            Container(
+                                              width:width*0.9-120,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'Qty: ${cartItems[i].qty.toString()}',
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 15,
+                                                  ),
+                                                  Text(
+                                                    'Price: Rs ${cartItems[i].price.toString()}',
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Spacer()
+                                                ],
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -682,7 +738,9 @@ class _CheckoutState extends State<Checkout> {
               ),
               SizedBox(height: height * 0.02),
               InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    placeOrder();
+                  },
                   child: Container(
                       height: height * 0.08,
                       width: width * 0.9,

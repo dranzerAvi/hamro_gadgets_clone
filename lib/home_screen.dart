@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getflutter/components/carousel/gf_carousel.dart';
@@ -20,7 +21,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    get();
+    super.initState();
+  }
   final dbHelper = DatabaseHelper.instance;
+  User user;
+  void get(){
+    user=FirebaseAuth.instance.currentUser;
+
+  }
+
+
   static const int TAB_NO = 1;
   List<String> imageList = [];
   List<Products> newproducts = [];

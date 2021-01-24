@@ -1,6 +1,8 @@
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
 import 'package:hamro_gadgets/Constants/wishlist.dart';
 import 'package:hamro_gadgets/services/database_helper_wishlist.dart';
@@ -46,7 +48,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
     return Scaffold(
       appBar:AppBar(
         backgroundColor: primarycolor,
-        title:Text('Hamro Gadgets'),
+        title:Text('My Wishlist',style:GoogleFonts.poppins(color:Colors.white,fontWeight:FontWeight.bold)),
         centerTitle:true,
       ),
       body:Column(
@@ -63,70 +65,92 @@ class _WishlistScreenState extends State<WishlistScreen> {
           itemBuilder: (context,index){
             return Container(
               width: MediaQuery.of(context).size.width * 0.9,
+              height:MediaQuery.of(context).size.height*0.18,
               // height: 250,
               child: Card(
                 elevation: 4,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4),
                 ),
-                child: Stack(
+                child: Column(
                   children: <Widget>[
-                    Positioned(
-                      child: Column(
+                    Padding(
+                      padding: const EdgeInsets.only(top:12.0),
+                      child: Row(
                         children: <Widget>[
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: Image.network(
-                              wishlistItems[index].imgUrl,
-                              width: MediaQuery.of(context).size.width,
-                              height: 180,
-                              fit: BoxFit.fill,
-                            ),
+                          Container(
+                            height:100,
+                            width:100,
+                            child:FancyShimmerImage(
+                              imageUrl: wishlistItems[index].imgUrl ,
+                            )
                           ),
+
                           Container(
                             margin: EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 16,
+                              horizontal: 8,
+                              vertical: 8,
                             ),
                             child: Row(
                               mainAxisAlignment:
                               MainAxisAlignment.spaceEvenly,
                               children: [
-                                Column(
-                                  children: <Widget>[
-                                    Container(
-                                      width: MediaQuery.of(context)
-                                          .size
-                                          .width *
-                                          0.4,
-                                      child: Text(
-                                        '${wishlistItems[index].productName}',
-                                        textAlign: TextAlign.left,
-                                        style:
-                                        TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: height*0.02,
+                                Container(
+                                  height: 80,
+                                  width:width*0.5,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: MediaQuery.of(context)
+                                            .size
+                                            .width *
+                                            0.8,
+                                        child: Text(
+                                          wishlistItems[index].productName,
+                                          style: TextStyle(fontSize: height*0.02),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      SizedBox(
-                                        width: 5,
+                                      Spacer(),
+                                      Container(
+                                        width:width*0.9-120,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                          children: [
+
+                                            Text(
+                                              'Price: Rs ${wishlistItems[index].price.toString()}',
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight:
+                                                  FontWeight.bold),
+                                            ),
+                                            Spacer()
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
+//                              Align(
+//                                alignment: Alignment.center,
+//                                child: Row(
+//                                  mainAxisAlignment:
+//                                  MainAxisAlignment.center,
+//                                  children: [
+//                                    SizedBox(
+//                                      width: 5,
+//                                    ),
+//                                    SizedBox(
+//                                      width: 5,
+//                                    ),
+//                                  ],
+//                                ),
+//                              ),
                                 InkWell(
                                     onTap: () {
                                       removeItem(
@@ -145,32 +169,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                         ],
                       ),
                     ),
-                    Positioned(
-                      left: 16.0,
-                      right: 16.0,
-                      top: 8.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Card(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              child: Text(
-                                'Rs. ${wishlistItems[index].price}',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: height*0.02,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+
                   ],
                 ),
               ),

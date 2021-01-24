@@ -1,10 +1,12 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hamro_gadgets/Constants/cart.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
 import 'package:hamro_gadgets/checkout.dart';
+import 'package:hamro_gadgets/login_screen.dart';
 import 'package:hamro_gadgets/services/database_helper.dart';
 
 class BookmarksScreen extends StatefulWidget {
@@ -13,6 +15,13 @@ class BookmarksScreen extends StatefulWidget {
 }
 
 class _BookmarksScreenState extends State<BookmarksScreen> {
+  void get(){
+    Fluttertoast.showToast(
+        msg: 'Login first', toastLength: Toast.LENGTH_SHORT);
+    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LoginScreen()));
+
+  }
+
   TextEditingController _cont = TextEditingController();
   List<Cart> cartItems = [];
   double total;
@@ -28,10 +37,15 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
 //      print(cartItems[1]);
     });
   }
+  User user;
+void getUser(){
+  user=FirebaseAuth.instance.currentUser;
 
+}
   @override
   void initState() {
     getAllItems();
+    getUser();
     super.initState();
   }
 
@@ -214,8 +228,8 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Checkout()));
+                     user!=null? Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Checkout())):get();
                     },
                     child: Container(
                         height: height * 0.06,

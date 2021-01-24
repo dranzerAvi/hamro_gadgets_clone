@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -14,6 +15,7 @@ import 'package:hamro_gadgets/services/database_helper.dart';
 import 'package:hamro_gadgets/services/database_helper_wishlist.dart';
 import 'package:hamro_gadgets/wishlist.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   String imageUrl;
@@ -58,6 +60,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   var qty = 1;
   bool present = false;
   int choice = 0;
+  int order;
+  String orderid;
   List<Cart> cartItems = [];
   List<Wishlist> wishlistItems = [];
   void updateItem(
@@ -199,6 +203,51 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       DatabaseHelper.columnQuantity: qty,
       DatabaseHelper.columnProductDescription: productDesc,
     };
+    if (cartItems.length == 0) {
+      await print('----------------$order');
+      if (order + 1 < 9) {
+        await setState(() {
+          orderid = 'HAMRO0000${order + 1}';
+        });
+      }
+      if (order + 1 > 10 && order + 1 < 99) {
+        await setState(() {
+          orderid = 'HAMRO000${order + 1}';
+        });
+      }
+      if (order + 1 > 99 && order + 1 < 999) {
+        await setState(() {
+          orderid = 'HAMRO00${order + 1}';
+        });
+      }
+      if (order + 1 > 999 && order + 1 < 9999) {
+        await setState(() {
+          orderid = 'HAMRO0${order + 1}';
+        });
+      }
+      if (order + 1 > 9999 && order + 1 < 99999) {
+        await setState(() {
+          orderid = 'HAMRO${order + 1}';
+        });
+      }
+      if (order + 1 > 99999) {
+        await setState(() {
+          orderid = 'HAMRO${order + 1}';
+        });
+      }
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('Orderid', orderid);
+      print(orderid);
+
+      prefs.setString('Status', 'Order Placed');
+      await FirebaseFirestore.instance
+          .collection('Ordercount')
+          .doc('ordercount')
+          .update({
+        'Numberoforders': order + 1,
+      });
+    }
 
     Cart item = Cart.fromMap(row);
     final id = await dbHelper.insert(item);
@@ -327,6 +376,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   first() async {
+    await FirebaseFirestore.instance
+        .collection('Ordercount')
+        .doc('ordercount')
+        .snapshots()
+        .listen((event) {
+      print(event['Numberoforders'].toString());
+
+      order = event['Numberoforders'];
+    });
     qty = await getQuantity(
       widget.name,
     );

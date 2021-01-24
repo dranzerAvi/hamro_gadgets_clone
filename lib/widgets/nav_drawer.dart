@@ -1,7 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getflutter/components/drawer/gf_drawer.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
+import 'package:hamro_gadgets/My_orders.dart';
 import 'package:hamro_gadgets/allcategories.dart';
+import 'package:hamro_gadgets/login_screen.dart';
+import 'package:hamro_gadgets/profile.dart';
 import 'package:hamro_gadgets/wishlist.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -10,6 +17,39 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
+  User user;
+
+  String name = ' ',
+      email = ' ',
+      url =
+          '';
+  getUserDetails() async {
+    user = await FirebaseAuth.instance.currentUser;
+    FirebaseFirestore.instance
+        .collection('Users')
+        .where('userId', isEqualTo: user.uid)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        setState(() {
+          name = element['name'];
+          email = element['email'];
+          url = element['ImageURL'];
+        });
+      });
+    });
+  }
+  void get(){
+    Fluttertoast.showToast(
+        msg: 'Login first', toastLength: Toast.LENGTH_SHORT);
+    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LoginScreen()));
+
+  }
+  @override
+  void initState() {
+    getUserDetails();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return GFDrawer(
@@ -17,9 +57,52 @@ class _CustomDrawerState extends State<CustomDrawer> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           SafeArea(
-              child: InkWell(
+              child:user!=null? InkWell(
                 onTap: () {
     },
+                child: Container(
+                  color: primarycolor,
+                  height: 80,
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            backgroundImage: NetworkImage(url),
+                            radius: 30,
+                          )),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            name,
+                            style: GoogleFonts.poppins(
+
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: MediaQuery.of(context).size.height*0.02),
+                          ),
+                          Text(
+                            email,
+                            style: GoogleFonts.poppins(
+
+                                fontSize:MediaQuery.of(context).size.height*0.016 ,
+                                color: Colors.black),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                )
+              ):InkWell(
+                onTap: () {
+                 Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LoginScreen()));
+                },
                 child: Container(
                   color: primarycolor,
                   height: 80,
@@ -139,7 +222,7 @@ Navigator.push(context,MaterialPageRoute(builder:(context)=>AllCategories()),);
               ),
             ),
             onTap: () {
-
+              Navigator.push(context,MaterialPageRoute(builder:(context)=>MyOrders()));
             },
           ),
           Container(
@@ -160,6 +243,8 @@ Navigator.push(context,MaterialPageRoute(builder:(context)=>AllCategories()),);
               ),
             ),
             onTap: () {
+            user!=null?  Navigator.push(context,MaterialPageRoute(builder:(context)=>ProfileScreen()),):get();
+
 
             },
           ),
@@ -202,6 +287,8 @@ Navigator.push(context,MaterialPageRoute(builder:(context)=>AllCategories()),);
               ),
             ),
             onTap: () {
+              FirebaseAuth.instance.signOut();
+              Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>LoginScreen()));
 
             },
           ),

@@ -76,7 +76,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
                     // height: height * 0.8,
                     child: GridView.count(
                       crossAxisCount: 2,
-                      childAspectRatio: 0.65,
+                      childAspectRatio: 0.59,
                       crossAxisSpacing: 2,
                       mainAxisSpacing: 4,
                       scrollDirection: Axis.vertical,
