@@ -18,24 +18,25 @@ class _SplashScreenState extends State<SplashScreen> {
       setState(() {});
     });
     new Future.delayed(Duration(seconds: 3), () async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var islogin = prefs.getString('isLogged');
-
-      if (islogin == null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomeScreen(),
-          ),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomeScreen(),
-          ),
-        );
-      }
+      Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScreen()));
+//      SharedPreferences prefs = await SharedPreferences.getInstance();
+//      var islogin = prefs.getString('isLogged');
+//
+//      if (islogin == null) {
+//        Navigator.pushReplacement(
+//          context,
+//          MaterialPageRoute(
+//            builder: (context) => HomeScreen(),
+//          ),
+//        );
+//      } else {
+//        Navigator.pushReplacement(
+//          context,
+//          MaterialPageRoute(
+//            builder: (context) => HomeScreen(),
+//          ),
+//        );
+//      }
     });
     super.initState();
   }
