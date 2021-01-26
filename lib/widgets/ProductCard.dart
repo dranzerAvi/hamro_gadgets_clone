@@ -274,7 +274,7 @@ class _ProductCardState extends State<ProductCard> {
                     ),
                   ),
                   Container(
-                    height: height * 0.07,
+                    height: 60,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(widget.name,
@@ -302,7 +302,7 @@ class _ProductCardState extends State<ProductCard> {
                                     fontWeight: FontWeight.w500)),
                           ]),
                     ),
-                    SizedBox(width: width * 0.1),
+                    SizedBox(width:35),
                     Container(
                         decoration: BoxDecoration(
                             shape: BoxShape.circle, color: Colors.red),

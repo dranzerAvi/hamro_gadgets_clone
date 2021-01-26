@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hamro_gadgets/Bookmarks.dart';
+import 'package:hamro_gadgets/Constants/cart.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
 import 'package:hamro_gadgets/Constants/screens.dart';
 import 'package:hamro_gadgets/category_products.dart';
+import 'package:hamro_gadgets/services/database_helper.dart';
 import 'package:hamro_gadgets/widgets/custom_floating_button.dart';
 
 class AllCategories extends StatefulWidget {
@@ -58,19 +62,80 @@ class _AllCategoriesState extends State<AllCategories> {
   void initState() {
     super.initState();
   }
+  final dbHelper = DatabaseHelper.instance;
+  int total=0;
+  List<Cart> cartItems = [];
+  void getAllItems() async {
+    final allRows = await dbHelper.queryAllRows();
+    cartItems.clear();
+    allRows.forEach((row) => cartItems.add(Cart.fromMap(row)));
+    setState(() {
+      total = cartItems.length;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    getAllItems();
     return Scaffold(
       backgroundColor: Colors.white,
-      floatingActionButton: CustomFloatingButton(CurrentScreen(
-          tab_no: AllCategories.TAB_NO, currentScreen: AllCategories())),
+//      floatingActionButton: CustomFloatingButton(CurrentScreen(
+//          tab_no: AllCategories.TAB_NO, currentScreen: AllCategories())),
       appBar: AppBar(
         backgroundColor: primarycolor,
         title: Text('Hamro Gadgets'),
         centerTitle: true,
+        actions: [
+          InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BookmarksScreen()));
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 5.0),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Icon(
+                      Icons.shopping_cart,
+                      color: Colors.white,
+                    ),
+                    total != null
+                        ? total > 0
+                        ? Positioned(
+                      bottom:
+                      MediaQuery.of(context).size.height *
+                          0.04,
+                      left:
+                      MediaQuery.of(context).size.height *
+                          0.013,
+                      child: Padding(
+                        padding:
+                        const EdgeInsets.only(left: 2.0),
+                        child: CircleAvatar(
+                          radius: 6.0,
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          child: Text(
+                            total.toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 8.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                        : Container()
+                        : Container(),
+                  ],
+                ),
+              )),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -123,12 +188,12 @@ class _AllCategoriesState extends State<AllCategories> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 4.0),
                                 child: Text(snap.data.docs[i]['catName'],
-                                    style: TextStyle(
+                                    style: GoogleFonts.poppins(
                                         color: Colors.black.withOpacity(0.7),
                                         fontWeight: FontWeight.bold,
                                         fontSize:
                                             MediaQuery.of(context).size.height *
-                                                0.03)),
+                                                0.017)),
                               ),
                             ],
                           )),

@@ -509,24 +509,29 @@ void getUser(){
                                           padding:
                                               const EdgeInsets.only(right: 10),
                                           child: Container(
-                                            height: height * 0.075,
+                                            height: height * 0.092,
                                             child: Column(
+                                              mainAxisAlignment:MainAxisAlignment.end,
                                               children: [
-                                                Spacer(
-                                                  flex: 100,
-                                                ),
+                                                Spacer(),
+//                                                Spacer(
+//                                                  flex: 50,
+//                                                ),
                                                 InkWell(
                                                     onTap: () {
                                                       removeItem(
                                                           cartItems[index]
                                                               .productName);
                                                     },
-                                                    child: Icon(Icons.delete,
-                                                        color: Colors.grey,
-                                                        size: height * 0.03)),
-                                                Spacer(
-                                                  flex: 1,
-                                                ),
+                                                    child: Align(
+                                                      alignment:Alignment.topLeft,
+                                                      child: Icon(Icons.delete,
+                                                          color: Colors.grey,
+                                                          size: height * 0.03),
+                                                    )),
+//                                                Spacer(
+//                                                  flex: 1,
+//                                                ),
                                               ],
                                             ),
                                           ),

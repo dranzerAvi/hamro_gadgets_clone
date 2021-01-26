@@ -420,16 +420,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         details.add(Container(
           width: double.infinity,
           color: secondarycolor,
-          child: Expanded(
-            child: Container(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Container(width: 150, child: Text(k)),
-                    Container(width: widget.scWidth - 182, child: Text(v))
-                  ],
-                ),
+          child: Container(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Container(width: 150, child: Text(k)),
+                  Container(width: widget.scWidth - 182, child: Text(v))
+                ],
               ),
             ),
           ),
@@ -439,16 +437,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         details.add(Container(
           width: double.infinity,
           color: Colors.white,
-          child: Expanded(
-            child: Container(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Container(width: 150, child: Text(k)),
-                    Container(width: widget.scWidth - 182, child: Text(v))
-                  ],
-                ),
+          child: Container(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Container(width: 150, child: Text(k)),
+                  Container(width: widget.scWidth - 182, child: Text(v))
+                ],
               ),
             ),
           ),
@@ -461,16 +457,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         specs.add(Container(
           width: double.infinity,
           color: secondarycolor,
-          child: Expanded(
-            child: Container(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Container(width: 150, child: Text(k)),
-                    Container(width: widget.scWidth - 182, child: Text(v))
-                  ],
-                ),
+          child: Container(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Container(width: 150, child: Text(k)),
+                  Container(width: widget.scWidth - 182, child: Text(v))
+                ],
               ),
             ),
           ),
@@ -480,16 +474,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         specs.add(Container(
           width: double.infinity,
           color: Colors.white,
-          child: Expanded(
-            child: Container(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Container(width: 150, child: Text(k)),
-                    Container(width: widget.scWidth - 182, child: Text(v))
-                  ],
-                ),
+          child: Container(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Container(width: 150, child: Text(k)),
+                  Container(width: widget.scWidth - 182, child: Text(v))
+                ],
               ),
             ),
           ),

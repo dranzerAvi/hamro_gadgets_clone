@@ -222,7 +222,7 @@ Navigator.push(context,MaterialPageRoute(builder:(context)=>AllCategories()),);
               ),
             ),
             onTap: () {
-              Navigator.push(context,MaterialPageRoute(builder:(context)=>MyOrders()));
+              user!=null?  Navigator.push(context,MaterialPageRoute(builder:(context)=>MyOrders()),):get();
             },
           ),
           Container(
@@ -274,7 +274,7 @@ Navigator.push(context,MaterialPageRoute(builder:(context)=>AllCategories()),);
             height: 0.5,
             color: Colors.black26,
           ),
-          ListTile(
+          user!=null?ListTile(
             title: Padding(
               padding:
               const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
@@ -291,7 +291,7 @@ Navigator.push(context,MaterialPageRoute(builder:(context)=>AllCategories()),);
               Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>LoginScreen()));
 
             },
-          ),
+          ):Container(),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 20),
             height: 0.5,

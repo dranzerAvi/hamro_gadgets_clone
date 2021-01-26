@@ -142,78 +142,78 @@ class _CategoryProductsState extends State<CategoryProducts> {
               ),
             )
           ),
-          showSort == true
-              ? Container(
-            height: 100,
-            child: Center(
-              child: Column(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      var newList = allProducts.toList();
-
-                      newList
-                          .sort((a, b) => b.pricecompareTo(a.price));
-                      setState(() {
-                        cleanList = newList;
-
-                        choice = 0;
-                        print(choice);
-                      });
-                      for (var v in cleanList) {
-                        print(v.name);
-                      }
-                    },
-                    child: Container(
-                      color: choice == 0
-                          ? MColors.mainColor
-                          : MColors.primaryWhiteSmoke,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Price- Highest to Lowest",
-                          style: normalFont(MColors.textDark, null),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      var newList = prods.toList();
-
-                      newList
-                          .sort((a, b) => a.price.compareTo(b.price));
-                      setState(() {
-                        cleanList = newList;
-
-                        choice = 1;
-                        print(choice);
-                      });
-                      for (var v in cleanList) {
-                        print(v.name);
-                      }
-                    },
-                    child: Container(
-                      color: choice == 1
-                          ? MColors.mainColor
-                          : MColors.primaryWhiteSmoke,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Price- Lowest to Highest",
-                          style: normalFont(MColors.textDark, null),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-              : Container(),
+//          showSort == true
+//              ? Container(
+//            height: 100,
+//            child: Center(
+//              child: Column(
+//                children: [
+//                  InkWell(
+//                    onTap: () {
+//                      var newList = allProducts.toList();
+//
+//                      newList
+//                          .sort((a, b) => b.pricecompareTo(a.price));
+//                      setState(() {
+//                        cleanList = newList;
+//
+//                        choice = 0;
+//                        print(choice);
+//                      });
+//                      for (var v in cleanList) {
+//                        print(v.name);
+//                      }
+//                    },
+//                    child: Container(
+//                      color: choice == 0
+//                          ? MColors.mainColor
+//                          : MColors.primaryWhiteSmoke,
+//                      child: Padding(
+//                        padding: const EdgeInsets.all(8.0),
+//                        child: Text(
+//                          "Price- Highest to Lowest",
+//                          style: normalFont(MColors.textDark, null),
+//                        ),
+//                      ),
+//                    ),
+//                  ),
+//                  SizedBox(
+//                    height: 5,
+//                  ),
+//                  InkWell(
+//                    onTap: () {
+//                      var newList = prods.toList();
+//
+//                      newList
+//                          .sort((a, b) => a.price.compareTo(b.price));
+//                      setState(() {
+//                        cleanList = newList;
+//
+//                        choice = 1;
+//                        print(choice);
+//                      });
+//                      for (var v in cleanList) {
+//                        print(v.name);
+//                      }
+//                    },
+//                    child: Container(
+//                      color: choice == 1
+//                          ? MColors.mainColor
+//                          : MColors.primaryWhiteSmoke,
+//                      child: Padding(
+//                        padding: const EdgeInsets.all(8.0),
+//                        child: Text(
+//                          "Price- Lowest to Highest",
+//                          style: normalFont(MColors.textDark, null),
+//                        ),
+//                      ),
+//                    ),
+//                  ),
+//                ],
+//              ),
+//            ),
+//          )
+//              : Container(),
           StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('Products')
