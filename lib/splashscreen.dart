@@ -17,8 +17,11 @@ class _SplashScreenState extends State<SplashScreen> {
       print("completed");
       setState(() {});
     });
+    WidgetsFlutterBinding.ensureInitialized();
+
     new Future.delayed(Duration(seconds: 3), () async {
-      Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScreen()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
 //      SharedPreferences prefs = await SharedPreferences.getInstance();
 //      var islogin = prefs.getString('isLogged');
 //

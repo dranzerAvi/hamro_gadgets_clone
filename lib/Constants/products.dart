@@ -23,7 +23,7 @@ class Products {
       this.colors,
       this.description,
       this.details,
-      detailsurls,
+      this.detailsurls,
       this.disprice,
       this.docid,
       this.imageurls,

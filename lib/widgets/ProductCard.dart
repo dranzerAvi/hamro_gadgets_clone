@@ -185,7 +185,7 @@ class _ProductCardState extends State<ProductCard> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return SizedBox(
-      height: height * 0.45,
+      height: 301,
       width: width * 0.47,
       child: InkWell(
         onTap: () {
@@ -207,117 +207,123 @@ class _ProductCardState extends State<ProductCard> {
                       MediaQuery.of(context).size.width)));
         },
         child: Container(
-            height: height * 0.5,
+            height: 301,
             width: width * 0.47,
             child: Card(
-                child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  widget.quantity > 0
-                      ? Align(
-                          alignment: Alignment.topLeft,
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Icon(
-                                Icons.check_circle,
-                                color: Colors.green,
-                                size: MediaQuery.of(context).size.height * 0.02,
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Text('in stock',
-                                  style: TextStyle(
-                                      color: Colors.green,
-                                      fontSize:
-                                          MediaQuery.of(context).size.height *
-                                              0.02)),
-                            ],
-                          ))
-                      : Align(
-                          alignment: Alignment.topLeft,
-                          child: Text('Out of stock',
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: MediaQuery.of(context).size.height *
-                                      0.015))),
-                  SizedBox(height: height * 0.01),
-                  FancyShimmerImage(
-                    imageUrl: widget.imageUrl,
-                    shimmerDuration: Duration(seconds: 2),
-                    height: height * 0.2,
-                    width: width * 0.47,
-                    boxFit: BoxFit.fill,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: RatingBar.builder(
-                        initialRating: double.parse(widget.rating),
-                        minRating: 0,
-                        direction: Axis.horizontal,
-                        allowHalfRating: true,
-                        itemCount: 5,
-                        itemSize: 12,
-                        itemBuilder: (context, _) => Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        ),
-                        onRatingUpdate: (rating) {
-                          print(rating);
-                        },
+                child: Column(
+              children: [
+                widget.quantity > 0
+                    ? Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                  size:
+                                      MediaQuery.of(context).size.height * 0.02,
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text('in stock',
+                                    style: TextStyle(
+                                        color: Colors.green,
+                                        fontSize:
+                                            MediaQuery.of(context).size.height *
+                                                0.02)),
+                              ],
+                            )),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text('Out of stock',
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize:
+                                        MediaQuery.of(context).size.height *
+                                            0.015))),
                       ),
+                SizedBox(height: height * 0.01),
+                FancyShimmerImage(
+                  imageUrl: widget.imageUrl,
+                  shimmerDuration: Duration(seconds: 2),
+                  height: height * 0.2,
+                  width: width * 0.47,
+                  boxFit: BoxFit.fill,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: RatingBar.builder(
+                      initialRating: double.parse(widget.rating),
+                      minRating: 0,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemSize: 12,
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      onRatingUpdate: (rating) {
+                        print(rating);
+                      },
                     ),
                   ),
+                ),
+                Container(
+                  height: 55,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(widget.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            color: Colors.black.withOpacity(0.8),
+                            fontSize: height * 0.02),
+                        maxLines: 2),
+                  ),
+                ),
+                Row(children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Rs.${(widget.mp).toString()}',
+                              style: TextStyle(
+                                  fontSize: height * 0.017,
+                                  decoration: TextDecoration.lineThrough,
+                                  fontWeight: FontWeight.w300)),
+                          Text('Rs.${(widget.disprice).toString()}',
+                              style: TextStyle(
+                                  fontSize: height * 0.02,
+                                  fontWeight: FontWeight.w500)),
+                        ]),
+                  ),
+                  Spacer(),
                   Container(
-                    height: 60,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(widget.name,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: Colors.black.withOpacity(0.8),
-                              fontSize: height * 0.02),
-                          maxLines: 2),
-                    ),
-                  ),
-                  Row(children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Rs.${(widget.mp).toString()}',
-                                style: TextStyle(
-                                    fontSize: height * 0.017,
-                                    decoration: TextDecoration.lineThrough,
-                                    fontWeight: FontWeight.w300)),
-                            Text('Rs.${(widget.disprice).toString()}',
-                                style: TextStyle(
-                                    fontSize: height * 0.02,
-                                    fontWeight: FontWeight.w500)),
-                          ]),
-                    ),
-                    SizedBox(width:35),
-                    Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.red),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: Text(
-                                ' - ${((int.parse(widget.mp.toString()) - int.parse(widget.disprice.toString())) / int.parse(widget.mp.toString()) * 100).toStringAsFixed(0)}%',
-                                style: TextStyle(color: Colors.white),
-                              )),
-                        )),
-                  ]),
-                ],
-              ),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.red),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: Text(
+                              ' - ${((int.parse(widget.mp.toString()) - int.parse(widget.disprice.toString())) / int.parse(widget.mp.toString()) * 100).toStringAsFixed(0)}%',
+                              style: TextStyle(color: Colors.white),
+                            )),
+                      )),
+                ]),
+              ],
             ))
 
 //        child: Card(

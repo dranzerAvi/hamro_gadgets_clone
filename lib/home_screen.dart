@@ -28,13 +28,14 @@ class _HomeScreenState extends State<HomeScreen> {
     get();
     super.initState();
   }
+
   final dbHelper = DatabaseHelper.instance;
   User user;
-  void get(){
-    user=FirebaseAuth.instance.currentUser;
-
+  void get() {
+    user = FirebaseAuth.instance.currentUser;
   }
-int total=0;
+
+  int total = 0;
   List<Cart> cartItems = [];
   void getAllItems() async {
     final allRows = await dbHelper.queryAllRows();
@@ -57,7 +58,6 @@ int total=0;
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-
 //      floatingActionButton: CustomFloatingButton(CurrentScreen(
 //          currentScreen: HomeScreen(), tab_no: HomeScreen.TAB_NO)),
       appBar: AppBar(
@@ -82,55 +82,50 @@ int total=0;
           ),
         ),
         centerTitle: true,
-actions: [
-  InkWell(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => BookmarksScreen()));
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(right: 5.0),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Icon(
-              Icons.shopping_cart,
-              color: Colors.white,
-            ),
-            total != null
-                ? total > 0
-                ? Positioned(
-              bottom:
-              MediaQuery.of(context).size.height *
-                  0.04,
-              left:
-              MediaQuery.of(context).size.height *
-                  0.013,
+        actions: [
+          InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => BookmarksScreen()));
+              },
               child: Padding(
-                padding:
-                const EdgeInsets.only(left: 2.0),
-                child: CircleAvatar(
-                  radius: 6.0,
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                  child: Text(
-                    total.toString(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 8.0,
+                padding: const EdgeInsets.only(right: 5.0),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Icon(
+                      Icons.shopping_cart,
+                      color: Colors.white,
                     ),
-                  ),
+                    total != null
+                        ? total > 0
+                            ? Positioned(
+                                bottom:
+                                    MediaQuery.of(context).size.height * 0.04,
+                                left:
+                                    MediaQuery.of(context).size.height * 0.013,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 2.0),
+                                  child: CircleAvatar(
+                                    radius: 6.0,
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    child: Text(
+                                      total.toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 8.0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Container()
+                        : Container(),
+                  ],
                 ),
-              ),
-            )
-                : Container()
-                : Container(),
-          ],
-        ),
-      )),
-],
+              )),
+        ],
 //       actions: [
 //
 //         Center(child: Container(width:width*0.5,child: TextFormField(controller:_cont,decoration: InputDecoration(filled: true,fillColor: Colors.white,prefixIcon: Icon(Icons.search,color:Colors.grey),hintText: 'Search here',hintStyle: TextStyle(color:Colors.grey)),)))
@@ -261,7 +256,7 @@ actions: [
                     // print(newproducts[0].imageurls.length);
 
                     return Container(
-                      height: height * 0.45,
+                      height: 301,
                       child: ListView.builder(
                           itemCount: newproducts.length,
                           shrinkWrap: true,
@@ -357,7 +352,7 @@ actions: [
                     // print(newproducts[0].imageurls.length);
 
                     return Container(
-                      height: height * 0.45,
+                      height: 301,
                       child: ListView.builder(
                           itemCount: newproducts.length,
                           shrinkWrap: true,
@@ -480,7 +475,7 @@ actions: [
                     // print(newproducts[0].imageurls.length);
 
                     return Container(
-                      height: height * 0.45,
+                      height: 301,
                       child: ListView.builder(
                           itemCount: newproducts.length,
                           shrinkWrap: true,
@@ -566,7 +561,7 @@ actions: [
                     // print(newproducts[0].imageurls.length);
 
                     return Container(
-                      height: height * 0.45,
+                      height: 301,
                       child: ListView.builder(
                           itemCount: newproducts.length,
                           shrinkWrap: true,
