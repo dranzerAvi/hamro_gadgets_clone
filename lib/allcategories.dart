@@ -103,6 +103,7 @@ class _AllCategoriesState extends State<AllCategories> {
                                 MaterialPageRoute(
                                     builder: (context) => CategoryProducts(
                                           catName: snap.data.docs[i]['catName'],
+                                      filters: List.from(snap.data.docs[i]['filters']),
                                         )));
                           },
                           child: Card(
