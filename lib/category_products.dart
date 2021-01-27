@@ -507,7 +507,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
                       for (int j = 0; j < subCatChosen.length; j++) {
                         var newList = allProducts
                             .where((element) =>
-                                element.subcategories.contains(subCatChosen[j]))
+                                element.subcategories == subCatChosen[j])
                             .toList();
                         for (int i = 0; i < newList.length; i++)
                           subCatList.add(newList[i]);
@@ -518,8 +518,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
                     if (widget.filters.contains('Brands')) {
                       for (int j = 0; j < allbrands.length; j++) {
                         var newList = allProducts
-                            .where((element) =>
-                                element.Brand.contains(allbrands[j]))
+                            .where((element) => element.Brand == allbrands[j])
                             .toList();
                         for (int i = 0; i < newList.length; i++)
                           brandList.add(newList[i]);
