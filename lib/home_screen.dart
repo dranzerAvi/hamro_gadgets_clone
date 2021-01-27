@@ -8,6 +8,7 @@ import 'package:hamro_gadgets/Bookmarks.dart';
 import 'package:hamro_gadgets/Constants/cart.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
 import 'package:hamro_gadgets/Constants/products.dart';
+import 'package:hamro_gadgets/search_screen.dart';
 import 'package:hamro_gadgets/services/database_helper.dart';
 import 'package:hamro_gadgets/widgets/ProductCard.dart';
 import 'package:hamro_gadgets/widgets/nav_drawer.dart';
@@ -84,23 +85,28 @@ class _HomeScreenState extends State<HomeScreen> {
 //          currentScreen: HomeScreen(), tab_no: HomeScreen.TAB_NO)),
       appBar: AppBar(
         backgroundColor: primarycolor,
-        title: Container(
-          width: width * 0.7,
-          height: 40,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-          ),
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Icon(
-                  Icons.search,
-                  color: Colors.grey,
+        title: InkWell(
+          onTap:(){
+            Navigator.push(context,MaterialPageRoute(builder:(context)=>SearchScreen()));
+          },
+          child: Container(
+            width: width * 0.7,
+            height: 40,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+            ),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         centerTitle: true,

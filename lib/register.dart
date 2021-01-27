@@ -57,7 +57,7 @@ class _RegisterState extends State<Register> {
         if (_verificationId != null) {
           Fluttertoast.showToast(
               msg: 'Code sent', toastLength: Toast.LENGTH_SHORT);
-          Navigator.push(
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (context) => OtpScreen(_verificationId, phnno,'register')));
