@@ -15,6 +15,7 @@ class CategoryProducts extends StatefulWidget {
 }
 
 List<Products> allProducts = [];
+List<String> allbrands=[];
 
 class _CategoryProductsState extends State<CategoryProducts> {
   bool showSort, showFilter;
@@ -30,7 +31,19 @@ class _CategoryProductsState extends State<CategoryProducts> {
 
     super.initState();
   }
+void getbrands()async{
+    await FirebaseFirestore.instance.collection('Brands').get().then((value) {
+      for(int i =0;i<value.docs.length;i++){
+        setState(() {
+          if(value.docs[i].data()['cats'].toList().contains(widget.catName)){
+            allbrands.add(value.docs[i].data()['brandName']);
 
+          }
+        });
+      }
+      print(allbrands.length);
+    });
+}
   void getSubCategories() async {
     await FirebaseFirestore.instance
         .collection('SubCategories')
@@ -88,6 +101,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
 
   List<String> colorsChosen = [];
   List<String> subCatChosen = [];
+  List<String>brandsChosen=[];
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -276,8 +290,8 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                 padding:
                                     const EdgeInsets.fromLTRB(15, 0, 15, 10),
                                 child: Container(
-                                  color: Colors.blue,
-                                  height: 50,
+                                  color: Colors.white,
+                                  height: 100,
                                   child: StreamBuilder(
                                       stream: FirebaseFirestore.instance
                                           .collection('SubCategories')
@@ -307,18 +321,33 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                               itemCount: allSubCatgories.length,
                                               itemBuilder: (context, i) {
                                                 return InkWell(
+                                                  onTap: (){
+                                                    if (subCatChosen.contains(allSubCatgories[i])) {
+                                                      // int index=colorsChosen.indexOf('Red');
+                                                      subCatChosen.remove(allSubCatgories[i]);
+                                                      setState(() {
+                                                        print(subCatChosen);
+                                                      });
+                                                    } else {
+                                                      subCatChosen.add(allSubCatgories[i]);
+                                                      setState(() {
+                                                        print(subCatChosen);
+                                                      });
+                                                    }
+
+                                                  },
                                                   child: Container(
-                                                    height: 15,
-                                                    width: 50,
-                                                    color: Colors.red,
+                                                    height: 25,
+                                                    width: 100,
+                                                    color: Colors.white,
                                                     child: Row(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .center,
                                                       children: [
                                                         Container(
-                                                          height: 10,
-                                                          width: 10,
+                                                          height: 20,
+                                                          width: 20,
                                                           decoration: BoxDecoration(
                                                               border: Border.all(
                                                                   color: Colors
@@ -351,15 +380,148 @@ class _CategoryProductsState extends State<CategoryProducts> {
                           ],
                         ),
                       )
-                    : Container(),
+                    :Container(),
+                (widget.filters.contains('Brands'))
+                    ? Theme(
+                  data: Theme.of(context)
+                      .copyWith(accentColor: Colors.black),
+                  child: ExpansionTile(
+                    title: Text('Brands'),
+                    children: [
+                      Padding(
+                          padding:
+                          const EdgeInsets.fromLTRB(15, 0, 15, 10),
+                          child: Container(
+                            color: Colors.white,
+                            height: 100,
+                            child: StreamBuilder(
+                                stream: FirebaseFirestore.instance
+                                    .collection('Brands')
+                                    .where('cats',
+                                    arrayContains: widget.catName)
+                                    .snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<QuerySnapshot> snap) {
+                                  if (snap.hasData &&
+                                      !snap.hasError &&
+                                      snap.data != null) {
+                                    allbrands.clear();
+                                    print('Docs ${snap.data.docs}');
+                                    for (int i = 0;
+                                    i < snap.data.docs.length;
+                                    i++) {
+
+                                      allbrands.add(
+                                        snap.data.docs[i]['brandName'],
+                                      );
+                                      print(allbrands.length);
+                                    }
+
+                                    return Container(
+                                      child: ListView.builder(
+                                        itemCount: allbrands.length,
+                                        itemBuilder: (context, i) {
+                                          return InkWell(
+                                            onTap: (){
+                                              if (brandsChosen.contains(allbrands[i])) {
+                                                // int index=colorsChosen.indexOf('Red');
+                                                brandsChosen.remove(allbrands[i]);
+                                                setState(() {
+                                                  print(brandsChosen);
+                                                });
+                                              } else {
+                                                brandsChosen.add(allbrands[i]);
+                                                setState(() {
+                                                  print(brandsChosen);
+                                                });
+                                              }
+
+                                            },
+                                            child: Container(
+                                              height: 25,
+                                              width: 50,
+                                              color: Colors.white,
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment
+                                                    .center,
+                                                children: [
+                                                  Container(
+                                                    height: 20,
+                                                    width: 20,
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: Colors
+                                                                .black,
+                                                            width: 1),
+                                                        color: brandsChosen
+                                                            .contains(
+                                                            allbrands[
+                                                            i])
+                                                            ? primarycolor
+                                                            : Colors
+                                                            .white),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 20,
+                                                  ),
+                                                  Text(allbrands[i])
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
+                                }),
+                          ))
+                    ],
+                  ),
+                ):Container(),
                 InkWell(
                   onTap: () {
                     List completeList = [];
+
+
                     if (widget.filters.contains('Colors')) {
                       for (int j = 0; j < colorsChosen.length; j++) {
                         var newList = allProducts
                             .where((element) =>
                                 element.colors.contains(colorsChosen[j]))
+                            .toList();
+                        for (int i = 0; i < newList.length; i++)
+                          completeList.add(newList[i]);
+                      }
+
+                      setState(() {
+                        cleanList = completeList.toList();
+                      });
+                    }else{
+                      completeList=allProducts;
+                    }
+
+                    if (widget.filters.contains('Subcategories')) {
+                      for (int j = 0; j < subCatChosen.length; j++) {
+                        var newList = completeList
+                            .where((element) =>
+                            element.subcategories.contains(subCatChosen[j]))
+                            .toList();
+                        for (int i = 0; i < newList.length; i++)
+                          completeList.add(newList[i]);
+                      }
+
+                      setState(() {
+                        cleanList = completeList.toList();
+                      });
+                    }
+                    if (widget.filters.contains('Brands')) {
+                      for (int j = 0; j < allbrands.length; j++) {
+                        var newList = completeList
+                            .where((element) =>
+                            element.Brand.contains(allbrands[j]))
                             .toList();
                         for (int i = 0; i < newList.length; i++)
                           completeList.add(newList[i]);
