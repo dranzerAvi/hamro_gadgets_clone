@@ -516,18 +516,22 @@ class _CategoryProductsState extends State<CategoryProducts> {
                       subCatList = allProducts;
 
                     if (widget.filters.contains('Brands')) {
-                      for (int j = 0; j < allbrands.length; j++) {
+                      for (int j = 0; j < brandsChosen.length; j++) {
                         var newList = allProducts
-                            .where((element) => element.Brand == allbrands[j])
+                            .where((element) => element.Brand == brandsChosen[j])
                             .toList();
                         for (int i = 0; i < newList.length; i++)
                           brandList.add(newList[i]);
+                        print('checkinggggggggg');
+                        print(brandList);
                       }
                     } else
                       brandList = allProducts;
-
+print(colorList);
                     colorList.removeWhere((item) => !subCatList.contains(item));
+                    print(colorList);
                     colorList.removeWhere((item) => !brandList.contains(item));
+                    print(colorList);
                     cleanList = await colorList;
                     setState(() {});
 

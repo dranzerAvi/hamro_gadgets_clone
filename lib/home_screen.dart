@@ -23,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+//    addDishParams();
     get();
     super.initState();
   }
@@ -42,6 +43,29 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       total = cartItems.length;
     });
+  }
+  addDishParams() {
+    FirebaseFirestore.instance.collection('Products').get().then((value) {
+      value.docs.forEach((element) {
+        FirebaseFirestore.instance
+            .collection('Products')
+            .doc(element.id)
+            .update({
+          'nameSearch': setSearchParam(element['name']),
+          'categorySearch': setSearchParam(element['Category']),
+          'subcategorysearch':setSearchParam(element['SubCategories'])
+        });
+      });
+    });
+  }
+  setSearchParam(String caseString) {
+    List<String> caseSearchList = List();
+    String temp = "";
+    for (int i = 0; i < caseString.length; i++) {
+      temp = temp + caseString[i];
+      caseSearchList.add(temp);
+    }
+    return caseSearchList;
   }
 
   static const int TAB_NO = 1;
