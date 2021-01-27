@@ -8,10 +8,8 @@ import 'package:hamro_gadgets/Bookmarks.dart';
 import 'package:hamro_gadgets/Constants/cart.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
 import 'package:hamro_gadgets/Constants/products.dart';
-import 'package:hamro_gadgets/Constants/screens.dart';
 import 'package:hamro_gadgets/services/database_helper.dart';
 import 'package:hamro_gadgets/widgets/ProductCard.dart';
-import 'package:hamro_gadgets/widgets/custom_floating_button.dart';
 import 'package:hamro_gadgets/widgets/nav_drawer.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
