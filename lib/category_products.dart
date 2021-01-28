@@ -22,13 +22,15 @@ class _CategoryProductsState extends State<CategoryProducts> {
 
   int choice;
   List cleanList = [];
+  bool filterApplied;
   @override
   void initState() {
     print(widget.filters.length);
     choice = 0;
     showSort = false;
     showFilter = false;
-
+    filterApplied = false;
+    getSubCategories();
     super.initState();
   }
 
@@ -41,7 +43,6 @@ class _CategoryProductsState extends State<CategoryProducts> {
           }
         });
       }
-      print(allbrands.length);
     });
   }
 
@@ -50,7 +51,6 @@ class _CategoryProductsState extends State<CategoryProducts> {
         .collection('SubCategories')
         .get()
         .then((value) {
-      print('Scat Name-${value}');
       for (int i = 0; i < value.docs.length; i++) {
         setState(() {
           if (value.docs[i].data()['cats'].toList().contains(widget.catName)) {
@@ -58,7 +58,6 @@ class _CategoryProductsState extends State<CategoryProducts> {
             print(value.docs[i].data()['sCatName']);
           }
         });
-        print('Scat Name-${value.docs[i].data()}');
       }
     });
     print('-------------------$allSubCatgories');
@@ -291,8 +290,8 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                 padding:
                                     const EdgeInsets.fromLTRB(15, 0, 15, 10),
                                 child: Container(
-                                  color: Colors.white,
-                                  height: 100,
+                                  // color: Colors.white,
+                                  height: allSubCatgories.length * 40.0,
                                   child: StreamBuilder(
                                       stream: FirebaseFirestore.instance
                                           .collection('SubCategories')
@@ -305,44 +304,44 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                             !snap.hasError &&
                                             snap.data != null) {
                                           allSubCatgories.clear();
-                                          print('Docs ${snap.data.docs}');
+
                                           for (int i = 0;
                                               i < snap.data.docs.length;
                                               i++) {
-                                            print(
-                                                'name-${snap.data.docs[i]['sCatName']}');
                                             allSubCatgories.add(
                                               snap.data.docs[i]['sCatName'],
                                             );
-                                            print(allSubCatgories.length);
                                           }
 
-                                          return Container(
-                                            child: ListView.builder(
-                                              itemCount: allSubCatgories.length,
-                                              itemBuilder: (context, i) {
-                                                return InkWell(
-                                                  onTap: () {
-                                                    if (subCatChosen.contains(
-                                                        allSubCatgories[i])) {
-                                                      // int index=colorsChosen.indexOf('Red');
-                                                      subCatChosen.remove(
-                                                          allSubCatgories[i]);
-                                                      setState(() {
-                                                        print(subCatChosen);
-                                                      });
-                                                    } else {
-                                                      subCatChosen.add(
-                                                          allSubCatgories[i]);
-                                                      setState(() {
-                                                        print(subCatChosen);
-                                                      });
-                                                    }
-                                                  },
-                                                  child: Container(
-                                                    height: 25,
-                                                    width: 100,
-                                                    color: Colors.white,
+                                          return ListView.builder(
+                                            itemCount: allSubCatgories.length,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: false,
+                                            itemBuilder: (context, i) {
+                                              return InkWell(
+                                                onTap: () {
+                                                  if (subCatChosen.contains(
+                                                      allSubCatgories[i])) {
+                                                    // int index=colorsChosen.indexOf('Red');
+                                                    subCatChosen.remove(
+                                                        allSubCatgories[i]);
+                                                    setState(() {
+                                                      print(subCatChosen);
+                                                    });
+                                                  } else {
+                                                    subCatChosen.add(
+                                                        allSubCatgories[i]);
+                                                    setState(() {
+                                                      print(subCatChosen);
+                                                    });
+                                                  }
+                                                },
+                                                child: Container(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
                                                     child: Row(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -371,9 +370,9 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                                       ],
                                                     ),
                                                   ),
-                                                );
-                                              },
-                                            ),
+                                                ),
+                                              );
+                                            },
                                           );
                                         } else {
                                           return Container();
@@ -395,8 +394,8 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                 padding:
                                     const EdgeInsets.fromLTRB(15, 0, 15, 10),
                                 child: Container(
-                                  color: Colors.white,
-                                  height: 100,
+                                  // color: Colors.white,
+                                  height: allbrands.length * 40.0,
                                   child: StreamBuilder(
                                       stream: FirebaseFirestore.instance
                                           .collection('Brands')
@@ -409,73 +408,71 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                             !snap.hasError &&
                                             snap.data != null) {
                                           allbrands.clear();
-                                          print('Docs ${snap.data.docs}');
+
                                           for (int i = 0;
                                               i < snap.data.docs.length;
                                               i++) {
                                             allbrands.add(
                                               snap.data.docs[i]['brandName'],
                                             );
-                                            print(allbrands.length);
                                           }
 
-                                          return Container(
-                                            child: ListView.builder(
-                                              itemCount: allbrands.length,
-                                              itemBuilder: (context, i) {
-                                                return InkWell(
-                                                  onTap: () {
-                                                    if (brandsChosen.contains(
-                                                        allbrands[i])) {
-                                                      // int index=colorsChosen.indexOf('Red');
-                                                      brandsChosen
-                                                          .remove(allbrands[i]);
-                                                      setState(() {
-                                                        print(brandsChosen);
-                                                      });
-                                                    } else {
-                                                      brandsChosen
-                                                          .add(allbrands[i]);
-                                                      setState(() {
-                                                        print(brandsChosen);
-                                                      });
-                                                    }
-                                                  },
-                                                  child: Container(
-                                                    height: 25,
-                                                    width: 50,
-                                                    color: Colors.white,
-                                                    child: Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Container(
-                                                          height: 20,
-                                                          width: 20,
-                                                          decoration: BoxDecoration(
-                                                              border: Border.all(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  width: 1),
-                                                              color: brandsChosen
-                                                                      .contains(
-                                                                          allbrands[
-                                                                              i])
-                                                                  ? primarycolor
-                                                                  : Colors
-                                                                      .white),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 20,
-                                                        ),
-                                                        Text(allbrands[i])
-                                                      ],
-                                                    ),
+                                          return ListView.builder(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: false,
+                                            itemCount: allbrands.length,
+                                            itemBuilder: (context, i) {
+                                              return InkWell(
+                                                onTap: () {
+                                                  if (brandsChosen
+                                                      .contains(allbrands[i])) {
+                                                    // int index=colorsChosen.indexOf('Red');
+                                                    brandsChosen
+                                                        .remove(allbrands[i]);
+                                                    setState(() {
+                                                      print(brandsChosen);
+                                                    });
+                                                  } else {
+                                                    brandsChosen
+                                                        .add(allbrands[i]);
+                                                    setState(() {
+                                                      print(brandsChosen);
+                                                    });
+                                                  }
+                                                },
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Container(
+                                                        height: 20,
+                                                        width: 20,
+                                                        decoration: BoxDecoration(
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                    .black,
+                                                                width: 1),
+                                                            color: brandsChosen
+                                                                    .contains(
+                                                                        allbrands[
+                                                                            i])
+                                                                ? primarycolor
+                                                                : Colors.white),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 20,
+                                                      ),
+                                                      Text(allbrands[i])
+                                                    ],
                                                   ),
-                                                );
-                                              },
-                                            ),
+                                                ),
+                                              );
+                                            },
                                           );
                                         } else {
                                           return Container();
@@ -486,68 +483,116 @@ class _CategoryProductsState extends State<CategoryProducts> {
                         ),
                       )
                     : Container(),
-                InkWell(
-                  onTap: () async {
-                    List colorList = [];
-                    List subCatList = [];
-                    List brandList = [];
-                    if (widget.filters.contains('Colors')) {
-                      for (int j = 0; j < colorsChosen.length; j++) {
-                        var newList = allProducts
-                            .where((element) =>
-                                element.colors.contains(colorsChosen[j]))
-                            .toList();
-                        for (int i = 0; i < newList.length; i++)
-                          colorList.add(newList[i]);
-                      }
-                    } else
-                      colorList = allProducts;
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      InkWell(
+                        onTap: () async {
+                          List<Products> colorList = [];
+                          List subCatList = [];
+                          List brandList = [];
+                          if (widget.filters.contains('Colors')) {
+                            for (int j = 0; j < colorsChosen.length; j++) {
+                              var newList = allProducts
+                                  .where((element) =>
+                                      element.colors.contains(colorsChosen[j]))
+                                  .toList();
+                              for (int i = 0; i < newList.length; i++)
+                                await colorList.add(newList[i]);
+                            }
+                          } else
+                            colorList = await allProducts;
 
-                    if (widget.filters.contains('Subcategories')) {
-                      for (int j = 0; j < subCatChosen.length; j++) {
-                        var newList = allProducts
-                            .where((element) =>
-                                element.subcategories == subCatChosen[j])
-                            .toList();
-                        for (int i = 0; i < newList.length; i++)
-                          subCatList.add(newList[i]);
-                      }
-                    } else
-                      subCatList = allProducts;
+                          if (widget.filters.contains('Subcategories')) {
+                            for (int j = 0; j < subCatChosen.length; j++) {
+                              var newList = allProducts
+                                  .where((element) =>
+                                      element.subcategories == subCatChosen[j])
+                                  .toList();
+                              for (int i = 0; i < newList.length; i++)
+                                await subCatList.add(newList[i]);
+                            }
+                          } else
+                            subCatList = await allProducts;
 
-                    if (widget.filters.contains('Brands')) {
-                      for (int j = 0; j < brandsChosen.length; j++) {
-                        var newList = allProducts
-                            .where((element) => element.Brand == brandsChosen[j])
-                            .toList();
-                        for (int i = 0; i < newList.length; i++)
-                          brandList.add(newList[i]);
-                        print('checkinggggggggg');
-                        print(brandList);
-                      }
-                    } else
-                      brandList = allProducts;
-print(colorList);
-                    colorList.removeWhere((item) => !subCatList.contains(item));
-                    print(colorList);
-                    colorList.removeWhere((item) => !brandList.contains(item));
-                    print(colorList);
-                    cleanList = await colorList;
-                    setState(() {});
+                          if (widget.filters.contains('Brands')) {
+                            for (int j = 0; j < brandsChosen.length; j++) {
+                              var newList = allProducts
+                                  .where((element) =>
+                                      element.Brand == brandsChosen[j])
+                                  .toList();
+                              for (int i = 0; i < newList.length; i++)
+                                await brandList.add(newList[i]);
 
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: primarycolor,
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        'Apply Filters',
-                        style: TextStyle(color: Colors.white),
+                              print(brandList);
+                            }
+                          } else
+                            brandList = await allProducts;
+                          print('Printing');
+                          colorList.forEach((element) {
+                            print(element.name);
+                          });
+
+                          colorList.removeWhere(
+                              (item) => !subCatList.contains(item));
+                          print('Printing');
+                          colorList.forEach((element) {
+                            print(element.name);
+                          });
+                          colorList
+                              .removeWhere((item) => !brandList.contains(item));
+                          print('Printing');
+                          colorList.forEach((element) {
+                            print(element.name);
+                          });
+
+                          cleanList = await colorList;
+                          print('List Length-${cleanList.length}');
+                          setState(() {});
+                          if (filterApplied == false) filterApplied = true;
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: primarycolor,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              'Apply Filters',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      InkWell(
+                        onTap: () async {
+                          subCatChosen.clear();
+                          colorsChosen.clear();
+                          brandsChosen.clear();
+
+                          filterApplied = false;
+                          setState(() {});
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: primarycolor,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              'Clear Filters',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 )
               ],
@@ -781,33 +826,38 @@ print(colorList);
                           snap.data.docs[i]['status']));
                       print(allProducts.length);
                     }
-                    if (cleanList.isEmpty) cleanList = allProducts;
+                    if (cleanList.isEmpty && filterApplied == false)
+                      cleanList = allProducts;
                     return Expanded(
                       child: Container(
-                        child: GridView.count(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.7,
-                          crossAxisSpacing: 2,
-                          mainAxisSpacing: 4,
-                          scrollDirection: Axis.vertical,
-                          children:
-                              List<Widget>.generate(cleanList.length, (i) {
-                            return Container(
-                              // color: Colors.red,
-                              child: ProductCard(
-                                  cleanList[i].imageurls[0],
-                                  cleanList[i].name,
-                                  cleanList[i].mp,
-                                  cleanList[i].disprice,
-                                  cleanList[i].description,
-                                  cleanList[i].details,
-                                  cleanList[i].detailsurls,
-                                  cleanList[i].rating,
-                                  cleanList[i].specs,
-                                  cleanList[i].quantity),
-                            );
-                          }),
-                        ),
+                        child: cleanList.length != 0
+                            ? GridView.count(
+                                crossAxisCount: 2,
+                                childAspectRatio: 0.6,
+                                crossAxisSpacing: width * 0.001,
+                                mainAxisSpacing: height * 0.002,
+                                scrollDirection: Axis.vertical,
+                                children: List<Widget>.generate(
+                                    cleanList.length, (i) {
+                                  return Container(
+                                    // color: Colors.red,
+                                    child: ProductCard(
+                                        cleanList[i].imageurls[0],
+                                        cleanList[i].name,
+                                        cleanList[i].mp,
+                                        cleanList[i].disprice,
+                                        cleanList[i].description,
+                                        cleanList[i].details,
+                                        cleanList[i].detailsurls,
+                                        cleanList[i].rating,
+                                        cleanList[i].specs,
+                                        cleanList[i].quantity),
+                                  );
+                                }),
+                              )
+                            : Center(
+                                child: Text('No Products Available'),
+                              ),
                       ),
                     );
                   } else {

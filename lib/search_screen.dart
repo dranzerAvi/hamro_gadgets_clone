@@ -10,21 +10,23 @@ class SearchScreen extends StatefulWidget {
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
+
 List<Products> dogList1 = [];
 List<Widget> dogCardsList1 = [];
 
 class _SearchScreenState extends State<SearchScreen> {
   List<DocumentSnapshot> docList = [];
   List<Products> dogList = [];
-@override
+  @override
   void initState() {
     getData();
     getData1();
     super.initState();
   }
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  TextEditingController _cont=TextEditingController();
+  TextEditingController _cont = TextEditingController();
   void getData1() async {
     dogCardsList1.clear();
     dogList1.clear();
@@ -34,29 +36,26 @@ class _SearchScreenState extends State<SearchScreen> {
         .get()
         .then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((f) async {
+        Products dp = Products(
+            f['Brands'],
+            f['Category'],
+            f['SubCategories'],
+            List.from(f['colors']),
+            f['description'],
+            f['details'],
+            List.from(f['detailsGraphicURLs']),
+            f['disPrice'],
+            f['docID'],
+            List.from(f['imageURLs']),
+            f['mp'],
+            f['name'],
+            f['noOfPurchases'],
+            f['quantity'],
+            f['rating'].toString(),
+            f['specs'],
+            f['status']);
 
-
-        Products dp =
-            Products(
-                f['Brands'],
-                f['Category'],
-                f['SubCategories'],
-                List.from(f['colors']),
-                f['description'],
-                f['details'],
-                f['detailsGraphicURLs'],
-                f['disPrice'],
-                f['docID'],
-                List.from(f['imageURLs']),
-                f['mp'],
-                f['name'],
-                f['noOfPurchases'],
-                f['quantity'],
-                f['rating'].toString(),
-                f['specs'],
-                f['status']);
-
-            await dogList1.add(dp);
+        await dogList1.add(dp);
         // await dogCardsList1.add(MyDogCard(dp, width, height));
         print('Dog added');
 //        print(f['imageLinks'].toString());
@@ -67,6 +66,7 @@ class _SearchScreenState extends State<SearchScreen> {
       print(dogCardsList1.length.toString());
     });
   }
+
   double width, height;
   List<Widget> dogCardsList = [];
   @override
@@ -74,127 +74,125 @@ class _SearchScreenState extends State<SearchScreen> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
- backgroundColor: Colors.white,
-      body:Padding(
-        padding:EdgeInsets.only(top:MediaQuery.of(context).size.height*0.05),
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding:
+            EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.05),
         child: SingleChildScrollView(
-          child: Column(
-            children:[
-              TextFormField(
-                controller: _cont,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search,color:Colors.grey),
+          child: Column(children: [
+            TextFormField(
+              controller: _cont,
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search, color: Colors.grey),
                   hintText: 'Search products',
-                  focusColor: primarycolor
-                ),
-                onChanged: (String query){
-                  getCaseDetails(query);
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: height * 0.75,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: dogList.length,
-                    itemBuilder: (BuildContext, index) {
-                      var item = dogList[index];
-                      return InkWell(
-                        onTap: () async {
-
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProductDetailsScreen(
-                                      item.imageurls[0],
-                                      item.name,
-                                      item.mp,
-                                      item.disprice,
-                                          item.description,
-                                      item.details,
-                                      item.detailsurls,
-                                      item.rating,
-                                      item.specs,
-                                      item.quantity,
-                                      MediaQuery.of(context).size.height,
-                                      MediaQuery.of(context).size.width)));
-                          // _scaffoldKey.currentState.showBottomSheet((context) {
-                          //   return StatefulBuilder(
-                          //       builder: (context, StateSetter state) {
-                          //     return ProfilePullUp(item, width, height);
-                          //   });
-                          // });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            width: width * 0.8,
-                            child: Row(
-                              children: <Widget>[
-                                // Container(
-                                //   height: 50,
-                                //   width: 50,
-                                //   decoration: BoxDecoration(
-                                //     borderRadius: BorderRadius.all(
-                                //       Radius.circular(25),
-                                //     ),
-                                //   ),
-                                //   child: ClipRRect(
-                                //     borderRadius: BorderRadius.circular(25.0),
-                                //     child: CachedNetworkImage(
-                                //       height: 50,
-                                //       width: 50,
-                                //       imageUrl: item.url,
-                                //       imageBuilder: (context, imageProvider) =>
-                                //           Container(
-                                //         decoration: BoxDecoration(
-                                //           image: DecorationImage(
-                                //               image: imageProvider,
-                                //               fit: BoxFit.fill),
-                                //         ),
-                                //       ),
-                                //       placeholder: (context, url) => GFLoader(
-                                //         type: GFLoaderType.ios,
-                                //       ),
-                                //       errorWidget: (context, url, error) =>
-                                //           Icon(Icons.error),
-                                //     ),
-                                //   ),
-                                // ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20),
-                                    child: Container(
-
-                                      child: Text(
-                                        '${item.name} in ${item.subcategories}',style: GoogleFonts.poppins(fontSize:height*0.02),
-                                      ),
+                  focusColor: primarycolor),
+              onChanged: (String query) {
+                getCaseDetails(query);
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: height * 0.75,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: dogList.length,
+                  itemBuilder: (BuildContext, index) {
+                    var item = dogList[index];
+                    return InkWell(
+                      onTap: () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProductDetailsScreen(
+                                    item.imageurls[0],
+                                    item.name,
+                                    item.mp,
+                                    item.disprice,
+                                    item.description,
+                                    item.details,
+                                    item.detailsurls,
+                                    item.rating,
+                                    item.specs,
+                                    item.quantity,
+                                    MediaQuery.of(context).size.height,
+                                    MediaQuery.of(context).size.width)));
+                        // _scaffoldKey.currentState.showBottomSheet((context) {
+                        //   return StatefulBuilder(
+                        //       builder: (context, StateSetter state) {
+                        //     return ProfilePullUp(item, width, height);
+                        //   });
+                        // });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: width * 0.8,
+                          child: Row(
+                            children: <Widget>[
+                              // Container(
+                              //   height: 50,
+                              //   width: 50,
+                              //   decoration: BoxDecoration(
+                              //     borderRadius: BorderRadius.all(
+                              //       Radius.circular(25),
+                              //     ),
+                              //   ),
+                              //   child: ClipRRect(
+                              //     borderRadius: BorderRadius.circular(25.0),
+                              //     child: CachedNetworkImage(
+                              //       height: 50,
+                              //       width: 50,
+                              //       imageUrl: item.url,
+                              //       imageBuilder: (context, imageProvider) =>
+                              //           Container(
+                              //         decoration: BoxDecoration(
+                              //           image: DecorationImage(
+                              //               image: imageProvider,
+                              //               fit: BoxFit.fill),
+                              //         ),
+                              //       ),
+                              //       placeholder: (context, url) => GFLoader(
+                              //         type: GFLoaderType.ios,
+                              //       ),
+                              //       errorWidget: (context, url, error) =>
+                              //           Icon(Icons.error),
+                              //     ),
+                              //   ),
+                              // ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: Container(
+                                    child: Text(
+                                      '${item.name} in ${item.subcategories}',
+                                      style: GoogleFonts.poppins(
+                                          fontSize: height * 0.02),
                                     ),
                                   ),
                                 ),
-                                Icon(
-                                  Icons.call_made_sharp,
-                                  color: Colors.black,
-                                ),
-                              ],
-                            ),
+                              ),
+                              Icon(
+                                Icons.call_made_sharp,
+                                color: Colors.black,
+                              ),
+                            ],
                           ),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ),
-            ]
-          ),
+            ),
+          ]),
         ),
       ),
-
     );
   }
+
   getCaseDetails(String query) async {
     docList.clear();
     dogList.clear();
@@ -215,13 +213,13 @@ class _SearchScreenState extends State<SearchScreen> {
       docList.clear();
       dogList.clear();
       snapshot.docs.forEach((f) {
-        var name=f['name'].toString().toLowerCase();
-         List<dynamic>dogsub=  List<String>.from(f['subcategorysearch']);
+        var name = f['name'].toString().toLowerCase();
+        List<dynamic> dogsub = List<String>.from(f['subcategorysearch']);
         List<dynamic> dogName = List<String>.from(f['nameSearch']);
         List<dynamic> dogBreed = List<String>.from(f['categorySearch']);
         List<String> dogLowerCase = [];
         List<String> breedLowerCase = [];
-        List<String>dogsubLowerCase=[];
+        List<String> dogsubLowerCase = [];
         print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
 //        print( f['Quantity'].length);
         for (var dog in dogName) {
@@ -234,7 +232,9 @@ class _SearchScreenState extends State<SearchScreen> {
           dogsubLowerCase.add(sub.toLowerCase());
         }
         if (dogLowerCase.contains(query.toLowerCase()) ||
-            breedLowerCase.contains(query.toLowerCase())||dogsubLowerCase.contains(query.toLowerCase())||name.toString().contains(query.toLowerCase())) {
+            breedLowerCase.contains(query.toLowerCase()) ||
+            dogsubLowerCase.contains(query.toLowerCase()) ||
+            name.toString().contains(query.toLowerCase())) {
           print('Match found ${f['name']}');
           docList.add(f);
           Products dog = Products(
@@ -263,13 +263,13 @@ class _SearchScreenState extends State<SearchScreen> {
       });
     });
   }
+
   void getData() async {
     await FirebaseFirestore.instance
         .collection("Products")
         .get()
         .then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((f) {
-
         dogList.add(Products(
             f['Brands'],
             f['Category'],

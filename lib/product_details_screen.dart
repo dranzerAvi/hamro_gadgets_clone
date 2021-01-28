@@ -1018,7 +1018,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           qty != 0
                               ? qty != null
                                   ? Container(
-                                      height: height * 0.075,
+                                      height: 60,
                                       width: width * 0.16,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.all(
@@ -1101,7 +1101,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   : Row(
                                       children: [
                                         Container(
-                                            height: height * 0.075,
+                                            height: 60,
                                             width: width * 0.16,
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.all(
@@ -1203,7 +1203,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   child: Container(
                                       // width: MediaQuery.of(context).size.width *
                                       //     0.5,
-                                      height: height * 0.07,
+                                      height: 50,
                                       decoration: BoxDecoration(
                                           color: primarycolor,
                                           borderRadius: BorderRadius.all(
@@ -1221,7 +1221,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               : Container(
                                   // width:
                                   //     MediaQuery.of(context).size.width * 0.5,
-                                  height: height * 0.07,
+                                  height: 50,
                                   decoration: BoxDecoration(
                                       color: secondarycolor,
                                       borderRadius: BorderRadius.all(
@@ -1236,24 +1236,43 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             fontSize: height * 0.022,
                                             fontWeight: FontWeight.w500)),
                                   ))),
-                          Container(
-                              // width:
-                              //     MediaQuery.of(context).size.width * 0.5,
-                              height: height * 0.07,
-                              decoration: BoxDecoration(
-                                  color: primarycolor,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(30))),
-                              child: Center(
-                                  child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0),
-                                child: Text('Buy Now',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: height * 0.022,
-                                        fontWeight: FontWeight.w500)),
-                              ))),
+                          InkWell(
+                            onTap: () async {
+                              for (var v in cartItems) {
+                                removeItem(v.productName);
+                              }
+                              print(cartItems);
+                              await addToCart(context,
+                                  productDesc: widget.description,
+                                  name: widget.name,
+                                  imgUrl: widget.detailsurls[0],
+                                  price: (widget.disprice).toString(),
+                                  qty: 1);
+                              setState(() {});
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => BookmarksScreen()));
+                            },
+                            child: Container(
+                                // width:
+                                //     MediaQuery.of(context).size.width * 0.5,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    color: primarycolor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(30))),
+                                child: Center(
+                                    child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0),
+                                  child: Text('Buy Now',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: height * 0.022,
+                                          fontWeight: FontWeight.w500)),
+                                ))),
+                          ),
                         ],
                       ),
                     ),

@@ -62,8 +62,9 @@ class _AllCategoriesState extends State<AllCategories> {
   void initState() {
     super.initState();
   }
+
   final dbHelper = DatabaseHelper.instance;
-  int total=0;
+  int total = 0;
   List<Cart> cartItems = [];
   void getAllItems() async {
     final allRows = await dbHelper.queryAllRows();
@@ -90,10 +91,8 @@ class _AllCategoriesState extends State<AllCategories> {
         actions: [
           InkWell(
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BookmarksScreen()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => BookmarksScreen()));
               },
               child: Padding(
                 padding: const EdgeInsets.only(right: 5.0),
@@ -106,38 +105,37 @@ class _AllCategoriesState extends State<AllCategories> {
                     ),
                     total != null
                         ? total > 0
-                        ? Positioned(
-                      bottom:
-                      MediaQuery.of(context).size.height *
-                          0.04,
-                      left:
-                      MediaQuery.of(context).size.height *
-                          0.013,
-                      child: Padding(
-                        padding:
-                        const EdgeInsets.only(left: 2.0),
-                        child: CircleAvatar(
-                          radius: 6.0,
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-                          child: Text(
-                            total.toString(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 8.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                        : Container()
+                            ? Positioned(
+                                bottom:
+                                    MediaQuery.of(context).size.height * 0.04,
+                                left:
+                                    MediaQuery.of(context).size.height * 0.013,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 2.0),
+                                  child: CircleAvatar(
+                                    radius: 6.0,
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    child: Text(
+                                      total.toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 8.0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Container()
                         : Container(),
                   ],
                 ),
               )),
         ],
       ),
-      body: SingleChildScrollView(
+      body: Container(
+        height: height,
+        width: width,
         child: Column(
           children: [
             SizedBox(height: height * 0.03),
@@ -168,7 +166,8 @@ class _AllCategoriesState extends State<AllCategories> {
                                 MaterialPageRoute(
                                     builder: (context) => CategoryProducts(
                                           catName: snap.data.docs[i]['catName'],
-                                      filters: List.from(snap.data.docs[i]['filters']),
+                                          filters: List.from(
+                                              snap.data.docs[i]['filters']),
                                         )));
                           },
                           child: Card(
@@ -200,17 +199,19 @@ class _AllCategoriesState extends State<AllCategories> {
                         ),
                       ));
                     }
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: height * 0.7,
-                        child: GridView.count(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.95,
-                          crossAxisSpacing: 4,
-                          mainAxisSpacing: 4,
-                          scrollDirection: Axis.vertical,
-                          children: allcats,
+                    return Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          // height: height * 0.7,
+                          child: GridView.count(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.95,
+                            crossAxisSpacing: 4,
+                            mainAxisSpacing: 4,
+                            scrollDirection: Axis.vertical,
+                            children: allcats,
+                          ),
                         ),
                       ),
                     );

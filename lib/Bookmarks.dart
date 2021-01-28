@@ -15,11 +15,10 @@ class BookmarksScreen extends StatefulWidget {
 }
 
 class _BookmarksScreenState extends State<BookmarksScreen> {
-  void get(){
-    Fluttertoast.showToast(
-        msg: 'Login first', toastLength: Toast.LENGTH_SHORT);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>LoginScreen()));
-
+  void get() {
+    Fluttertoast.showToast(msg: 'Login first', toastLength: Toast.LENGTH_SHORT);
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 
   TextEditingController _cont = TextEditingController();
@@ -37,11 +36,12 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
 //      print(cartItems[1]);
     });
   }
-  User user;
-void getUser(){
-  user=FirebaseAuth.instance.currentUser;
 
-}
+  User user;
+  void getUser() {
+    user = FirebaseAuth.instance.currentUser;
+  }
+
   @override
   void initState() {
     getAllItems();
@@ -228,8 +228,12 @@ void getUser(){
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
                     onTap: () {
-                     user!=null? Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Checkout())):get();
+                      user != null
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Checkout()))
+                          : get();
                     },
                     child: Container(
                         height: height * 0.06,
@@ -272,7 +276,7 @@ void getUser(){
                     itemBuilder: (context, index) {
                       return Container(
                           width: MediaQuery.of(context).size.width * 0.9,
-                          height: MediaQuery.of(context).size.height * 0.32,
+                          height: MediaQuery.of(context).size.height * 0.28,
                           child: Card(
                               elevation: 4,
                               shape: RoundedRectangleBorder(
@@ -293,18 +297,21 @@ void getUser(){
                                         shimmerDuration: Duration(seconds: 2),
                                       ),
                                     ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.4,
-                                      height: 100,
-                                      child: Text(
-                                        '\n${cartItems[index].productName}',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                            color:
-                                                Colors.black.withOpacity(0.8),
-                                            // fontWeight: FontWeight.w600,
-                                            fontSize: 15),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        height: 100,
+                                        child: Text(
+                                          '\n${cartItems[index].productName}',
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                              color:
+                                                  Colors.black.withOpacity(0.8),
+                                              // fontWeight: FontWeight.w600,
+                                              fontSize: 15),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -332,7 +339,7 @@ void getUser(){
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Container(
-                                                height: height * 0.075,
+                                                height: 50,
                                                 child: Center(
                                                   child: Text(
                                                       'Rs.${cartItems[index].price}',
@@ -362,7 +369,7 @@ void getUser(){
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Container(
-                                                  height: height * 0.075,
+                                                  height: 50,
                                                   width: width * 0.16,
                                                   decoration: BoxDecoration(
                                                     borderRadius:
@@ -487,7 +494,7 @@ void getUser(){
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Container(
-                                                height: height * 0.075,
+                                                height: 50,
                                                 child: Center(
                                                   child: Text(
                                                       '${totalAmount().toString()}',
@@ -505,35 +512,44 @@ void getUser(){
                                             )
                                           ],
                                         ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 10),
-                                          child: Container(
-                                            height: height * 0.092,
-                                            child: Column(
-                                              mainAxisAlignment:MainAxisAlignment.end,
-                                              children: [
-                                                Spacer(),
-//                                                Spacer(
-//                                                  flex: 50,
-//                                                ),
-                                                InkWell(
-                                                    onTap: () {
-                                                      removeItem(
-                                                          cartItems[index]
-                                                              .productName);
-                                                    },
-                                                    child: Align(
-                                                      alignment:Alignment.topLeft,
+                                        Container(
+                                          height: 100,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text('test',
+                                                  style: GoogleFonts.poppins(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: height * 0.02)),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Container(
+                                                  height: 50,
+                                                  child: InkWell(
+                                                      onTap: () {
+                                                        removeItem(
+                                                            cartItems[index]
+                                                                .productName);
+                                                        setState(() {
+                                                          print(
+                                                              cartItems.length);
+                                                        });
+                                                      },
                                                       child: Icon(Icons.delete,
                                                           color: Colors.grey,
-                                                          size: height * 0.03),
-                                                    )),
+                                                          size: height * 0.03)),
+                                                ),
+                                              ),
+                                              Spacer(),
+
 //                                                Spacer(
 //                                                  flex: 1,
 //                                                ),
-                                              ],
-                                            ),
+                                            ],
                                           ),
                                         ),
                                       ]),

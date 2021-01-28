@@ -185,8 +185,8 @@ class _ProductCardState extends State<ProductCard> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return SizedBox(
-      height: 301,
-      width: width * 0.47,
+      height: height * 0.4,
+      width: double.infinity,
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -207,8 +207,8 @@ class _ProductCardState extends State<ProductCard> {
                       MediaQuery.of(context).size.width)));
         },
         child: Container(
-            height: 301,
-            width: width * 0.47,
+            height: height * 0.4,
+            width: double.infinity,
             child: Card(
                 child: Column(
               children: [
@@ -219,9 +219,6 @@ class _ProductCardState extends State<ProductCard> {
                             alignment: Alignment.topLeft,
                             child: Row(
                               children: [
-                                SizedBox(
-                                  width: 2,
-                                ),
                                 Icon(
                                   Icons.check_circle,
                                   color: Colors.green,
@@ -256,7 +253,7 @@ class _ProductCardState extends State<ProductCard> {
                   imageUrl: widget.imageUrl,
                   shimmerDuration: Duration(seconds: 2),
                   height: height * 0.2,
-                  width: width * 0.47,
+                  // width: width * 0.47,
                   boxFit: BoxFit.fill,
                 ),
                 Padding(
@@ -281,7 +278,7 @@ class _ProductCardState extends State<ProductCard> {
                   ),
                 ),
                 Container(
-                  height: 55,
+                  height: height * 0.07,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(widget.name,
@@ -314,7 +311,7 @@ class _ProductCardState extends State<ProductCard> {
                       decoration: BoxDecoration(
                           shape: BoxShape.circle, color: Colors.red),
                       child: Padding(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: EdgeInsets.all(height * 0.012),
                         child: Align(
                             alignment: Alignment.bottomRight,
                             child: Text(

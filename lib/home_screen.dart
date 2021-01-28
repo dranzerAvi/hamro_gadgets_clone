@@ -45,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
       total = cartItems.length;
     });
   }
+
   addDishParams() {
     FirebaseFirestore.instance.collection('Products').get().then((value) {
       value.docs.forEach((element) {
@@ -54,11 +55,12 @@ class _HomeScreenState extends State<HomeScreen> {
             .update({
           'nameSearch': setSearchParam(element['name']),
           'categorySearch': setSearchParam(element['Category']),
-          'subcategorysearch':setSearchParam(element['SubCategories'])
+          'subcategorysearch': setSearchParam(element['SubCategories'])
         });
       });
     });
   }
+
   setSearchParam(String caseString) {
     List<String> caseSearchList = List();
     String temp = "";
@@ -86,8 +88,9 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: primarycolor,
         title: InkWell(
-          onTap:(){
-            Navigator.push(context,MaterialPageRoute(builder:(context)=>SearchScreen()));
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => SearchScreen()));
           },
           child: Container(
             width: width * 0.7,
@@ -273,18 +276,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       newproducts.add(pro);
                     }
 
-                    // print(newproducts.length);
-
-                    // print('&&&&&&&&&&&&&&&');
-
-                    // print(newproducts[2].detailsurls.length);
-
-                    // print('***************');
-
-                    // print(newproducts[0].imageurls.length);
-
                     return Container(
-                      height: 301,
+                      height: height * 0.41,
                       child: ListView.builder(
                           itemCount: newproducts.length,
                           shrinkWrap: true,
@@ -292,19 +285,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemBuilder: (context, index) {
                             var item = newproducts[index];
 
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ProductCard(
-                                  item.imageurls[0],
-                                  item.name,
-                                  item.mp,
-                                  item.disprice,
-                                  item.description,
-                                  item.details,
-                                  item.imageurls,
-                                  item.rating,
-                                  item.specs,
-                                  item.quantity),
+                            return Container(
+                              height: height * 0.4,
+                              width: width * 0.5,
+                              child: Padding(
+                                padding: EdgeInsets.all(height * 0.005),
+                                child: ProductCard(
+                                    item.imageurls[0],
+                                    item.name,
+                                    item.mp,
+                                    item.disprice,
+                                    item.description,
+                                    item.details,
+                                    item.imageurls,
+                                    item.rating,
+                                    item.specs,
+                                    item.quantity),
+                              ),
                             );
                           }),
                     );
@@ -369,18 +366,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       newproducts.add(pro);
                     }
 
-                    // print(newproducts.length);
-                    //
-                    // print('&&&&&&&&&&&&&&&');
-                    //
-                    // print(newproducts[2].detailsurls.length);
-                    //
-                    // print('***************');
-                    //
-                    // print(newproducts[0].imageurls.length);
-
                     return Container(
-                      height: 301,
+                      height: height * 0.41,
                       child: ListView.builder(
                           itemCount: newproducts.length,
                           shrinkWrap: true,
@@ -388,19 +375,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemBuilder: (context, index) {
                             var item = newproducts[index];
 
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ProductCard(
-                                  item.imageurls[0],
-                                  item.name,
-                                  item.mp,
-                                  item.disprice,
-                                  item.description,
-                                  item.details,
-                                  item.imageurls,
-                                  item.rating,
-                                  item.specs,
-                                  item.quantity),
+                            return Container(
+                              height: height * 0.4,
+                              width: width * 0.5,
+                              child: Padding(
+                                padding: EdgeInsets.all(height * 0.005),
+                                child: ProductCard(
+                                    item.imageurls[0],
+                                    item.name,
+                                    item.mp,
+                                    item.disprice,
+                                    item.description,
+                                    item.details,
+                                    item.imageurls,
+                                    item.rating,
+                                    item.specs,
+                                    item.quantity),
+                              ),
                             );
                           }),
                     );
@@ -455,11 +446,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontSize: height * 0.025,
                           fontWeight: FontWeight.bold)),
                 ),
-//      InkWell(
-//        onTap: (){
-//
-//        },
-//      )
               ],
             ),
             SizedBox(height: height * 0.02),
@@ -496,33 +482,31 @@ class _HomeScreenState extends State<HomeScreen> {
                       newproducts.add(pro);
                     }
 
-                    // print(newproducts.length);
-                    // print('&&&&&&&&&&&&&&&');
-                    // print(newproducts[2].detailsurls.length);
-                    // print('***************');
-                    // print(newproducts[0].imageurls.length);
-
                     return Container(
-                      height: 301,
+                      height: height * 0.41,
                       child: ListView.builder(
                           itemCount: newproducts.length,
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
                             var item = newproducts[index];
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ProductCard(
-                                  item.imageurls[0],
-                                  item.name,
-                                  item.mp,
-                                  item.disprice,
-                                  item.description,
-                                  item.details,
-                                  item.imageurls,
-                                  item.rating,
-                                  item.specs,
-                                  item.quantity),
+                            return Container(
+                              height: height * 0.4,
+                              width: width * 0.5,
+                              child: Padding(
+                                padding: EdgeInsets.all(height * 0.005),
+                                child: ProductCard(
+                                    item.imageurls[0],
+                                    item.name,
+                                    item.mp,
+                                    item.disprice,
+                                    item.description,
+                                    item.details,
+                                    item.imageurls,
+                                    item.rating,
+                                    item.specs,
+                                    item.quantity),
+                              ),
                             );
                           }),
                     );
@@ -582,33 +566,31 @@ class _HomeScreenState extends State<HomeScreen> {
                       newproducts.add(pro);
                     }
 
-                    // print(newproducts.length);
-                    // print('&&&&&&&&&&&&&&&');
-                    // print(newproducts[2].detailsurls.length);
-                    // print('***************');
-                    // print(newproducts[0].imageurls.length);
-
                     return Container(
-                      height: 301,
+                      height: height * 0.41,
                       child: ListView.builder(
                           itemCount: newproducts.length,
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
                             var item = newproducts[index];
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ProductCard(
-                                  item.imageurls[0],
-                                  item.name,
-                                  item.mp,
-                                  item.disprice,
-                                  item.description,
-                                  item.details,
-                                  item.imageurls,
-                                  item.rating,
-                                  item.specs,
-                                  item.quantity),
+                            return Container(
+                              height: height * 0.4,
+                              width: width * 0.5,
+                              child: Padding(
+                                padding: EdgeInsets.all(height * 0.005),
+                                child: ProductCard(
+                                    item.imageurls[0],
+                                    item.name,
+                                    item.mp,
+                                    item.disprice,
+                                    item.description,
+                                    item.details,
+                                    item.imageurls,
+                                    item.rating,
+                                    item.specs,
+                                    item.quantity),
+                              ),
                             );
                           }),
                     );
