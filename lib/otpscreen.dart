@@ -25,6 +25,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
 
   }
+  String uid;
   FirebaseAuth firebaseAuth=FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
@@ -94,27 +95,30 @@ class _OtpScreenState extends State<OtpScreen> {
                               color: primarycolor,
 
                               onPressed: ()async{
-                                firebaseAuth.signInWithCredential(PhoneAuthProvider.credential(verificationId: widget.id, smsCode: otp)).catchError((e){print('-------');print(e.toString());
+                                firebaseAuth.signInWithCredential(PhoneAuthProvider.credential(verificationId: widget.id, smsCode: otp)).then((value) =>
+      widget.check=='login'?  Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScreen())):  Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>SignUp(widget.number))),
+    );
 //                              if(e.toString()!=null){
 //                                Fluttertoast.showToast(
 //                                    msg: 'Invalid otp', toastLength: Toast.LENGTH_SHORT);
 //                              }
 
-                                });
-                                  if( firebaseAuth.currentUser.uid!=null){
+
+
+
+
 //                                  await FirebaseFirestore.instance.collection('Users').doc(firebaseAuth.currentUser.uid).set({
 //                                    'userId':firebaseAuth.currentUser.uid,
 //                                    'phoneNumber':'+91${widget.number}'
 //
 //                                  });
-                                  widget.check=='login'?await  Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScreen())): await  Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>SignUp(widget.number)));
 
 
 
 
-                                  }
+                                  },
 
-    },
+
                               child:Text('Submit',style:GoogleFonts.poppins(color:Colors.white,fontWeight: FontWeight.w500)),
 
                             ),

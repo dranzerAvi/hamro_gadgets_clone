@@ -7,10 +7,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hamro_gadgets/Constants/cart.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
 import 'package:hamro_gadgets/home_screen.dart';
+import 'package:hamro_gadgets/my_addresses2.dart';
 import 'package:hamro_gadgets/services/database_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Checkout extends StatefulWidget {
+  String address,city,state,zip,orderid;
+  Checkout(this.address,this.city,this.state,this.zip,this.orderid);
   @override
   _CheckoutState createState() => _CheckoutState();
 }
@@ -23,9 +26,11 @@ class _CheckoutState extends State<Checkout> {
   TextEditingController _zip = TextEditingController();
   TextEditingController _phnNo = TextEditingController();
   TextEditingController _address2 = TextEditingController();
-  String state = 'Haryana';
+  String state = 'Bagmati';
   String country = 'India';
-
+  final scaffoldState = GlobalKey<ScaffoldState>();
+  final _formkey = GlobalKey<FormState>();
+  GlobalKey key = new GlobalKey();
   List<Cart> cartItems = [];
   final addressController = TextEditingController();
   final dbHelper = DatabaseHelper.instance;
@@ -141,6 +146,7 @@ class _CheckoutState extends State<Checkout> {
   }
   String orderid;
   void placeOrder() async{
+
     SharedPreferences prefs=await SharedPreferences.getInstance();
     orderid= prefs.getString('Orderid');
     await getUserDetails();
@@ -155,27 +161,54 @@ class _CheckoutState extends State<Checkout> {
       quantities.add(v.qty);
       image.add(v.imgUrl);
     }
-    Map<String,dynamic> address={'city':_city.text,'fulladdress':'${addressController.text},${_address2.text}','phonenumber':'+91${_phnNo.text}','postalcode':_zip.text,'state':state} ;
+   if (widget.address==''&&widget.address==null){
+     Map<String,dynamic> address1={'city':_city.text,'fulladdress':'${addressController.text},${_address2.text}','phonenumber':'+91${_phnNo.text}','postalcode':_zip.text,'state':state};
+     final databaseReference = FirebaseFirestore.instance;
+     databaseReference.collection('Orders').doc(orderid).set({
+       'Address':address1,
+       'GrandTotal':totalAmount() + (totalAmount() * 0.1 + 20),
+       'Items':items,
+       'Price':prices,
+       'Qty':quantities,
+       'Status':'Order Placed',
+       'TimeStamp':Timestamp.now(),
+       'UserID':user.uid,
+       'imgUrl':image,
+       'orderid':orderid
 
-    final databaseReference = FirebaseFirestore.instance;
-    databaseReference.collection('Orders').doc(orderid).set({
-      'Address':address,
-      'GrandTotal':totalAmount() + (totalAmount() * 0.1 + 20),
-      'Items':items,
-      'Price':prices,
-      'Qty':quantities,
-      'Status':'Order Placed',
-      'TimeStamp':Timestamp.now(),
-      'UserID':user.uid,
-      'imgUrl':image,
-      'orderid':orderid
+
+     });
+     removeAll();
+     Fluttertoast.showToast(
+         msg: 'Your order has been placed', toastLength: Toast.LENGTH_SHORT);
+     Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScreen()));
+
+   }
+   else{
+     Map<String,dynamic> address2={'city':widget.city,'fulladdress':widget.address,'phonenumber':user.phoneNumber,'postalcode':widget.zip,'state':widget.state} ;
+     final databaseReference = FirebaseFirestore.instance;
+     databaseReference.collection('Orders').doc(orderid).set({
+       'Address':address2,
+       'GrandTotal':totalAmount() + (totalAmount() * 0.1 + 20),
+       'Items':items,
+       'Price':prices,
+       'Qty':quantities,
+       'Status':'Order Placed',
+       'TimeStamp':Timestamp.now(),
+       'UserID':user.uid,
+       'imgUrl':image,
+       'orderid':orderid
 
 
-    });
-removeAll();
-    Fluttertoast.showToast(
-        msg: 'Your order has been placed', toastLength: Toast.LENGTH_SHORT);
-Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScreen()));
+     });
+     removeAll();
+     Fluttertoast.showToast(
+         msg: 'Your order has been placed', toastLength: Toast.LENGTH_SHORT);
+     Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScreen()));
+   }
+
+
+
 
   }
   void removeAll() async {
@@ -188,6 +221,7 @@ Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScree
   @override
   void initState() {
     getAllItems();
+    getUserDetails();
     // TODO: implement initState
     super.initState();
   }
@@ -197,6 +231,7 @@ Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScree
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
+        key: scaffoldState,
         appBar: AppBar(
           backgroundColor: primarycolor,
           title: Text('Hamro Gadgets'),
@@ -205,7 +240,7 @@ Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScree
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Column(children: [
+              (widget.address=='')? Column(children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Align(
@@ -416,10 +451,10 @@ Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScree
                             child: new DropdownButton<String>(
                               value: state,
                               items: <String>[
-                                'Haryana',
-                                'Chandigarh',
-                                'Uttar Pradesh',
-                                'Kerala'
+                                'Bagmati',
+                                'Lumbini',
+                                'Karnali',
+                                'Sudurpashchim'
                               ].map((String value) {
                                 return new DropdownMenuItem<String>(
                                   value: value,
@@ -540,40 +575,87 @@ Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScree
                         ),
                       )),
                 ),
-              ]),
-//              Padding(
-//                padding: const EdgeInsets.all(8.0),
-//                child: InkWell(
-//                    onTap: () {
-//                      Navigator.push(
-//                          context,
-//                          MaterialPageRoute(
-//                              builder: (context) => HomeScreen()));
-//                    },
-//                    child: Container(
-//                        height: height * 0.06,
-//                        width: width * 0.8,
-//                        decoration: BoxDecoration(
-//                            color: primarycolor,
-//                            borderRadius:
-//                                BorderRadius.all(Radius.circular(20))),
-//                        child: Padding(
-//                          padding: const EdgeInsets.only(top: 12.0),
-//                          child: Text('Next',
-//                              textAlign: TextAlign.center,
-//                              style: GoogleFonts.poppins(
-//                                  color: Colors.white,
-//                                  fontWeight: FontWeight.w500,
-//                                  fontSize: height * 0.022)),
-//                        ))),
-//              ),
-//            Align(
-//              alignment: Alignment.topLeft,
-//              child: Padding(
-//                padding:EdgeInsets.only(top:height*0.015,left:width*0.07),
-//                child: Text('Items',textAlign:TextAlign.left,style:TextStyle(color:Colors.black.withOpacity(0.8),fontSize: height*0.025,fontWeight: FontWeight.w500)),
-//              ),
-//            ),
+              ]):Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text('Shipping Address',
+                            style: GoogleFonts.poppins(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: height * 0.03))),
+                  ),
+                  Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment:
+                      MainAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment:
+                          Alignment.bottomLeft,
+                          child: Text(
+                              'Address :  ${widget.address}'),
+                        ),
+                         Align(
+                            alignment:
+                            Alignment.bottomLeft,
+                            child: Text(
+                                'City : ${widget.city}')),
+
+                         Align(
+                            alignment:
+                            Alignment.bottomLeft,
+                            child: Text(
+                                'State : ${widget.state}')),
+
+                         Align(
+                            alignment:
+                            Alignment.bottomLeft,
+                            child: Text(
+                                'Zip Code : ${widget.zip}'))
+
+                      ],
+                    ),
+                  )),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MyAddresses2(user.uid)));
+                    },
+                    child: Container(
+                        height: height * 0.06,
+                        width: width * 0.8,
+                        decoration: BoxDecoration(
+                            color: primarycolor,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 12.0),
+                          child: Text('Saved Addresses',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: height * 0.022)),
+                        ))),
+              ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding:EdgeInsets.only(top:height*0.015,left:width*0.07),
+                child: Text('Items',textAlign:TextAlign.left,style:TextStyle(color:Colors.black.withOpacity(0.8),fontSize: height*0.025,fontWeight: FontWeight.w500)),
+              ),
+            ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
@@ -749,6 +831,23 @@ Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScree
                           borderRadius: BorderRadius.all(Radius.circular(5.0))),
                       child: Center(
                           child: Text('Cash on Delivery',
+                              style: TextStyle(
+                                  fontSize: height * 0.025,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white))))),
+              SizedBox(height: height * 0.02),
+              InkWell(
+                  onTap: () {
+                    placeOrder();
+                  },
+                  child: Container(
+                      height: height * 0.08,
+                      width: width * 0.9,
+                      decoration: BoxDecoration(
+                          color: primarycolor,
+                          borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                      child: Center(
+                          child: Text('Card on Delivery',
                               style: TextStyle(
                                   fontSize: height * 0.025,
                                   fontWeight: FontWeight.bold,

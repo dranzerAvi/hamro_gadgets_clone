@@ -5,6 +5,7 @@ import 'package:hamro_gadgets/widgets/ProductCard.dart';
 
 import 'Constants/colors.dart';
 import 'Constants/products.dart';
+import 'package:flutter_range_slider/flutter_range_slider.dart' as frs;
 
 class CategoryProducts extends StatefulWidget {
   String catName;
@@ -23,6 +24,12 @@ class _CategoryProductsState extends State<CategoryProducts> {
   int choice;
   List cleanList = [];
   bool filterApplied;
+  double minPrice=10000.0;
+  double maxPrice=100000.0;
+  double _lowerValue=10000.0;
+  double _upperValue=100000.0;
+  double range1=0.0;
+  double range2=0.0;
   @override
   void initState() {
     print(widget.filters.length);
@@ -31,6 +38,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
     showFilter = false;
     filterApplied = false;
     getSubCategories();
+    getbrands();
     super.initState();
   }
 
@@ -98,7 +106,10 @@ class _CategoryProductsState extends State<CategoryProducts> {
       ),
     );
   }
+  RangeValues _currentRangeValues = const RangeValues(0, 100);
 
+  static String _valueToString(double value) {
+    return value.toStringAsFixed(0);}
   List<String> colorsChosen = [];
   List<String> subCatChosen = [];
   List<String> brandsChosen = [];
@@ -407,15 +418,21 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                         if (snap.hasData &&
                                             !snap.hasError &&
                                             snap.data != null) {
-                                          allbrands.clear();
+                                          List<String>allbrands2=[];
+//                                          allbrands2.clear();
 
                                           for (int i = 0;
                                               i < snap.data.docs.length;
                                               i++) {
-                                            allbrands.add(
-                                              snap.data.docs[i]['brandName'],
-                                            );
+                                            print( snap.data.docs[i]['brandName']);
+
+                                              allbrands2.add(
+                                                snap.data.docs[i]['brandName'],
+                                              );
+
+                                          print('====${allbrands2[i]}');
                                           }
+                                          print(allbrands2.length);
 
                                           return ListView.builder(
                                             physics:
@@ -423,6 +440,8 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                             shrinkWrap: false,
                                             itemCount: allbrands.length,
                                             itemBuilder: (context, i) {
+                                              print('----------------------------');
+                                              print(allbrands.length);
                                               return InkWell(
                                                 onTap: () {
                                                   if (brandsChosen
@@ -467,7 +486,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                                       SizedBox(
                                                         width: 20,
                                                       ),
-                                                      Text(allbrands[i])
+                                                      Text(allbrands[i],style:TextStyle(color:Colors.black))
                                                     ],
                                                   ),
                                                 ),
@@ -483,6 +502,54 @@ class _CategoryProductsState extends State<CategoryProducts> {
                         ),
                       )
                     : Container(),
+//                RangeSlider(
+//                  values: _currentRangeValues,
+//                  min: 0,
+//                  max: 100,
+//                  divisions: 50,
+//                  labels: RangeLabels(
+//                    _currentRangeValues.start.round().toString(),
+//                    _currentRangeValues.end.round().toString(),
+//                  ),
+//                  onChanged: (RangeValues values) {
+//                    setState(() {
+//                      _currentRangeValues = values;
+//                      print(_currentRangeValues.start);
+//                    });
+//                  },
+//                ),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Align(alignment:Alignment.topLeft,child: Text('Prices',style:GoogleFonts.poppins(fontWeight: FontWeight.w500))),
+              ),
+          frs.RangeSlider(
+            min: minPrice,
+            max: maxPrice,
+            lowerValue: _lowerValue,
+            upperValue: _upperValue,
+            divisions: 5,
+            showValueIndicator: true,
+            valueIndicatorMaxDecimals: 1,
+            onChanged: (double newLowerValue, double newUpperValue) {
+              setState(() {
+                _lowerValue = newLowerValue;
+                _upperValue = newUpperValue;
+                range1=newLowerValue;
+                range2=newUpperValue;
+
+              });
+            },
+            onChangeStart:
+                (double startLowerValue, double startUpperValue) {
+              print(
+                  'Started with values: $startLowerValue and $startUpperValue');
+            },
+            onChangeEnd: (double newLowerValue, double newUpperValue) {
+              print(
+                  'Ended with values: $newLowerValue and $newUpperValue');
+            },
+          ),
+
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
@@ -490,10 +557,13 @@ class _CategoryProductsState extends State<CategoryProducts> {
                     children: [
                       InkWell(
                         onTap: () async {
+                          print(allProducts.length);
                           List<Products> colorList = [];
+                          List<Products>prices=[];
                           List subCatList = [];
                           List brandList = [];
-                          if (widget.filters.contains('Colors')) {
+                          List newlist=[];
+                          if (widget.filters.contains('Colors')&&colorsChosen.length>0) {
                             for (int j = 0; j < colorsChosen.length; j++) {
                               var newList = allProducts
                                   .where((element) =>
@@ -502,10 +572,17 @@ class _CategoryProductsState extends State<CategoryProducts> {
                               for (int i = 0; i < newList.length; i++)
                                 await colorList.add(newList[i]);
                             }
-                          } else
+                          } else{
                             colorList = await allProducts;
+//                            setState(() {
+//
+//                              print('hiiiiii');
+//                              print(colorList.length);
+//                            });
+                          }
 
-                          if (widget.filters.contains('Subcategories')) {
+
+                          if (widget.filters.contains('Subcategories')&&subCatChosen.length>0) {
                             for (int j = 0; j < subCatChosen.length; j++) {
                               var newList = allProducts
                                   .where((element) =>
@@ -517,7 +594,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
                           } else
                             subCatList = await allProducts;
 
-                          if (widget.filters.contains('Brands')) {
+                          if (widget.filters.contains('Brands')&&brandsChosen.length>0) {
                             for (int j = 0; j < brandsChosen.length; j++) {
                               var newList = allProducts
                                   .where((element) =>
@@ -530,25 +607,48 @@ class _CategoryProductsState extends State<CategoryProducts> {
                             }
                           } else
                             brandList = await allProducts;
-                          print('Printing');
+                          print('Printing111');
                           colorList.forEach((element) {
+                            print('------------------');
                             print(element.name);
                           });
 
                           colorList.removeWhere(
                               (item) => !subCatList.contains(item));
                           print('Printing');
+                          newlist=colorList;
                           colorList.forEach((element) {
                             print(element.name);
                           });
                           colorList
                               .removeWhere((item) => !brandList.contains(item));
                           print('Printing');
+                          newlist=colorList;
                           colorList.forEach((element) {
                             print(element.name);
                           });
+                       colorList.forEach((element) {
+                         print('===${range1}');
+                         if(element.disprice<range2&&element.disprice>range1){
+                         print('----------');
+                         print(element.name);
 
-                          cleanList = await colorList;
+                       }
+                         else{
+                           prices.add(element);
+                         }
+                       });
+                       setState(() {
+                         colorList.removeWhere((element) => prices.contains(element));
+                         newlist=colorList;
+                         print(colorList.length);
+                       });
+                         cleanList=await newlist;
+                        cleanList.forEach((element)
+                {
+                  print('-3-3-3');
+                          print(element.name);
+                        });
                           print('List Length-${cleanList.length}');
                           setState(() {});
                           if (filterApplied == false) filterApplied = true;
@@ -573,7 +673,10 @@ class _CategoryProductsState extends State<CategoryProducts> {
                           subCatChosen.clear();
                           colorsChosen.clear();
                           brandsChosen.clear();
-
+                           _lowerValue=10000;
+                           _upperValue=100000;
+                           range1=10000;
+                           range2=100000;
                           filterApplied = false;
                           setState(() {});
                           Navigator.pop(context);
@@ -826,8 +929,8 @@ class _CategoryProductsState extends State<CategoryProducts> {
                           snap.data.docs[i]['status']));
                       print(allProducts.length);
                     }
-                    if (cleanList.isEmpty && filterApplied == false)
-                      cleanList = allProducts;
+//                    if (cleanList.isEmpty && filterApplied == false)
+//                      cleanList = allProducts;
                     return Expanded(
                       child: Container(
                         child: cleanList.length != 0

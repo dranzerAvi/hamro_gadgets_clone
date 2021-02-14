@@ -8,6 +8,7 @@ import 'package:hamro_gadgets/Constants/colors.dart';
 import 'package:hamro_gadgets/checkout.dart';
 import 'package:hamro_gadgets/login_screen.dart';
 import 'package:hamro_gadgets/services/database_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BookmarksScreen extends StatefulWidget {
   @override
@@ -195,7 +196,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
                                           fontSize: height * 0.02)),
-                                  Text('Rs.${(totalAmount() * 0.1).toString()}',
+                                  Text('Rs.${((totalAmount() * 0.1).round()).toString()}',
                                       style: GoogleFonts.poppins(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
@@ -227,12 +228,14 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
-                    onTap: () {
+                    onTap: () async{
+                      SharedPreferences prefs= await SharedPreferences.getInstance();
+                      var orderid =prefs.getString('Orderid');
                       user != null
                           ? Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Checkout()))
+                                  builder: (context) => Checkout('','','','',orderid)))
                           : get();
                     },
                     child: Container(
@@ -276,7 +279,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                     itemBuilder: (context, index) {
                       return Container(
                           width: MediaQuery.of(context).size.width * 0.9,
-                          height: MediaQuery.of(context).size.height * 0.28,
+                          height: MediaQuery.of(context).size.height * 0.30,
                           child: Card(
                               elevation: 4,
                               shape: RoundedRectangleBorder(

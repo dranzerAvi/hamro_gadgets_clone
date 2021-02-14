@@ -3,6 +3,7 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:getflutter/components/carousel/gf_carousel.dart';
 import 'package:hamro_gadgets/Bookmarks.dart';
 import 'package:hamro_gadgets/Constants/cart.dart';
@@ -276,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       newproducts.add(pro);
                     }
 
-                    return Container(
+                    return (newproducts.length!=0)?Container(
                       height: height * 0.41,
                       child: ListView.builder(
                           itemCount: newproducts.length,
@@ -304,9 +305,21 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                           }),
+                    ):Center(
+                      child: Container(
+                        height:100,
+                        width:100,
+                        child:SpinKitWave(color:primarycolor,size:height*0.023)
+                      ),
                     );
                   } else {
-                    return Container();
+                    return Center(
+                      child: Container(
+                        height:100,
+                        width:100,
+                        child:SpinKitWave(color:primarycolor,size:height*0.023)
+                      ),
+                    );
                   }
                 }),
             SizedBox(height: height * 0.02),
@@ -366,7 +379,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       newproducts.add(pro);
                     }
 
-                    return Container(
+                    return (newproducts.length!=0)?Container(
                       height: height * 0.41,
                       child: ListView.builder(
                           itemCount: newproducts.length,
@@ -394,9 +407,21 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                           }),
+                    ):Center(
+                      child: Container(
+                        height:100,
+                        width:100,
+                        child:SpinKitWave(color:primarycolor,size:height*0.023)
+                      ),
                     );
                   } else {
-                    return Container();
+                    return Center(
+                      child: Container(
+                          height:100,
+                          width:100,
+                          child:SpinKitWave(color:primarycolor,size:height*0.023)
+                      ),
+                    );
                   }
                 }),
             SizedBox(height: height * 0.02),
@@ -413,7 +438,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       banners.add(snap.data.docs[i]['imageURL']);
                     }
 
-                    return Container(
+                    return(banners.length!=0)? Container(
                         child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -430,9 +455,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           fit: BoxFit.fill,
                         ),
                       ],
-                    ));
+                    )):Center(
+                      child: Container(
+                          height:100,
+                          width:100,
+                          child:SpinKitWave(color:primarycolor,size:height*0.023)
+                      ),
+                    );
                   } else {
-                    return Container();
+                    return Center(
+                      child: Container(
+                          height:100,
+                          width:100,
+                          child:SpinKitWave(color:primarycolor,size:height*0.023)
+                      ),
+                    );
                   }
                 }),
             SizedBox(height: height * 0.02),
@@ -482,7 +519,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       newproducts.add(pro);
                     }
 
-                    return Container(
+                    return (newproducts.length!=0)?Container(
                       height: height * 0.41,
                       child: ListView.builder(
                           itemCount: newproducts.length,
@@ -509,9 +546,21 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                           }),
+                    ):Center(
+                      child: Container(
+                          height:100,
+                          width:100,
+                          child:SpinKitWave(color:primarycolor,size:height*0.023)
+                      ),
                     );
                   } else {
-                    return Container();
+                    return Center(
+                      child: Container(
+                          height:100,
+                          width:100,
+                          child:SpinKitWave(color:primarycolor,size:height*0.023)
+                      ),
+                    );
                   }
                 }),
             SizedBox(height: height * 0.02),
@@ -566,7 +615,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       newproducts.add(pro);
                     }
 
-                    return Container(
+                    return(newproducts.length!=0)? Container(
                       height: height * 0.41,
                       child: ListView.builder(
                           itemCount: newproducts.length,
@@ -593,9 +642,21 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                           }),
+                    ):Center(
+                      child: Container(
+                          height:100,
+                          width:100,
+                          child:SpinKitWave(color:primarycolor,size:height*0.023)
+                      ),
                     );
                   } else {
-                    return Container();
+                    return Center(
+                      child: Container(
+                          height:100,
+                          width:100,
+                          child:SpinKitWave(color:primarycolor,size:height*0.023)
+                      ),
+                    );
                   }
                 })
           ],
