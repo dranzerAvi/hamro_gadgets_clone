@@ -8,6 +8,7 @@ import 'package:hamro_gadgets/Bookmarks.dart';
 import 'package:hamro_gadgets/Constants/cart.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
 import 'package:hamro_gadgets/Constants/order.dart';
+import 'package:hamro_gadgets/checkout2.dart';
 import 'package:hamro_gadgets/order_placed.dart';
 import 'package:hamro_gadgets/services/database_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -161,9 +162,99 @@ class _MyOrdersState extends State<MyOrders> {
     });
    
   }
- 
+  List<Order>reorders2=[];
+  int inStock2=0;
+  void reorder2(String id)async{
+    reorders2.clear();
+    await FirebaseFirestore.instance.collection('Orders').doc(id).get().then((value) {
+      Map map2=value.data();
+      setState(() {
+        reorders2.add(
+            Order(
+                prices: map2['Price'],
+                items: map2['Items'],
+                total: map2['GrandTotal'].toString(),
+                quantities: map2['Qty'],
+                status: map2['Status'],
+                timestamp: map2['TimeStamp'],
+                images:map2['imgUrl'],
+                orderType: map2['orderType'],
+                id: map2['UserId']
+            )
+        );
+      });
+      print(reorders2.length);
+      FirebaseFirestore.instance.collection('RewardProducts').snapshots().listen((event) async{
+        for(int i =0;i<event.docs.length;i++){
+          for(int j=0;j<reorders2[0].items.length;j++){
+            if(reorders2[0].items[j]==event.docs[i]['name']){
+              if(event.docs[i]['quantity']>0){
+                await print('----------------$order');
+                if (order + 1 < 9) {
+                  await setState(() {
+                    orderid = 'HAMRO0000${order + 1}';
+                  });
+                }
+                if (order + 1 > 10 && order + 1 < 99) {
+                  await setState(() {
+                    orderid = 'HAMRO000${order + 1}';
+                  });
+                }
+                if (order + 1 > 99 && order + 1 < 999) {
+                  await setState(() {
+                    orderid = 'HAMRO00${order + 1}';
+                  });
+                }
+                if (order + 1 > 999 && order + 1 < 9999) {
+                  await setState(() {
+                    orderid = 'HAMRO0${order + 1}';
+                  });
+                }
+                if (order + 1 > 9999 && order + 1 < 99999) {
+                  await setState(() {
+                    orderid = 'HAMRO${order + 1}';
+                  });
+                }
+                if (order + 1 > 99999) {
+                  await setState(() {
+                    orderid = 'HAMRO${order + 1}';
+                  });
+                }
+
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.setString('Orderid', orderid);
+                print(orderid);
+
+                prefs.setString('Status', 'Order Placed');
+                await FirebaseFirestore.instance
+                    .collection('Ordercount')
+                    .doc('ordercount')
+                    .update({
+                  'Numberoforders': order + 1,
+                });
+                inStock2++;
+                List<String>newitems=[];
+                for (int n=0;n<reorders2[0].items.length;n++){
+                  newitems.add(reorders2[0].items[n].toString());
+                }
+                Navigator.push(context,MaterialPageRoute(builder:(context)=> Checkout2('', '', '', '', orderid, event.docs[i]['inStore'], newitems, event.docs[i]['rewardpoints'], reorders2[0].images[0].toString())));
+
+              }
+            }
+          }
+        }
+        if(inStock2==0){
+          Fluttertoast.showToast(
+              msg: 'Not available', toastLength: Toast.LENGTH_SHORT);
+        }
+      });
+
+    });
+  }
+  int instock=0;
   void reorder(String id)async {
-   await FirebaseFirestore.instance.collection('Orders').doc(id).get().then((value) {
+    reorders.clear();
+    await FirebaseFirestore.instance.collection('Orders').doc(id).get().then((value) {
       Map map=value.data();
       print(map['imgUrl']);
       setState(() {
@@ -178,18 +269,47 @@ class _MyOrdersState extends State<MyOrders> {
 
             id: map['UserId']));
       });
-print(reorders.length);
-      
+      print(reorders.length);
+      FirebaseFirestore.instance.collection('Products').snapshots().listen((element) {
+        for(int i=0;i<element.docs.length;i++){
+
+          for(int k=0;k<reorders[0].items.length;k++){
+            if(reorders[0].items[k]==element.docs[i]['name']){
+              print('hiiiiiiiiiiiiii${element.docs[i]['name']}');
+              if(element.docs[i]['quantity']>0){
+                print('hiiiiiiiiiiiiii${element.docs[i]['quantity']}');
+//                await  place();
+                instock++;
+                print(instock);
+                addToCart(context,name:reorders[0].items[k],imgUrl:reorders[0].images[k],price:reorders[0].prices[k],qty:reorders[0].quantities[k],productDesc:desc);
+              }
+            }
+
+
+          }
+        }
+        if(instock==reorders[0].items.length){
+          Fluttertoast.showToast(
+              msg: 'Added to cart', toastLength: Toast.LENGTH_SHORT);
+          Navigator.push(context,MaterialPageRoute(builder:(context)=>BookmarksScreen()));
+        }
+        if(instock<reorders[0].items.length){
+          if(reorders[0].items.length==1){
+
+            Fluttertoast.showToast(
+                msg: 'Not available', toastLength: Toast.LENGTH_SHORT);
+          }
+          else{
+            Fluttertoast.showToast(
+                msg: 'Some items are not available', toastLength: Toast.LENGTH_SHORT);
+            Navigator.push(context,MaterialPageRoute(builder:(context)=>BookmarksScreen()));
+          }
+
+        }
+      });
     });
-    await  place();
-  }
-  void place(){
-    for(int i =0;i<reorders[0].items.length;i++) {
-      addToCart(context,name:reorders[0].items[i],imgUrl:reorders[0].images[i],price:reorders[0].prices[i],qty:reorders[0].quantities[i],productDesc:desc);
-    }
-    Fluttertoast.showToast(
-        msg: 'Added to cart', toastLength: Toast.LENGTH_SHORT);
-    Navigator.push(context,MaterialPageRoute(builder:(context)=>BookmarksScreen()));
+
+
   }
   showAlertDialog(BuildContext context) {
     showDialog(
@@ -271,6 +391,7 @@ print(reorders.length);
                           timestamp: snap.data.docs[i]['TimeStamp'],
                           images:snap.data.docs[i]['imgUrl'],
                           orderString: str,
+                          orderType: snap.data.docs[i]['orderType'],
                           id: snap.data.docs[i].id));
                     }
                     return orders.length != 0
@@ -284,7 +405,7 @@ print(reorders.length);
                               padding: EdgeInsets.fromLTRB(15.0, 8, 8, 8),
                               child: InkWell(
                                 onTap: () async {
-                                  Navigator.push(context,MaterialPageRoute(builder:(context)=>OrderPlaced(orders[index].id,orders[index].images,orders[index].quantities,orders[index].prices,orders[index].timestamp,orders[index].total,orders[index].status,orders[index].items)));
+                                  Navigator.push(context,MaterialPageRoute(builder:(context)=>OrderPlaced(orders[index].id,orders[index].images,orders[index].quantities,orders[index].prices,orders[index].timestamp,orders[index].total,orders[index].status,orders[index].items,orders[index].orderType)));
 
                                 },
                                 child: Card(
@@ -387,13 +508,19 @@ print(reorders.length);
                                                                     SizedBox(
                                                                       width: 15,
                                                                     ),
-                                                                    Text(
-                                                                      'Price: Rs ${orders[index].prices[index2].toString()}',
-                                                                      style: GoogleFonts.poppins(
-                                                                          fontSize: 15,
-                                                                          fontWeight:
-                                                                          FontWeight.bold),
-                                                                    ),
+                                                                    (orders[index].orderType=='Point Mode'||orders[index].orderType=='Point Mode Instore')? Row(
+                                                                      children: [
+
+                                                                        Text('${orders[index].prices[index2].toString()} coins ',style:GoogleFonts.poppins(fontSize:15,fontWeight: FontWeight.bold)),
+                                                                        Image.asset('assets/images/coins.png',height:height*0.025,)
+                                                                      ],
+                                                                    )
+                                                                        :Text(
+                                                                        'Price: Rs ${orders[index].prices[index2].toString()}',
+                                                                        style: GoogleFonts.poppins(
+                                                                            fontSize: 15,
+                                                                            fontWeight:
+                                                                            FontWeight.bold)),
                                                                     Spacer()
                                                                   ],
                                                                 ),
@@ -598,7 +725,13 @@ print(reorders.length);
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          Text(
+                                          (orders[index].orderType=='Point Mode'||orders[index].orderType=='Point Mode Instore')?Row(
+                                            children: [
+
+                                              Text('${orders[index].total} coins ',style:GoogleFonts.poppins(fontSize:15,fontWeight: FontWeight.bold)),
+                                              Image.asset('assets/images/coins.png',height:height*0.025,)
+                                            ],
+                                          ) :Text(
                                             'Rs. ' + orders[index].total,
                                             style: GoogleFonts.poppins(fontSize: 14),
                                           ),
@@ -622,9 +755,15 @@ print(reorders.length);
                                                     fontWeight: FontWeight.bold),
                                               ),
                                               InkWell(
-                                                 onTap:(){
-                                                   reorder(orders[index].id);
-                                                 },
+                                                onTap:(){
+                                                  if(orders[index].orderType=='Point Mode'||orders[index].orderType=='Point Mode Instore'){
+                                                    reorder2(orders[index].id);
+                                                  }
+                                                  else{
+                                                    reorder(orders[index].id);
+                                                  }
+
+                                                },
                                                 child: Container(
                                                   height:20,
                                                   width:80,

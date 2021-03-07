@@ -627,30 +627,31 @@ class _CategoryProductsState extends State<CategoryProducts> {
                           colorList.forEach((element) {
                             print(element.name);
                           });
-                       colorList.forEach((element) {
-                         print('===${range1}');
-                         if(element.disprice<range2&&element.disprice>range1){
-                         print('----------');
-                         print(element.name);
-
-                       }
-                         else{
-                           prices.add(element);
-                         }
-                       });
-                       setState(() {
-                         colorList.removeWhere((element) => prices.contains(element));
-                         newlist=colorList;
-                         print(colorList.length);
-                       });
+//                       colorList.forEach((element) {
+//                         print('===${range1}');
+//                         if(element.disprice<range2&&element.disprice>range1){
+//                         print('----------');
+//                         print(element.name);
+//                         }
+//                         else{
+//                           prices.add(element);
+//                         }
+//                       });
+//                       setState(() {
+//                         colorList.removeWhere((element) => prices.contains(element));
+//                         newlist=colorList;
+//                         print(colorList.length);
+//                       });
                          cleanList=await newlist;
                         cleanList.forEach((element)
                 {
                   print('-3-3-3');
                           print(element.name);
                         });
-                          print('List Length-${cleanList.length}');
-                          setState(() {});
+
+                          setState(() {
+                            print('List Length-${cleanList.length}');
+                          });
                           if (filterApplied == false) filterApplied = true;
                           Navigator.pop(context);
                         },
@@ -926,11 +927,13 @@ class _CategoryProductsState extends State<CategoryProducts> {
                           snap.data.docs[i]['quantity'],
                           snap.data.docs[i]['rating'].toString(),
                           snap.data.docs[i]['specs'],
-                          snap.data.docs[i]['status']));
+                          snap.data.docs[i]['status'],
+                      snap.data.docs[i]['inStore'],
+                      snap.data.docs[i]['productId']));
                       print(allProducts.length);
                     }
-//                    if (cleanList.isEmpty && filterApplied == false)
-//                      cleanList = allProducts;
+                    if (cleanList.isEmpty && filterApplied == false)
+                      cleanList = allProducts;
                     return Expanded(
                       child: Container(
                         child: cleanList.length != 0
@@ -954,7 +957,8 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                         cleanList[i].detailsurls,
                                         cleanList[i].rating,
                                         cleanList[i].specs,
-                                        cleanList[i].quantity),
+                                        cleanList[i].quantity,
+                                    cleanList[i].inStore),
                                   );
                                 }),
                               )

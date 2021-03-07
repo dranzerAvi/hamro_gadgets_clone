@@ -31,7 +31,7 @@ class _NavigationScreenState extends State<NavigationScreen> with SingleTickerPr
   initState() {
     super.initState();
 
-    currentScreen = widget.currentScreen?.currentScreen ?? HomeScreen();
+    currentScreen = widget.currentScreen?.currentScreen ?? HomeScreen(0);
     currentTab = widget.currentScreen?.tab_no ?? 0;
     _controller = AnimationController(
       duration: const Duration(milliseconds: 200),
@@ -93,7 +93,7 @@ class _NavigationScreenState extends State<NavigationScreen> with SingleTickerPr
 
 List<Widget> _buildScreens() {
   return [
-    HomeScreen(),
+    HomeScreen(0),
     AllCategories(),
     SearchScreen(),
     ProfileScreen()

@@ -349,6 +349,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           print('Item already exists');
           check[choice] = true;
           qty = temp.qty;
+//          for (var v in cartItems) {
+//            if (v.productName ==
+//                widget.name) {
+//              var newQty = v.qty + 1;
+//              updateItem(
+//                productDesc:
+//                v.productDesc,
+//                id: v.id,
+//                name: v.productName,
+//                imgUrl: v.imgUrl,
+//                price: v.price,
+//                qty: newQty,
+//              );
+//            }
+//          }
+
         });
         return;
       } else
@@ -1010,12 +1026,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                       )
                     ])),
-                    Padding(
+                   Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          qty != 0
+                          (widget.quantity>0)?qty != 0
                               ? qty != null
                                   ? Container(
                                       height: 60,
@@ -1158,7 +1174,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             ))
                                       ],
                                     )
-                              : Container(),
+                              : Container():Container(),
 //                      children: [
 //                        present==false||present==null?
 //                            InkWell(
@@ -1190,9 +1206,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 //                              child: Text('Saved in Wishlist',style:TextStyle(color:primarycolor,fontSize: height*0.025,fontWeight: FontWeight.w500)),
 //                            ))),
 
-                          qty == 0 || qty == null
+                          (widget.quantity>0)? qty == 0 || qty == null
                               ? InkWell(
                                   onTap: () async {
+
                                     addToCart(context,
                                         productDesc: widget.description,
                                         name: widget.name,
@@ -1235,8 +1252,24 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             color: Colors.black,
                                             fontSize: height * 0.022,
                                             fontWeight: FontWeight.w500)),
+                                  ))):Container(
+                            width:MediaQuery.of(context).size.width*0.7,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  color: secondarycolor,
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(30))),
+                              child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0),
+                                    child: Text('Out of Stock',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: height * 0.022,
+                                            fontWeight: FontWeight.w500)),
                                   ))),
-                          InkWell(
+                          (widget.quantity>0)?InkWell(
                             onTap: () async {
                               for (var v in cartItems) {
                                 removeItem(v.productName);
@@ -1272,7 +1305,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           fontSize: height * 0.022,
                                           fontWeight: FontWeight.w500)),
                                 ))),
-                          ),
+                          ):Container(),
                         ],
                       ),
                     ),

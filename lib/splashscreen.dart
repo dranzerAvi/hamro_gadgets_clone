@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     new Future.delayed(Duration(seconds: 3), () async {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          context, MaterialPageRoute(builder: (context) => HomeScreen(0)));
 //      SharedPreferences prefs = await SharedPreferences.getInstance();
 //      var islogin = prefs.getString('isLogged');
 //

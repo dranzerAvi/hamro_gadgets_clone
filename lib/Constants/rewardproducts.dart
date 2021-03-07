@@ -1,4 +1,4 @@
-class Products {
+class RewardProducts {
   String Brand;
   String category;
   String subcategories;
@@ -17,8 +17,8 @@ class Products {
   Map specs;
   String status;
   bool inStore;
-  String productId;
-  Products(
+  int rewardpoints;
+  RewardProducts(
       this.Brand,
       this.category,
       this.subcategories,
@@ -37,18 +37,5 @@ class Products {
       this.specs,
       this.status,
       this.inStore,
-      this.productId
-      );
+      this.rewardpoints);
 }
-// class Details{
-//   String display;
-//   String graphic;
-//   Details(this.display,this.graphic);
-// }
-// class Specs{
-//   String cpu;
-//   String model;
-//   String ram;
-//   String storage;
-//   Specs(this.cpu,this.model,this.ram,this.storage);
-// }

@@ -1,27 +1,30 @@
+import 'package:flutter/material.dart';
 import 'dart:io';
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hamro_gadgets/Constants/address.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
 import 'package:hamro_gadgets/checkout.dart';
+import 'package:hamro_gadgets/checkout2.dart';
 import 'package:hamro_gadgets/confirm_address.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MyAddresses2 extends StatefulWidget {
-  String id;bool store;List<String>items=[];
-  MyAddresses2(this.id,this.store,this.items);
+class MyAddresses3 extends StatefulWidget {
+  String id;bool store;List<String>items=[];int rewardpoints;String imageurl;
+  MyAddresses3(this.id,this.store,this.items,this.rewardpoints,this.imageurl);
   @override
-  _MyAddresses2State createState() => _MyAddresses2State();
+  _MyAddresses3State createState() => _MyAddresses3State();
 }
 
-class _MyAddresses2State extends State<MyAddresses2> {
+class _MyAddresses3State extends State<MyAddresses3> {
+  @override
   LocationResult location;
 
   LocationResult result;
@@ -200,7 +203,7 @@ class _MyAddresses2State extends State<MyAddresses2> {
                                         onTap:()async{
                                           SharedPreferences prefs= await SharedPreferences.getInstance();
                                           var orderid =prefs.getString('Orderid');
-                                          Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>Checkout(item.address,item.city,item.state,item.zip,orderid,widget.store,widget.items)));
+                                          Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>Checkout2(item.address,item.city,item.state,item.zip,orderid,widget.store,widget.items,widget.rewardpoints,widget.imageurl)));
                                         },
                                         child: Card(
                                             child: Padding(
@@ -308,4 +311,5 @@ class _MyAddresses2State extends State<MyAddresses2> {
 
   }
 }
+
 

@@ -53,7 +53,9 @@ class _SearchScreenState extends State<SearchScreen> {
             f['quantity'],
             f['rating'].toString(),
             f['specs'],
-            f['status']);
+            f['status'],
+        f['inStore'],
+        f['productId']);
 
         await dogList1.add(dp);
         // await dogCardsList1.add(MyDogCard(dp, width, height));
@@ -254,7 +256,9 @@ class _SearchScreenState extends State<SearchScreen> {
               f['quantity'],
               f['rating'].toString(),
               f['specs'],
-              f['status']);
+              f['status'],
+          f['inStore'],
+          f['productId']);
           dogList.add(dog);
           setState(() {
             print('Updated');
@@ -287,7 +291,9 @@ class _SearchScreenState extends State<SearchScreen> {
             f['quantity'],
             f['rating'].toString(),
             f['specs'],
-            f['status']));
+            f['status'],
+        f['inStore'],
+        f['productId']));
         print('Dog added');
 //        print(f['profileImage'].toString());
 //        print('--------------------${f['Quantity'].length}');

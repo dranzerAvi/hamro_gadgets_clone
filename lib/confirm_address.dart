@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hamro_gadgets/Constants/area.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -22,14 +23,14 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
   final _formkey = GlobalKey<FormState>();
   GlobalKey key = new GlobalKey();
   String area;
-  String emirate2;
-  String emirate;
+
   String state = 'Bagmati';
   List<String> emiratesname = [];
   List<String> areaname = [];
   var id = '';
   var minimumOrderValue = '150';
-
+ List<Area>allareas=[];
+ List<String>areanames=[];
   void addAddress() async {
     User user =  FirebaseAuth.instance.currentUser;
     await FirebaseFirestore.instance
@@ -168,42 +169,114 @@ class _ConfirmAddressState extends State<ConfirmAddress> {
                       controller: hnocontroller,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 8.0, top: 12.0, bottom: 12.0, right: 12.0),
-                    child: Container(
-                        width: height * 0.8,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(4)),
-                            border: Border.all(color: Colors.grey, width: 1)),
-                        child: Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: DropdownButtonHideUnderline(
-                              child: new DropdownButtonFormField<String>(
-                                validator: (value) =>
-                                value == null
-                                    ? 'field required'
-                                    : null,
-                                value: state,
-                                items: <String>[
-                                  'Bagmati',
-                                  'Lumbini',
-                                  'Karnali',
-                                  'Sudurpashchim'
-                                ].map((String value) {
-                                  return new DropdownMenuItem<String>(
-                                    value: value,
-                                    child: new Text(value),
-                                  );
-                                }).toList(),
-                                onChanged: (val) {
-                                  setState(() {
-                                    state = val;
-                                  });
-                                },
-                              ),
-                            ))),
-                  ),
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('Area')
+
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snap) {
+                        if (snap.hasData && !snap.hasError && snap.data != null) {
+                          allareas.clear();
+                          areanames.clear();
+                          for (int i = 0; i < snap.data.docs.length; i++) {
+                            print(snap.data.docs.length);
+
+                            areanames.add(snap.data.docs[i]['name']);
+
+                            Area ar = Area(
+                              snap.data.docs[i]['Price'],
+                              snap.data.docs[i]['name'],
+                            );
+                            allareas.add(ar);
+                          }
+
+                          if (area == null) {
+                            state = allareas[0].name;
+                          }
+                          return areanames.length != 0
+                              ? Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 8.0, top: 12.0, bottom: 12.0, right: 12.0),
+                                child: Container(
+
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.circular(4)),
+                                        border: Border.all(color: Colors.grey, width: 1)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left:8.0),
+                                      child: DropdownButtonHideUnderline(
+                                          child: new DropdownButtonFormField<
+                                              String>(
+                                              validator: (value) =>
+                                              value == null
+                                                  ? 'field required'
+                                                  : null,
+                                              hint: Text('State'),
+                                              value: areanames[0],
+                                              items:
+                                              areanames.map((String value) {
+                                                return new DropdownMenuItem<
+                                                    String>(
+                                                  value: value,
+                                                  child: new Text(value),
+                                                );
+                                              }).toList(),
+                                              onChanged: (String newValue) {
+                                                setState(() {
+                                                  state = newValue;
+
+
+
+                                                });
+                                              })),
+                                    )),
+                              )
+                            ],
+                          )
+                              : Container();
+                        } else {
+                          return Container();
+                        }
+                      }),
+//                  Padding(
+//                    padding: const EdgeInsets.only(
+//                        left: 8.0, top: 12.0, bottom: 12.0, right: 12.0),
+//                    child: Container(
+//                        width: height * 0.8,
+//                        decoration: BoxDecoration(
+//                            borderRadius: BorderRadius.all(Radius.circular(4)),
+//                            border: Border.all(color: Colors.grey, width: 1)),
+//                        child: Padding(
+//                            padding: const EdgeInsets.only(left: 8.0),
+//                            child: DropdownButtonHideUnderline(
+//                              child: new DropdownButtonFormField<String>(
+//                                validator: (value) =>
+//                                value == null
+//                                    ? 'field required'
+//                                    : null,
+//                                value: state,
+//                                items: <String>[
+//                                  'Bagmati',
+//                                  'Lumbini',
+//                                  'Karnali',
+//                                  'Sudurpashchim'
+//                                ].map((String value) {
+//                                  return new DropdownMenuItem<String>(
+//                                    value: value,
+//                                    child: new Text(value),
+//                                  );
+//                                }).toList(),
+//                                onChanged: (val) {
+//                                  setState(() {
+//                                    state = val;
+//                                  });
+//                                },
+//                              ),
+//                            ))),
+//                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(

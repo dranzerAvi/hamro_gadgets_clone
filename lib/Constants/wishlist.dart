@@ -26,3 +26,10 @@ class Wishlist {
     };
   }
 }
+class Wishlist2{
+  String name;
+  String imgurl;
+  String price;
+  int quantity;
+  Wishlist2(this.name,this.imgurl,this.price,this.quantity);
+}

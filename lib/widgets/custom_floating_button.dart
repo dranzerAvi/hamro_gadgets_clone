@@ -46,7 +46,7 @@ class _CustomFloatingButtonState extends State<CustomFloatingButton> with Single
     super.initState();
 
 
-    currentScreen = widget.currentScreen?.currentScreen ?? HomeScreen();
+    currentScreen = widget.currentScreen?.currentScreen ?? HomeScreen(0);
     currentTab = widget.currentScreen?.tab_no ?? 0;
     _controller = AnimationController(
       duration: const Duration(milliseconds: 200),

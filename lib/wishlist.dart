@@ -34,6 +34,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
       allRows.forEach((row) => wishlistItems.add(Wishlist.fromMap(row)));
 //      print(cartItems[1]);
     });
+    checking();
   }
   List<Cart> cartItems = [];
   void getAllItems2() async {
@@ -72,6 +73,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
     });
     getAllItems();
     getAllItems2();
+//    checking();
     super.initState();
   }
   final dbHelper = DatabaseHelper.instance;
@@ -183,6 +185,19 @@ class _WishlistScreenState extends State<WishlistScreen> {
     });
 
   }
+  List<Wishlist2>allitems=[];
+  void checking(){
+    FirebaseFirestore.instance.collection('Products').snapshots().forEach((element) {
+      for(int i=0;i<element.docs.length;i++){
+        for(int j=0;j<wishlistItems.length;j++){
+          if(wishlistItems[j].productName==element.docs[i]['name']){
+            Wishlist2 we=Wishlist2(wishlistItems[j].productName,wishlistItems[j].imgUrl,wishlistItems[j].price,element.docs[i]['quantity']);
+            allitems.add(we);
+          }
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +216,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
               height:height*0.75,
         child:ListView.separated(
           scrollDirection: Axis.vertical,
-          itemCount:wishlistItems.length,
+          itemCount:allitems.length,
           separatorBuilder: (context, index) {
             return SizedBox(height:8);
           },
@@ -225,7 +240,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                             height:100,
                             width:100,
                             child:FancyShimmerImage(
-                              imageUrl: wishlistItems[index].imgUrl ,
+                              imageUrl: allitems[index].imgurl ,
                             )
                           ),
 
@@ -251,7 +266,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                             .width *
                                             0.8,
                                         child: Text(
-                                          wishlistItems[index].productName,
+                                          allitems[index].name,
                                           style: TextStyle(fontSize: height*0.02),
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
@@ -266,7 +281,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                           children: [
 
                                             Text(
-                                              'Price: Rs ${wishlistItems[index].price.toString()}',
+                                              'Price: Rs ${allitems[index].price.toString()}',
                                               style: TextStyle(
                                                   fontSize: 15,
                                                   fontWeight:
@@ -279,8 +294,9 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          InkWell(
+                                          (allitems[index].quantity>0)?InkWell(
                                             onTap:(){
+
                                               addToCart(context,name:wishlistItems[index].productName,imgUrl:wishlistItems[index].imgUrl,price:wishlistItems[index].price,qty:1,productDesc: 'Wishlist');
                                             },
                                             child: Container(
@@ -289,7 +305,12 @@ class _WishlistScreenState extends State<WishlistScreen> {
                                               decoration:BoxDecoration(color:primarycolor,borderRadius: BorderRadius.all(Radius.circular(3))),
                                               child:Center(child: Text('Add to Cart',style:GoogleFonts.poppins(color:Colors.white)))
                                             ),
-                                          ),
+                                          ): Container(
+                                          height: 23,
+                                          width:width*0.3,
+                                          decoration:BoxDecoration(color:primarycolor,borderRadius: BorderRadius.all(Radius.circular(3))),
+                                          child:Center(child: Text('Out of Stock',style:GoogleFonts.poppins(color:Colors.white)))
+                                      ),
                                           InkWell(
                                               onTap: () {
                                                 removeItem(

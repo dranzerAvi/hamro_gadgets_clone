@@ -9,6 +9,7 @@ import 'package:hamro_gadgets/Constants/cart.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
 import 'package:hamro_gadgets/Constants/order.dart';
 import 'package:hamro_gadgets/Constants/wishlist.dart';
+import 'package:hamro_gadgets/checkout2.dart';
 import 'package:hamro_gadgets/edit_profile.dart';
 import 'package:hamro_gadgets/my_addresses.dart';
 import 'package:hamro_gadgets/order_placed.dart';
@@ -41,6 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     getAllItemsWishlist();
     getAllItems();
     getAllItems2();
+//    checking();
     super.initState();
   }
   final dbHelperWishlist = DatabaseHelper2.instance;
@@ -62,6 +64,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String orderid;
   String desc='reorder';
   List<Wishlist> wishlistItems = [];
+  List<Wishlist2>allitems=[];
+  void checking(){
+    FirebaseFirestore.instance.collection('Products').snapshots().forEach((element) {
+      for(int i=0;i<element.docs.length;i++){
+        for(int j=0;j<wishlistItems.length;j++){
+          if(wishlistItems[j].productName==element.docs[i]['name']){
+            Wishlist2 we=Wishlist2(wishlistItems[j].productName,wishlistItems[j].imgUrl,wishlistItems[j].price,element.docs[i]['quantity']);
+            allitems.add(we);
+          }
+        }
+      }
+    });
+  }
   List<Order>reorders=[];
   void getAllItemsWishlist() async {
     final allRows = await dbHelperWishlist.queryAllRows();
@@ -110,6 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       allRows.forEach((row) => wishlistItems.add(Wishlist.fromMap(row)));
 //      print(cartItems[1]);
     });
+    checking();
   }
   void addToCart(ctxt,
       {String name,
@@ -295,7 +311,98 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
 
   }
+  List<Order>reorders2=[];
+  int inStock2=0;
+  void reorder2(String id)async{
+    reorders2.clear();
+    await FirebaseFirestore.instance.collection('Orders').doc(id).get().then((value) {
+      Map map2=value.data();
+      setState(() {
+        reorders2.add(
+          Order(
+              prices: map2['Price'],
+              items: map2['Items'],
+              total: map2['GrandTotal'].toString(),
+              quantities: map2['Qty'],
+              status: map2['Status'],
+              timestamp: map2['TimeStamp'],
+              images:map2['imgUrl'],
+              orderType: map2['orderType'],
+              id: map2['UserId']
+          )
+        );
+      });
+      print(reorders2.length);
+      FirebaseFirestore.instance.collection('RewardProducts').snapshots().listen((event) async{
+        for(int i =0;i<event.docs.length;i++){
+          for(int j=0;j<reorders2[0].items.length;j++){
+            if(reorders2[0].items[j]==event.docs[i]['name']){
+              if(event.docs[i]['quantity']>0){
+                await print('----------------$order');
+                if (order + 1 < 9) {
+                  await setState(() {
+                    orderid = 'HAMRO0000${order + 1}';
+                  });
+                }
+                if (order + 1 > 10 && order + 1 < 99) {
+                  await setState(() {
+                    orderid = 'HAMRO000${order + 1}';
+                  });
+                }
+                if (order + 1 > 99 && order + 1 < 999) {
+                  await setState(() {
+                    orderid = 'HAMRO00${order + 1}';
+                  });
+                }
+                if (order + 1 > 999 && order + 1 < 9999) {
+                  await setState(() {
+                    orderid = 'HAMRO0${order + 1}';
+                  });
+                }
+                if (order + 1 > 9999 && order + 1 < 99999) {
+                  await setState(() {
+                    orderid = 'HAMRO${order + 1}';
+                  });
+                }
+                if (order + 1 > 99999) {
+                  await setState(() {
+                    orderid = 'HAMRO${order + 1}';
+                  });
+                }
+
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.setString('Orderid', orderid);
+                print(orderid);
+
+                prefs.setString('Status', 'Order Placed');
+                await FirebaseFirestore.instance
+                    .collection('Ordercount')
+                    .doc('ordercount')
+                    .update({
+                  'Numberoforders': order + 1,
+                });
+                inStock2++;
+                List<String>newitems=[];
+                for (int n=0;n<reorders2[0].items.length;n++){
+                  newitems.add(reorders2[0].items[n].toString());
+                }
+                Navigator.push(context,MaterialPageRoute(builder:(context)=> Checkout2('', '', '', '', orderid, event.docs[i]['inStore'], newitems, event.docs[i]['rewardpoints'], reorders2[0].images[0].toString())));
+
+              }
+            }
+          }
+        }
+       if(inStock2==0){
+         Fluttertoast.showToast(
+             msg: 'Not available', toastLength: Toast.LENGTH_SHORT);
+       }
+      });
+
+    });
+  }
+  int instock=0;
   void reorder(String id)async {
+    reorders.clear();
     await FirebaseFirestore.instance.collection('Orders').doc(id).get().then((value) {
       Map map=value.data();
       print(map['imgUrl']);
@@ -308,22 +415,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
             status: map['Status'],
             timestamp: map['TimeStamp'],
             images:map['imgUrl'],
-
+            orderType: map['orderType'],
             id: map['UserId']));
       });
       print(reorders.length);
+       FirebaseFirestore.instance.collection('Products').snapshots().listen((element) {
+        for(int i=0;i<element.docs.length;i++){
 
+          for(int k=0;k<reorders[0].items.length;k++){
+            if(reorders[0].items[k]==element.docs[i]['name']){
+              print('hiiiiiiiiiiiiii${element.docs[i]['name']}');
+              if(element.docs[i]['quantity']>0){
+                print('hiiiiiiiiiiiiii${element.docs[i]['quantity']}');
+//                await  place();
+                instock++;
+                print(instock);
+                addToCart(context,name:reorders[0].items[k],imgUrl:reorders[0].images[k],price:reorders[0].prices[k],qty:reorders[0].quantities[k],productDesc:desc);
+              }
+            }
+
+
+          }
+        }
+        if(instock==reorders[0].items.length){
+          Fluttertoast.showToast(
+              msg: 'Added to cart', toastLength: Toast.LENGTH_SHORT);
+          Navigator.push(context,MaterialPageRoute(builder:(context)=>BookmarksScreen()));
+        }
+        if(instock<reorders[0].items.length){
+          if(reorders[0].items.length==1){
+
+            Fluttertoast.showToast(
+                msg: 'Not available', toastLength: Toast.LENGTH_SHORT);
+          }
+          else{
+            Fluttertoast.showToast(
+                msg: 'Some items are not available', toastLength: Toast.LENGTH_SHORT);
+            Navigator.push(context,MaterialPageRoute(builder:(context)=>BookmarksScreen()));
+          }
+
+        }
+      });
     });
-    await  place();
+
+
   }
-  void place(){
-    for(int i =0;i<reorders[0].items.length;i++) {
-      addToCart(context,name:reorders[0].items[i],imgUrl:reorders[0].images[i],price:reorders[0].prices[i],qty:reorders[0].quantities[i],productDesc:desc);
-    }
-    Fluttertoast.showToast(
-        msg: 'Added to cart', toastLength: Toast.LENGTH_SHORT);
-    Navigator.push(context,MaterialPageRoute(builder:(context)=>BookmarksScreen()));
-  }
+//  void place(
+//
+//      ){
+//    for(int i =0;i<reorders[0].items.length;i++) {
+//      addToCart(context,name:reorders[0].items[i],imgUrl:reorders[0].images[i],price:reorders[0].prices[i],qty:reorders[0].quantities[i],productDesc:desc);
+//    }
+//    Fluttertoast.showToast(
+//        msg: 'Added to cart', toastLength: Toast.LENGTH_SHORT);
+//    Navigator.push(context,MaterialPageRoute(builder:(context)=>BookmarksScreen()));
+//  }
   void removeItem(String name) async {
     // Assuming that the number of rows is the id for the last row.
     final rowsDeleted = await dbHelperWishlist.delete(name);
@@ -662,7 +808,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                              timestamp: snap.data.docs[i]['TimeStamp'],
                              images:snap.data.docs[i]['imgUrl'],
                              orderString: str,
-                             id: snap.data.docs[i].id));
+                             id: snap.data.docs[i].id,
+                         orderType: snap.data.docs[i]['orderType']));
                        }
                        return orders.length != 0
                            ? Container(
@@ -675,7 +822,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                  padding: EdgeInsets.fromLTRB(15.0, 8, 8, 8),
                                  child: InkWell(
                                    onTap: () async {
-                                     Navigator.push(context,MaterialPageRoute(builder:(context)=>OrderPlaced(orders[index].id,orders[index].images,orders[index].quantities,orders[index].prices,orders[index].timestamp,orders[index].total,orders[index].status,orders[index].items)));
+                                     Navigator.push(context,MaterialPageRoute(builder:(context)=>OrderPlaced(orders[index].id,orders[index].images,orders[index].quantities,orders[index].prices,orders[index].timestamp,orders[index].total,orders[index].status,orders[index].items,orders[index].orderType)));
                                    },
                                    child: Card(
                                      elevation: 5,
@@ -777,13 +924,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                                        SizedBox(
                                                                          width: 15,
                                                                        ),
-                                                                       Text(
-                                                                         'Price: Rs ${orders[index].prices[index2].toString()}',
-                                                                         style: GoogleFonts.poppins(
-                                                                             fontSize: 15,
-                                                                             fontWeight:
-                                                                             FontWeight.bold),
-                                                                       ),
+                                                                       (orders[index].orderType=='Point Mode'||orders[index].orderType=='Point Mode Instore')? Row(
+                                                                         children: [
+
+                                                                           Text('${orders[index].prices[index2].toString()} coins ',style:GoogleFonts.poppins(fontSize:15,fontWeight: FontWeight.bold)),
+                                                                           Image.asset('assets/images/coins.png',height:height*0.025,)
+                                                                         ],
+                                                                       )
+                                                                       :Text(
+                                                       'Price: Rs ${orders[index].prices[index2].toString()}',
+                                                       style: GoogleFonts.poppins(
+                                                       fontSize: 15,
+                                                       fontWeight:
+                                                       FontWeight.bold)),
                                                                        Spacer()
                                                                      ],
                                                                    ),
@@ -988,7 +1141,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                    color: Colors.black,
                                                    fontWeight: FontWeight.bold),
                                              ),
-                                             Text(
+                                             (orders[index].orderType=='Point Mode'||orders[index].orderType=='Point Mode Instore')?Row(
+                                               children: [
+
+                                                 Text('${orders[index].total} coins ',style:GoogleFonts.poppins(fontSize:15,fontWeight: FontWeight.bold)),
+                                                 Image.asset('assets/images/coins.png',height:height*0.025,)
+                                               ],
+                                             ) :Text(
                                                'Rs. ' + orders[index].total,
                                                style: GoogleFonts.poppins(fontSize: 14),
                                              ),
@@ -1013,7 +1172,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                  ),
                                                  InkWell(
                                                    onTap:(){
-                                                     reorder(orders[index].id);
+                                                     if(orders[index].orderType=='Point Mode'||orders[index].orderType=='Point Mode Instore'){
+ reorder2(orders[index].id);
+                                                     }
+                                                     else{
+                                                       reorder(orders[index].id);
+                                                     }
+
                                                    },
                                                    child: Container(
                                                        height:20,
@@ -1062,7 +1227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                    height:height*0.75,
                    child:ListView.separated(
                      scrollDirection: Axis.vertical,
-                     itemCount:wishlistItems.length,
+                     itemCount:allitems.length,
                      separatorBuilder: (context, index) {
                        return SizedBox(height:8);
                      },
@@ -1086,7 +1251,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                          height:100,
                                          width:100,
                                          child:FancyShimmerImage(
-                                           imageUrl: wishlistItems[index].imgUrl ,
+                                           imageUrl: allitems[index].imgurl ,
                                          )
                                      ),
 
@@ -1112,7 +1277,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                        .width *
                                                        0.8,
                                                    child: Text(
-                                                     wishlistItems[index].productName,
+                                                     allitems[index].name,
                                                      style: TextStyle(fontSize: height*0.02),
                                                      maxLines: 2,
                                                      overflow: TextOverflow.ellipsis,
@@ -1127,7 +1292,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                      children: [
 
                                                        Text(
-                                                         'Price: Rs ${wishlistItems[index].price.toString()}',
+                                                         'Price: Rs ${allitems[index].price.toString()}',
                                                          style: TextStyle(
                                                              fontSize: 15,
                                                              fontWeight:
@@ -1140,7 +1305,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                  Row(
                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                    children: [
-                                                     InkWell(
+                                                     (allitems[index].quantity>0)?InkWell(
                                                        onTap:(){
                                                          addToCart2(context,name:wishlistItems[index].productName,imgUrl:wishlistItems[index].imgUrl,price:wishlistItems[index].price,qty:1,productDesc: 'Wishlist');
                                                        },
@@ -1150,7 +1315,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                            decoration:BoxDecoration(color:primarycolor,borderRadius: BorderRadius.all(Radius.circular(3))),
                                                            child:Center(child: Text('Add to Cart',style:GoogleFonts.poppins(color:Colors.white)))
                                                        ),
-                                                     ),
+                                                     ):Container(
+                                                     height: 23,
+                                                     width:width*0.3,
+                                                     decoration:BoxDecoration(color:primarycolor,borderRadius: BorderRadius.all(Radius.circular(3))),
+                                                     child:Center(child: Text('Out of stock',style:GoogleFonts.poppins(color:Colors.white)))
+                                                 ),
                                                      InkWell(
                                                          onTap: () {
                                                            removeItem(

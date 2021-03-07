@@ -5,6 +5,7 @@ class Order {
   Timestamp timestamp;
   var date;
   List items, prices, quantities,images;
+  String orderType;
   Order(
       {this.prices,
         this.quantities,
@@ -15,5 +16,6 @@ class Order {
         this.timestamp,
         this.orderString,
         this.id,
-        this.date});
+        this.date,
+      this.orderType});
 }

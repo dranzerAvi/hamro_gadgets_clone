@@ -10,7 +10,8 @@ class OrderPlaced extends StatefulWidget {
   List<dynamic>images=[]; List<dynamic>prices=[];List<dynamic>quantities=[];List<dynamic>items=[];
   String id,status,total;
   Timestamp timestamp;
-  OrderPlaced(this.id,this.images,this.quantities,this.prices,this.timestamp,this.total,this.status,this.items);
+  String orderType;
+  OrderPlaced(this.id,this.images,this.quantities,this.prices,this.timestamp,this.total,this.status,this.items,this.orderType);
   @override
   _OrderPlacedState createState() => _OrderPlacedState();
 }
@@ -152,13 +153,19 @@ class _OrderPlacedState extends State<OrderPlaced> {
                                                   SizedBox(
                                                     width: 15,
                                                   ),
-                                                  Text(
-                                                    'Price: Rs ${widget.prices[index].toString()}',
-                                                    style: GoogleFonts.poppins(
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                        FontWeight.bold),
-                                                  ),
+                                                  (widget.orderType=='Point Mode'||widget.orderType=='Point Mode Instore')? Row(
+                                                    children: [
+
+                                                      Text('${widget.prices[index].toString()} coins ',style:GoogleFonts.poppins(fontSize:15,fontWeight: FontWeight.bold)),
+                                                      Image.asset('assets/images/coins.png',height:height*0.025,)
+                                                    ],
+                                                  )
+                                                      :Text(
+                                                      'Price: Rs ${widget.prices[index].toString()}',
+                                                      style: GoogleFonts.poppins(
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                          FontWeight.bold)),
                                                   Spacer()
                                                 ],
                                               ),
@@ -363,7 +370,13 @@ class _OrderPlacedState extends State<OrderPlaced> {
                               color: Colors.black,
                               fontWeight: FontWeight.bold),
                         ),
-                        Text(
+                        (widget.orderType=='Point Mode'||widget.orderType=='Point Mode Instore')?Row(
+                          children: [
+
+                            Text('${widget.total} coins ',style:GoogleFonts.poppins(fontSize:15,fontWeight: FontWeight.bold)),
+                            Image.asset('assets/images/coins.png',height:height*0.025,)
+                          ],
+                        ) :Text(
                           'Rs. ' + widget.total,
                           style: GoogleFonts.poppins(fontSize: 14),
                         ),

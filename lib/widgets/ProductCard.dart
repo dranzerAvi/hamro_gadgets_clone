@@ -19,6 +19,7 @@ class ProductCard extends StatefulWidget {
   String rating;
   Map specs;
   int quantity;
+  bool inStore;
   ProductCard(
       this.imageUrl,
       this.name,
@@ -29,7 +30,8 @@ class ProductCard extends StatefulWidget {
       this.detailsurls,
       this.rating,
       this.specs,
-      this.quantity);
+      this.quantity,
+      this.inStore);
 
   @override
   _ProductCardState createState() => _ProductCardState();
@@ -212,42 +214,81 @@ class _ProductCardState extends State<ProductCard> {
             child: Card(
                 child: Column(
               children: [
-                widget.quantity > 0
-                    ? Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.check_circle,
-                                  color: Colors.green,
-                                  size:
-                                      MediaQuery.of(context).size.height * 0.02,
-                                ),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                Text('in stock',
-                                    style: TextStyle(
-                                        color: Colors.green,
-                                        fontSize:
-                                            MediaQuery.of(context).size.height *
-                                                0.02)),
-                              ],
-                            )),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Text('Out of stock',
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize:
-                                        MediaQuery.of(context).size.height *
-                                            0.015))),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    widget.quantity > 0
+                        ? Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                                size:
+                                MediaQuery.of(context).size.height * 0.02,
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Text('in stock',
+                                  style: TextStyle(
+                                      color: Colors.green,
+                                      fontSize:
+                                      MediaQuery.of(context).size.height *
+                                          0.02)),
+                            ],
+                          )),
+                    )
+                        : Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.cancel,
+                                color: Colors.red,
+                                size:
+                                MediaQuery.of(context).size.height * 0.02,
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+
+                              Text('Out of stock',
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize:
+                                      MediaQuery.of(context).size.height *
+                                          0.02)),
+                            ],
+                          )),
+                    ),
+                    (widget.inStore&&widget.quantity>0)?Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: Row(
+                          children: [
+                            Icon(Icons.business,
+                              color: Colors.blue,
+                              size:
+                              MediaQuery.of(context).size.height * 0.02,),
+                            Text(' In Store', style: TextStyle(
+                                color: Colors.blue,
+                                fontSize:
+                                MediaQuery.of(context).size.height *
+                                    0.02))
+                          ],
+                        ),
                       ),
+                    ):Container()
+                  ],
+                ),
+
                 SizedBox(height: height * 0.01),
                 FancyShimmerImage(
                   imageUrl: widget.imageUrl,
@@ -308,15 +349,16 @@ class _ProductCardState extends State<ProductCard> {
                   ),
                   Spacer(),
                   Container(
+
                       decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: Colors.red),
+                          shape: BoxShape.circle, color: Colors.red,),
                       child: Padding(
                         padding: EdgeInsets.all(height * 0.012),
                         child: Align(
                             alignment: Alignment.bottomRight,
                             child: Text(
                               ' - ${((int.parse(widget.mp.toString()) - int.parse(widget.disprice.toString())) / int.parse(widget.mp.toString()) * 100).toStringAsFixed(0)}%',
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.white,fontSize: 12),
                             )),
                       )),
                 ]),

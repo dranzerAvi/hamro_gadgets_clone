@@ -150,12 +150,13 @@ class _SignUpState extends State<SignUp> {
                                      'email':email,
                                       'role':'Hamroxxxx',
                                       'state':state,
-                                       'street':address
+                                       'street':address,
+                                        'count':0
 
                                   });
     SharedPreferences prefs= await SharedPreferences.getInstance();
     prefs.setString('isLogged', 'true');
-    Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScreen()));
+    Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScreen(0)));
   }
 
   @override

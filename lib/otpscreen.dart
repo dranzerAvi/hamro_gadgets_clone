@@ -96,7 +96,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
                               onPressed: ()async{
                                 firebaseAuth.signInWithCredential(PhoneAuthProvider.credential(verificationId: widget.id, smsCode: otp)).then((value) =>
-      widget.check=='login'?  Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScreen())):  Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>SignUp(widget.number))),
+      widget.check=='login'?  Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>HomeScreen(0))):  Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>SignUp(widget.number))),
     );
 //                              if(e.toString()!=null){
 //                                Fluttertoast.showToast(
