@@ -21,6 +21,8 @@ import 'package:hamro_gadgets/services/database_helper.dart';
 import 'package:hamro_gadgets/widgets/ProductCard.dart';
 import 'package:hamro_gadgets/widgets/nav_drawer.dart';
 import 'package:material_dialogs/material_dialogs.dart';
+import 'package:material_dialogs/widgets/buttons/icon_button.dart';
+import 'package:material_dialogs/widgets/buttons/icon_outline_button.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -84,28 +86,33 @@ class _HomeScreenState extends State<HomeScreen> {
     return caseSearchList;
   }
   bool yes=false;
-  void alert(int count2){
+  void alert(int count2,BuildContext ctx){
 
 
     print('hiiiiiiiiii');
     Dialogs.materialDialog(
 
         color: Colors.white,
-        barrierDismissible: true,
+
         msg: 'Congratulations!, you have won ${count2.toString()} coins  on your previous order.',
         title: 'Congratulations',
         animation: 'assets/cong_example.json',
-        context: context);
-//            actions: [
-//              IconsButton(
-//                onPressed: () {},
-//                text: 'Claim',
-//                iconData: Icons.done,
-//                color: Colors.blue,
-//                textStyle: TextStyle(color: Colors.white),
-//                iconColor: Colors.white,
-//              ),
-//            ]);
+barrierDismissible: true,
+        context: ctx,
+        actions: [
+          IconsButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+            text: 'Claim',
+            iconData: Icons.done,
+            color: primarycolor,
+            textStyle: TextStyle(color: Colors.white),
+            iconColor: Colors.white,
+          ),
+
+        ],
+        );
 
 //    up(count2);
   setState(() {
@@ -117,6 +124,9 @@ class _HomeScreenState extends State<HomeScreen> {
   static const int TAB_NO = 1;
   List<Banners> imageList = [];
   List<Products> newproducts = [];
+  List<Products>laptops=[];
+  List<Products>speakers=[];
+  List<Products>headphones=[];
   List<Banners> banners = [];
   TextEditingController _cont = TextEditingController();
   PersistentTabController _controller = PersistentTabController();
@@ -126,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     getAllItems();
 //    if(widget.count>0&&yes==false&&to==0){
-//      alert(widget.count);
+//      alert(widget.count,context);
 //
 //    }
     double height = MediaQuery.of(context).size.height;
@@ -262,7 +272,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                  map['specs'],
                                                  map['quantity'],
                                                  MediaQuery.of(context).size.height,
-                                                 MediaQuery.of(context).size.width)));
+                                                 MediaQuery.of(context).size.width,
+                                             map['varientID'])));
 
                                    });
                                   },
@@ -340,7 +351,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           snap.data.docs[i]['Brands'],
                           snap.data.docs[i]['Category'],
                           snap.data.docs[i]['SubCategories'],
-                          List.from(snap.data.docs[i]['colors']),
+
                           snap.data.docs[i]['description'],
                           snap.data.docs[i]['details'],
                           List.from(snap.data.docs[i]['detailsGraphicURLs']),
@@ -355,7 +366,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           snap.data.docs[i]['specs'],
                           snap.data.docs[i]['status'],
                         snap.data.docs[i]['inStore'],
-                        snap.data.docs[i]['productId']
+                        snap.data.docs[i]['productId'],
+                        snap.data.docs[i]['varientID'],
+                        snap.data.docs[i]['varientcolor'],
+                        snap.data.docs[i]['varientsize']
                       );
 
                       newproducts.add(pro);
@@ -386,7 +400,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     item.rating,
                                     item.specs,
                                     item.quantity,
-                                item.inStore),
+                                item.inStore,
+                                item.varientId),
                               ),
                             );
                           }),
@@ -439,14 +454,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder:
                     (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
                   if (snap.hasData && !snap.hasError && snap.data != null) {
-                    newproducts.clear();
+                    laptops.clear();
 
                     for (int i = 0; i < snap.data.docs.length; i++) {
+//                      print(snap.data.docs.length);
+//                      print('---------${snap.data.docs[i]['varientID']}yes');
                       Products pro = Products(
                           snap.data.docs[i]['Brands'],
                           snap.data.docs[i]['Category'],
                           snap.data.docs[i]['SubCategories'],
-                          List.from(snap.data.docs[i]['colors']),
+
                           snap.data.docs[i]['description'],
                           snap.data.docs[i]['details'],
                           List.from(snap.data.docs[i]['detailsGraphicURLs']),
@@ -461,19 +478,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           snap.data.docs[i]['specs'],
                           snap.data.docs[i]['status'],
                       snap.data.docs[i]['inStore'],
-                      snap.data.docs[i]['productId']);
+                      snap.data.docs[i]['productId'],
+                      snap.data.docs[i]['varientID'],
+                          snap.data.docs[i]['varientcolor'],
+                          snap.data.docs[i]['varientsize']
+                      );
 
-                      newproducts.add(pro);
+                      laptops.add(pro);
                     }
 
-                    return (newproducts.length!=0)?Container(
+                    return (laptops.length!=0)?Container(
                       height: height * 0.41,
                       child: ListView.builder(
-                          itemCount: newproducts.length,
+                          itemCount: laptops.length,
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
-                            var item = newproducts[index];
+                            var item = laptops[index];
 
                             return Container(
                               height: height * 0.4,
@@ -491,7 +512,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     item.rating,
                                     item.specs,
                                     item.quantity,
-                                item.inStore),
+                                item.inStore,
+                                item.varientId),
                               ),
                             );
                           }),
@@ -559,7 +581,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               map['specs'],
                                               map['quantity'],
                                               MediaQuery.of(context).size.height,
-                                              MediaQuery.of(context).size.width)));
+                                              MediaQuery.of(context).size.width,
+                                          map['varientID'])));
  });
                     },
                           child: Image.network(
@@ -595,7 +618,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           map['specs'],
                                           map['quantity'],
                                           MediaQuery.of(context).size.height,
-                                          MediaQuery.of(context).size.width)));
+                                          MediaQuery.of(context).size.width,
+                                      map['varientID'])));
                             });
                           },
                           child: Image.network(
@@ -645,14 +669,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder:
                     (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
                   if (snap.hasData && !snap.hasError && snap.data != null) {
-                    newproducts.clear();
+                    headphones.clear();
 
                     for (int i = 0; i < snap.data.docs.length; i++) {
                       Products pro = Products(
                           snap.data.docs[i]['Brands'],
                           snap.data.docs[i]['Category'],
                           snap.data.docs[i]['SubCategories'],
-                          List.from(snap.data.docs[i]['colors']),
+
                           snap.data.docs[i]['description'],
                           snap.data.docs[i]['details'],
                           List.from(snap.data.docs[i]['detailsGraphicURLs']),
@@ -667,19 +691,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           snap.data.docs[i]['specs'],
                           snap.data.docs[i]['status'],
                       snap.data.docs[i]['inStore'],
-                      snap.data.docs[i]['productId']);
+                      snap.data.docs[i]['productId'],
+                      snap.data.docs[i]['varientID'],
+                          snap.data.docs[i]['varientcolor'],
+                          snap.data.docs[i]['varientsize']
+                      );
 
-                      newproducts.add(pro);
+                      headphones.add(pro);
                     }
 
-                    return (newproducts.length!=0)?Container(
+                    return (headphones.length!=0)?Container(
                       height: height * 0.41,
                       child: ListView.builder(
-                          itemCount: newproducts.length,
+                          itemCount: headphones.length,
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
-                            var item = newproducts[index];
+                            var item = headphones[index];
                             return Container(
                               height: height * 0.4,
                               width: width * 0.5,
@@ -696,7 +724,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     item.rating,
                                     item.specs,
                                     item.quantity,
-                                item.inStore),
+                                item.inStore,
+                                item.varientId),
                               ),
                             );
                           }),
@@ -744,14 +773,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder:
                     (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
                   if (snap.hasData && !snap.hasError && snap.data != null) {
-                    newproducts.clear();
+                    speakers.clear();
 
                     for (int i = 0; i < snap.data.docs.length; i++) {
                       Products pro = Products(
                           snap.data.docs[i]['Brands'],
                           snap.data.docs[i]['Category'],
                           snap.data.docs[i]['SubCategories'],
-                          List.from(snap.data.docs[i]['colors']),
+
                           snap.data.docs[i]['description'],
                           snap.data.docs[i]['details'],
                           List.from(snap.data.docs[i]['detailsGraphicURLs']),
@@ -766,19 +795,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           snap.data.docs[i]['specs'],
                           snap.data.docs[i]['status'],
                       snap.data.docs[i]['inStore'],
-                      snap.data.docs[i]['productId']);
+                      snap.data.docs[i]['productId'],
+                      snap.data.docs[i]['varientID'],
+                          snap.data.docs[i]['varientcolor'],
+                          snap.data.docs[i]['varientsize']
+                      );
 
-                      newproducts.add(pro);
+                      speakers.add(pro);
                     }
 
-                    return(newproducts.length!=0)? Container(
+                    return(speakers.length!=0)? Container(
                       height: height * 0.41,
                       child: ListView.builder(
-                          itemCount: newproducts.length,
+                          itemCount: speakers.length,
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
-                            var item = newproducts[index];
+                            var item = speakers[index];
                             return Container(
                               height: height * 0.4,
                               width: width * 0.5,
@@ -795,7 +828,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     item.rating,
                                     item.specs,
                                     item.quantity,
-                                item.inStore),
+                                item.inStore,
+                                item.varientId),
                               ),
                             );
                           }),

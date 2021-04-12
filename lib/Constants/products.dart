@@ -2,7 +2,7 @@ class Products {
   String Brand;
   String category;
   String subcategories;
-  List<String> colors = [];
+//  List<String> colors = [];
   String description;
   Map details;
   List<String> detailsurls = [];
@@ -18,11 +18,14 @@ class Products {
   String status;
   bool inStore;
   String productId;
+  String varientId;
+  String varientcolor;
+  String varientsize;
   Products(
       this.Brand,
       this.category,
       this.subcategories,
-      this.colors,
+
       this.description,
       this.details,
       this.detailsurls,
@@ -37,7 +40,10 @@ class Products {
       this.specs,
       this.status,
       this.inStore,
-      this.productId
+      this.productId,
+      this.varientId,
+      this.varientcolor,
+      this.varientsize
       );
 }
 // class Details{

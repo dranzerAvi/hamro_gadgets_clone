@@ -142,12 +142,14 @@ class _SignUpState extends State<SignUp> {
     });
   }
   void createUser(String name,String email,String state,String address,String url)async{
+    List<String>titles=[];
     await FirebaseFirestore.instance.collection('Users').doc(firebaseAuth.currentUser.uid).set({
                                     'userId':firebaseAuth.currentUser.uid,
                                     'phoneNumber':'+91${widget.phnNumber}',
                                      'ImageURL':url,
                                      'name':name,
                                      'email':email,
+      'couponUsed':titles,
                                       'role':'Hamroxxxx',
                                       'state':state,
                                        'street':address,

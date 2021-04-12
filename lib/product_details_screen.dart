@@ -17,6 +17,8 @@ import 'package:hamro_gadgets/wishlist.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'widgets/ProductCard.dart';
+
 class ProductDetailsScreen extends StatefulWidget {
   String imageUrl;
   String name;
@@ -30,6 +32,7 @@ class ProductDetailsScreen extends StatefulWidget {
   int quantity;
   double scHeight;
   double scWidth;
+  String varientid;
   ProductDetailsScreen(
       this.imageUrl,
       this.name,
@@ -42,7 +45,8 @@ class ProductDetailsScreen extends StatefulWidget {
       this.specs,
       this.quantity,
       this.scHeight,
-      this.scWidth);
+      this.scWidth,
+      this.varientid);
   @override
   _ProductDetailsScreenState createState() => _ProductDetailsScreenState();
 }
@@ -78,7 +82,42 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     Fluttertoast.showToast(msg: 'Updated', toastLength: Toast.LENGTH_SHORT);
     getAllItems();
   }
+  List<Products>varients=[];
+ void getvarient(){
+   varients.clear();
+   if(widget.varientid!=null&&widget.varientid!=''){
+     FirebaseFirestore.instance.collection('Products').where('varientID',isEqualTo: widget.varientid).get().then((value) {
+       for(int i=0;i<value.docs.length;i++){
+         Products pro = Products(
+             value.docs[i]['Brands'],
+             value.docs[i]['Category'],
+             value.docs[i]['SubCategories'],
 
+             value.docs[i]['description'],
+             value.docs[i]['details'],
+             List.from(value.docs[i]['detailsGraphicURLs']),
+             value.docs[i]['disPrice'],
+             value.docs[i]['docID'],
+             List.from(value.docs[i]['imageURLs']),
+             value.docs[i]['mp'],
+             value.docs[i]['name'],
+             value.docs[i]['noOfPurchases'],
+             value.docs[i]['quantity'],
+             value.docs[i]['rating'].toString(),
+             value.docs[i]['specs'],
+             value.docs[i]['status'],
+             value.docs[i]['inStore'],
+             value.docs[i]['productId'],
+             value.docs[i]['varientID'],
+             value.docs[i]['varientcolor'],
+             value.docs[i]['varientsize']);
+
+         varients.add(pro);
+       }
+     });
+   }
+
+ }
   void updateItemWishlist(
       {int id,
       String name,
@@ -421,6 +460,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     });
     choice = 0;
     first();
+    getvarient();
     checkInCart();
     getAllItems();
     super.initState();
@@ -1024,8 +1064,56 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           height: heightOfStack,
                           boxFit: BoxFit.fill,
                         ),
-                      )
+                      ),
+                          (varients.length!=0)?Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(left: 12.0),
+                                  child: Text('Similar Products',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: height * 0.025,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              ],
+                            ),
+                          ):Container(),
+                          (varients.length!=0)? Container(
+                            height:height*0.45,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListView.builder(
+                                itemCount: varients.length,
+scrollDirection: Axis.horizontal,
+shrinkWrap: true,
+                                  itemBuilder: (context,index){
+                                  var item =varients[index];
+                                return Container(
+                                  height:height*0.45,
+                                  width:width*0.5,
+
+                                  child: ProductCard(
+                                      item.imageurls[0],
+                                      item.name,
+                                      item.mp,
+                                      item.disprice,
+                                      item.description,
+                                      item.details,
+                                      item.imageurls,
+                                      item.rating,
+                                      item.specs,
+                                      item.quantity,
+                                      item.inStore,
+                                      item.varientId
+                                  ),
+                                );
+                              }),
+                            ),
+                          ):Container()
                     ])),
+
                    Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(

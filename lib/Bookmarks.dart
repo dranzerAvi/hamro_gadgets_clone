@@ -272,7 +272,7 @@ store=false;
                                             fontSize: height * 0.02)),
                                     Text(
                                         '${totalAmount() +
-                                            (totalAmount() * 0.1 + 20)}',
+                                            (totalAmount() * 0.1 )}',
                                         style: GoogleFonts.poppins(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,

@@ -20,6 +20,7 @@ class ProductCard extends StatefulWidget {
   Map specs;
   int quantity;
   bool inStore;
+  String varientid;
   ProductCard(
       this.imageUrl,
       this.name,
@@ -31,7 +32,8 @@ class ProductCard extends StatefulWidget {
       this.rating,
       this.specs,
       this.quantity,
-      this.inStore);
+      this.inStore,
+      this.varientid);
 
   @override
   _ProductCardState createState() => _ProductCardState();
@@ -206,7 +208,8 @@ class _ProductCardState extends State<ProductCard> {
                       widget.specs,
                       widget.quantity,
                       MediaQuery.of(context).size.height,
-                      MediaQuery.of(context).size.width)));
+                      MediaQuery.of(context).size.width,
+                  widget.varientid)));
         },
         child: Container(
             height: height * 0.4,

@@ -168,6 +168,7 @@ class _AllCategoriesState extends State<AllCategories> {
                                           catName: snap.data.docs[i]['catName'],
                                           filters: List.from(
                                               snap.data.docs[i]['filters']),
+                                      sizefilters:List.from(snap.data.docs[i]['sizefilter'])
                                         )));
                           },
                           child: Card(

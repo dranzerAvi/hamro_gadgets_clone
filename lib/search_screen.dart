@@ -40,7 +40,7 @@ class _SearchScreenState extends State<SearchScreen> {
             f['Brands'],
             f['Category'],
             f['SubCategories'],
-            List.from(f['colors']),
+
             f['description'],
             f['details'],
             List.from(f['detailsGraphicURLs']),
@@ -55,7 +55,10 @@ class _SearchScreenState extends State<SearchScreen> {
             f['specs'],
             f['status'],
         f['inStore'],
-        f['productId']);
+        f['productId'],
+        f['varientID'],
+        f['varientcolor'],
+        f['varientsize']);
 
         await dogList1.add(dp);
         // await dogCardsList1.add(MyDogCard(dp, width, height));
@@ -119,7 +122,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                     item.specs,
                                     item.quantity,
                                     MediaQuery.of(context).size.height,
-                                    MediaQuery.of(context).size.width)));
+                                    MediaQuery.of(context).size.width,
+                                item.varientId)));
                         // _scaffoldKey.currentState.showBottomSheet((context) {
                         //   return StatefulBuilder(
                         //       builder: (context, StateSetter state) {
@@ -243,7 +247,7 @@ class _SearchScreenState extends State<SearchScreen> {
               f['Brands'],
               f['Category'],
               f['SubCategories'],
-              List.from(f['colors']),
+
               f['description'],
               f['details'],
               List.from(f['detailsGraphicURLs']),
@@ -258,7 +262,10 @@ class _SearchScreenState extends State<SearchScreen> {
               f['specs'],
               f['status'],
           f['inStore'],
-          f['productId']);
+          f['productId'],
+          f['varientID'],
+          f['varientcolor'],
+          f['varientsize']);
           dogList.add(dog);
           setState(() {
             print('Updated');
@@ -278,7 +285,7 @@ class _SearchScreenState extends State<SearchScreen> {
             f['Brands'],
             f['Category'],
             f['SubCategories'],
-            List.from(f['colors']),
+
             f['description'],
             f['details'],
             List.from(f['detailsGraphicURLs']),
@@ -293,7 +300,10 @@ class _SearchScreenState extends State<SearchScreen> {
             f['specs'],
             f['status'],
         f['inStore'],
-        f['productId']));
+        f['productId'],
+        f['varientID'],
+        f['varientcolor'],
+        f['varientsize']));
         print('Dog added');
 //        print(f['profileImage'].toString());
 //        print('--------------------${f['Quantity'].length}');

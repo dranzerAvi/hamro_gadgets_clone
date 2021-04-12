@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
@@ -8,8 +11,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hamro_gadgets/Constants/area.dart';
 import 'package:hamro_gadgets/Constants/cart.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
+import 'package:hamro_gadgets/Constants/offer.dart';
 import 'package:hamro_gadgets/home_screen.dart';
 import 'package:hamro_gadgets/my_addresses2.dart';
+import 'package:hamro_gadgets/offers_screen.dart';
 import 'package:hamro_gadgets/services/database_helper.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 import 'package:material_dialogs/widgets/buttons/icon_button.dart';
@@ -34,6 +39,7 @@ class _CheckoutState extends State<Checkout> {
   String ShippingCharge='';
   String country = 'India';
   String type = 'Delivery';
+//  Offer discount;
   final scaffoldState = GlobalKey<ScaffoldState>();
   final _formkey = GlobalKey<FormState>();
   GlobalKey key = new GlobalKey();
@@ -109,7 +115,7 @@ void up(int count){
     'count':count+counts
   });
 }
-int discount=0;
+//int discount=0;
 void alert(int count2){
 
 
@@ -176,6 +182,22 @@ up(count2);
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Text('Discount-'),
+//                  SizedBox(
+//                    width: MediaQuery.of(context).size.width * 0.2,
+//                  ),
+//                  Text(':'),
+//                  SizedBox(
+//                    width: MediaQuery.of(context).size.width * 0.03,
+//                  ),
+                  Text(discount != null
+                      ? 'Rs. ${(totalAmount() * (double.parse(discount.discount) / 100)).toStringAsFixed(2)}'
+                      : 'Rs. 0'),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Text('Taxes and Charges-',style:GoogleFonts.poppins()),
 //                  SizedBox(
 //                    width: MediaQuery.of(context).size.width * 0.03,
@@ -215,7 +237,9 @@ up(count2);
 //                  SizedBox(
 //                    width: MediaQuery.of(context).size.width * 0.03,
 //                  ),
-                  (ShippingCharge!='')?Text('Rs. ${((totalAmount() * 0.10) + totalAmount())+double.parse(ShippingCharge)}',style:GoogleFonts.poppins()):Text('Rs. ${((totalAmount() * 0.10) + totalAmount())}',style:GoogleFonts.poppins()),
+                  Text(discount != null
+                      ?(ShippingCharge!='')? 'Rs. ${((totalAmount() * 0.10) + totalAmount() - (totalAmount() * (double.parse(discount.discount) / 100)) + double.parse(ShippingCharge)).toStringAsFixed(2)}'
+                      : 'Rs. ${((totalAmount() * 0.10) + totalAmount()  - (totalAmount() * (double.parse(discount.discount) / 100))).toStringAsFixed(2)}':'Rs. ${((totalAmount() * 0.10) + totalAmount() ).toStringAsFixed(2)}'),
                 ],
               ),
               SizedBox(
@@ -294,7 +318,48 @@ up(count2);
 
 
   }
+  void set(String title) async {
+    await getUserDetails();
+    // print('title:${title}');
+    List titles = [];
+//    titles.add(title);
+    List check = [];
+    await Firestore.instance
+        .collection('Users')
+        .document(user.uid)
+        .get()
+        .then((value) {
+      Map map = value.data();
+      check = map['couponUsed'];
+      for (int i = 0; i < check.length; i++) {
+        titles.add(check[i]);
+      }
+
+      // print('checkkkkkkkkkkkkkkkkkkkk${check.length}');
+
+      titles.add(title);
+      // print('========================${titles}');
+      Firestore.instance.collection('Users').document(user.uid).update({
+        'couponUsed': titles,
+      });
+    });
+  }
   void placeOrder(String type) async {
+    var dis;
+    var coupon;
+    (discount != null) ? coupon = discount.title : coupon = '';
+    set(coupon);
+
+//    if(discount.discount==''&&discount.discount==null){
+//      dis='0.0';
+//    }
+//    else{
+//      dis=double.parse(discount.discount).toString();
+//    }
+    discount != null
+        ? dis =
+    ('${(totalAmount() * (double.parse(discount.discount) / 100)).toStringAsFixed(2)}')
+        : dis = ' 0';
     print('productidinplace:${productsid.length}');
     (type != 'payatstore')
         ? coins = 0.1 *
@@ -328,6 +393,8 @@ up(count2);
         final databaseReference = FirebaseFirestore.instance;
         databaseReference.collection('Orders').doc(orderid).set({
           'Address': address1,
+          'couponUsed':discount.title,
+          'discountPrice':dis,
           'GrandTotal': totalAmount() +
               (totalAmount() * 0.1 + double.parse(ShippingCharge)),
           'Items': items,
@@ -343,6 +410,7 @@ up(count2);
         });
         removeAll();
         updatepro(items,quantities);
+        callapi(orderid);
         alert(coins.toInt());
         Fluttertoast.showToast(
             msg: 'Your order has been placed', toastLength: Toast.LENGTH_SHORT);
@@ -364,6 +432,8 @@ up(count2);
         final databaseReference = FirebaseFirestore.instance;
         databaseReference.collection('Orders').doc(orderid).set({
           'Address': address2,
+          'couponUsed':discount.title,
+          'discountPrice':dis,
           'GrandTotal': totalAmount() +
               (totalAmount() * 0.1 + double.parse(ShippingCharge)),
           'Items': items,
@@ -380,6 +450,7 @@ up(count2);
       removeAll();
         updatepro(items,quantities);
         alert(coins.toInt());
+        callapi(orderid);
         Fluttertoast.showToast(
             msg: 'Your order has been placed', toastLength: Toast.LENGTH_SHORT);
         Navigator.pushReplacement(
@@ -391,6 +462,8 @@ up(count2);
       databaseReference.collection('Orders').doc(orderid).set({
 
         'GrandTotal': totalAmount() + (totalAmount() * 0.1),
+        'couponUsed':discount.title,
+        'discountPrice':dis,
         'Items': items,
         'Price': prices,
         'Qty': quantities,
@@ -405,6 +478,7 @@ up(count2);
 
       removeAll();
       updatepro(items,quantities);
+      callapi(orderid);
       alert(coins.toInt());
       Fluttertoast.showToast(
           msg: 'Your order has been placed', toastLength: Toast.LENGTH_SHORT);
@@ -421,6 +495,32 @@ up(count2);
     for (var v in cartItems) {
       final rowsDeleted = await dbHelper.delete(v.productName);
     }
+  }
+  void callapi(String orderid)async{
+    print('rEACHED');
+    HttpClient httpClient = new HttpClient();
+    httpClient.badCertificateCallback =
+    ((X509Certificate cert, String host, int port) => true);
+    final String apiUrl = "http://api.sparrowsms.com/v2";
+    Map map = {
+      "token": 'v2_r7OFGQG1crKK1lNJJJAYpqslNHD.eJeE',
+      "from": "Demo",
+      "to": user.phoneNumber,
+      "text": 'Dear ${user.displayName}, your order ${orderid} is ${'Order Placed'}. Please visit our website/app and check your dashboard.'
+    };
+    HttpClientRequest request = await httpClient.postUrl(Uri.parse(apiUrl));
+
+    request.headers.set('content-type', 'application/json');
+    request.add(utf8.encode(json.encode(map)));
+    HttpClientResponse response = await request.close();
+    var reply = await response.transform(utf8.decoder).join();
+    httpClient.close();
+print('-------------------------------------------');
+    print(reply);
+
+
+
+
   }
 
   @override
@@ -987,6 +1087,43 @@ up(count2);
 //              ),
 //            ),
               Bill(),
+              discount == null
+                  ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('No promo code applied!'),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return ApplyOffers(this, context);
+                          }));
+                    },
+                    child: Text(
+                      ' Apply Promo Code',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                ],
+              )
+                  : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('${discount.discount}% off promo code applied!'),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return ApplyOffers(this, context);
+                          }));
+                    },
+                    child: Text(
+                      ' Change',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                ],
+              ),
 //              InkWell(
 //                onTap:(){
 //                  alert();

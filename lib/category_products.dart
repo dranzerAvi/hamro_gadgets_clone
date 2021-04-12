@@ -10,7 +10,8 @@ import 'package:flutter_range_slider/flutter_range_slider.dart' as frs;
 class CategoryProducts extends StatefulWidget {
   String catName;
   List<String> filters = [];
-  CategoryProducts({this.catName, this.filters});
+  List<String>sizefilters=[];
+  CategoryProducts({this.catName, this.filters,this.sizefilters});
   @override
   _CategoryProductsState createState() => _CategoryProductsState();
 }
@@ -39,6 +40,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
     filterApplied = false;
     getSubCategories();
     getbrands();
+    getproducts();
     super.initState();
   }
 
@@ -70,7 +72,41 @@ class _CategoryProductsState extends State<CategoryProducts> {
     });
     print('-------------------$allSubCatgories');
   }
+void getproducts()async{
+    allProducts.clear();
+    cleanList.clear();
+    FirebaseFirestore.instance.collection('Products').snapshots().listen((event) {
+      for(int i=0;i<event.docs.length;i++){
+        allProducts.add(Products(
+            event.docs[i]['Brands'],
+            event.docs[i]['Category'],
+            event.docs[i]['SubCategories'],
 
+            event.docs[i]['description'],
+            event.docs[i]['details'],
+            List.from(event.docs[i]['detailsGraphicURLs']),
+            event.docs[i]['disPrice'],
+            event.docs[i]['docID'],
+            List.from(event.docs[i]['imageURLs']),
+            event.docs[i]['mp'],
+            event.docs[i]['name'],
+            event.docs[i]['noOfPurchases'],
+            event.docs[i]['quantity'],
+            event.docs[i]['rating'].toString(),
+            event.docs[i]['specs'],
+            event.docs[i]['status'],
+            event.docs[i]['inStore'],
+            event.docs[i]['productId'],
+            event.docs[i]['varientID'],
+            event.docs[i]['varientcolor'],
+            event.docs[i]['varientsize']));
+        print(allProducts.length);
+      }
+      cleanList=allProducts;
+      print(cleanList.length);
+    });
+
+}
   String radioval = '';
   final scaffoldState = GlobalKey<ScaffoldState>();
   List<String> allSubCatgories = [];
@@ -113,6 +149,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
   List<String> colorsChosen = [];
   List<String> subCatChosen = [];
   List<String> brandsChosen = [];
+  List<String> sizeChosen=[];
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -123,236 +160,347 @@ class _CategoryProductsState extends State<CategoryProducts> {
       drawer: Drawer(
         child: Container(
             width: width,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Filter By',
-                        style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 20)),
-                      ),
-                      Spacer(),
-                      InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Icon(Icons.close_rounded))
-                    ],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Container(
-                    width: width,
-                    height: 1,
-                    color: Colors.grey,
-                  ),
-                ),
-                widget.filters.contains('Colors')
-                    ? Theme(
-                        data: Theme.of(context)
-                            .copyWith(accentColor: Colors.black),
-                        child: ExpansionTile(
-                          title: Text('Colors'),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
-                              child: Row(
-                                children: [
-                                  InkWell(
-                                      onTap: () {
-                                        if (colorsChosen.contains('Red')) {
-                                          // int index=colorsChosen.indexOf('Red');
-                                          colorsChosen.remove('Red');
-                                          setState(() {
-                                            print(colorsChosen);
-                                          });
-                                        } else {
-                                          colorsChosen.add('Red');
-                                          setState(() {
-                                            print(colorsChosen);
-                                          });
-                                        }
-                                      },
-                                      child: Container(
-                                        height: 20,
-                                        width: 20,
-                                        decoration: BoxDecoration(
-                                            color: Colors.red,
-                                            border: Border.all(
-                                                width: 1,
-                                                color:
-                                                    colorsChosen.contains('Red')
-                                                        ? Colors.black
-                                                        : Colors.white)),
-                                      )),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  InkWell(
-                                      onTap: () {
-                                        if (colorsChosen.contains('Blue')) {
-                                          // int index=colorsChosen.indexOf('Red');
-                                          colorsChosen.remove('Blue');
-                                          setState(() {
-                                            print(colorsChosen);
-                                          });
-                                        } else {
-                                          colorsChosen.add('Blue');
-                                          setState(() {
-                                            print(colorsChosen);
-                                          });
-                                        }
-                                      },
-                                      child: Container(
-                                        height: 20,
-                                        width: 20,
-                                        decoration: BoxDecoration(
-                                            color: Colors.blue,
-                                            border: Border.all(
-                                                width: 1,
-                                                color: colorsChosen
-                                                        .contains('Blue')
-                                                    ? Colors.black
-                                                    : Colors.white)),
-                                      )),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  InkWell(
-                                      onTap: () {
-                                        if (colorsChosen.contains('Green')) {
-                                          // int index=colorsChosen.indexOf('Red');
-                                          colorsChosen.remove('Green');
-                                          setState(() {
-                                            print(colorsChosen);
-                                          });
-                                        } else {
-                                          colorsChosen.add('Green');
-                                          setState(() {
-                                            print(colorsChosen);
-                                          });
-                                        }
-                                      },
-                                      child: Container(
-                                        height: 20,
-                                        width: 20,
-                                        decoration: BoxDecoration(
-                                            color: Colors.green,
-                                            border: Border.all(
-                                                width: 1,
-                                                color: colorsChosen
-                                                        .contains('Green')
-                                                    ? Colors.black
-                                                    : Colors.white)),
-                                      )),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  InkWell(
-                                      onTap: () {
-                                        if (colorsChosen.contains('Yellow')) {
-                                          // int index=colorsChosen.indexOf('Red');
-                                          colorsChosen.remove('Yellow');
-                                          setState(() {
-                                            print(colorsChosen);
-                                          });
-                                        } else {
-                                          colorsChosen.add('Yellow');
-                                          setState(() {
-                                            print(colorsChosen);
-                                          });
-                                        }
-                                      },
-                                      child: Container(
-                                        height: 20,
-                                        width: 20,
-                                        decoration: BoxDecoration(
-                                            color: Colors.yellow,
-                                            border: Border.all(
-                                                width: 1,
-                                                color: colorsChosen
-                                                        .contains('Yellow')
-                                                    ? Colors.black
-                                                    : Colors.white)),
-                                      )),
-                                ],
-                              ),
-                            )
-                          ],
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Filter By',
+                          style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 20)),
                         ),
-                      )
-                    : Container(),
-                widget.filters.contains('Subcategories')
-                    ? Theme(
-                        data: Theme.of(context)
-                            .copyWith(accentColor: Colors.black),
-                        child: ExpansionTile(
-                          title: Text('Sub Categories'),
-                          children: [
-                            Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 0, 15, 10),
-                                child: Container(
-                                  // color: Colors.white,
-                                  height: allSubCatgories.length * 40.0,
-                                  child: StreamBuilder(
-                                      stream: FirebaseFirestore.instance
-                                          .collection('SubCategories')
-                                          .where('cats',
-                                              arrayContains: widget.catName)
-                                          .snapshots(),
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<QuerySnapshot> snap) {
-                                        if (snap.hasData &&
-                                            !snap.hasError &&
-                                            snap.data != null) {
-                                          allSubCatgories.clear();
-
-                                          for (int i = 0;
-                                              i < snap.data.docs.length;
-                                              i++) {
-                                            allSubCatgories.add(
-                                              snap.data.docs[i]['sCatName'],
-                                            );
+                        Spacer(),
+                        InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Icon(Icons.close_rounded))
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Container(
+                      width: width,
+                      height: 1,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  widget.filters.contains('Colors')
+                      ? Theme(
+                          data: Theme.of(context)
+                              .copyWith(accentColor: Colors.black),
+                          child: ExpansionTile(
+                            title: Text('Colors'),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
+                                child: Row(
+                                  children: [
+                                    InkWell(
+                                        onTap: () {
+                                          if (colorsChosen.contains('Red')) {
+                                            // int index=colorsChosen.indexOf('Red');
+                                            colorsChosen.remove('Red');
+                                            setState(() {
+                                              print(colorsChosen);
+                                            });
+                                          } else {
+                                            colorsChosen.add('Red');
+                                            setState(() {
+                                              print(colorsChosen);
+                                            });
                                           }
+                                        },
+                                        child: Container(
+                                          height: 20,
+                                          width: 20,
+                                          decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              border: Border.all(
+                                                  width: 1,
+                                                  color:
+                                                      colorsChosen.contains('Red')
+                                                          ? Colors.black
+                                                          : Colors.white)),
+                                        )),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    InkWell(
+                                        onTap: () {
+                                          if (colorsChosen.contains('Blue')) {
+                                            // int index=colorsChosen.indexOf('Red');
+                                            colorsChosen.remove('Blue');
+                                            setState(() {
+                                              print(colorsChosen);
+                                            });
+                                          } else {
+                                            colorsChosen.add('Blue');
+                                            setState(() {
+                                              print(colorsChosen);
+                                            });
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 20,
+                                          width: 20,
+                                          decoration: BoxDecoration(
+                                              color: Colors.blue,
+                                              border: Border.all(
+                                                  width: 1,
+                                                  color: colorsChosen
+                                                          .contains('Blue')
+                                                      ? Colors.black
+                                                      : Colors.white)),
+                                        )),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    InkWell(
+                                        onTap: () {
+                                          if (colorsChosen.contains('Green')) {
+                                            // int index=colorsChosen.indexOf('Red');
+                                            colorsChosen.remove('Green');
+                                            setState(() {
+                                              print(colorsChosen);
+                                            });
+                                          } else {
+                                            colorsChosen.add('Green');
+                                            setState(() {
+                                              print(colorsChosen);
+                                            });
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 20,
+                                          width: 20,
+                                          decoration: BoxDecoration(
+                                              color: Colors.green,
+                                              border: Border.all(
+                                                  width: 1,
+                                                  color: colorsChosen
+                                                          .contains('Green')
+                                                      ? Colors.black
+                                                      : Colors.white)),
+                                        )),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    InkWell(
+                                        onTap: () {
+                                          if (colorsChosen.contains('Yellow')) {
+                                            // int index=colorsChosen.indexOf('Red');
+                                            colorsChosen.remove('Yellow');
+                                            setState(() {
+                                              print(colorsChosen);
+                                            });
+                                          } else {
+                                            colorsChosen.add('Yellow');
+                                            setState(() {
+                                              print(colorsChosen);
+                                            });
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 20,
+                                          width: 20,
+                                          decoration: BoxDecoration(
+                                              color: Colors.yellow,
+                                              border: Border.all(
+                                                  width: 1,
+                                                  color: colorsChosen
+                                                          .contains('Yellow')
+                                                      ? Colors.black
+                                                      : Colors.white)),
+                                        )),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      : Container(),
+                  widget.filters.contains('Subcategories')
+                      ? Theme(
+                          data: Theme.of(context)
+                              .copyWith(accentColor: Colors.black),
+                          child: ExpansionTile(
+                            title: Text('Sub Categories'),
+                            children: [
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(15, 0, 15, 10),
+                                  child: Container(
+                                    // color: Colors.white,
+                                    height: allSubCatgories.length * 40.0,
+                                    child: StreamBuilder(
+                                        stream: FirebaseFirestore.instance
+                                            .collection('SubCategories')
+                                            .where('cats',
+                                                arrayContains: widget.catName)
+                                            .snapshots(),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<QuerySnapshot> snap) {
+                                          if (snap.hasData &&
+                                              !snap.hasError &&
+                                              snap.data != null) {
+                                            allSubCatgories.clear();
 
-                                          return ListView.builder(
-                                            itemCount: allSubCatgories.length,
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            shrinkWrap: false,
-                                            itemBuilder: (context, i) {
-                                              return InkWell(
-                                                onTap: () {
-                                                  if (subCatChosen.contains(
-                                                      allSubCatgories[i])) {
-                                                    // int index=colorsChosen.indexOf('Red');
-                                                    subCatChosen.remove(
-                                                        allSubCatgories[i]);
-                                                    setState(() {
-                                                      print(subCatChosen);
-                                                    });
-                                                  } else {
-                                                    subCatChosen.add(
-                                                        allSubCatgories[i]);
-                                                    setState(() {
-                                                      print(subCatChosen);
-                                                    });
-                                                  }
-                                                },
-                                                child: Container(
+                                            for (int i = 0;
+                                                i < snap.data.docs.length;
+                                                i++) {
+                                              allSubCatgories.add(
+                                                snap.data.docs[i]['sCatName'],
+                                              );
+                                            }
+
+                                            return ListView.builder(
+                                              itemCount: allSubCatgories.length,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              shrinkWrap: false,
+                                              itemBuilder: (context, i) {
+                                                return InkWell(
+                                                  onTap: () {
+                                                    if (subCatChosen.contains(
+                                                        allSubCatgories[i])) {
+                                                      // int index=colorsChosen.indexOf('Red');
+                                                      subCatChosen.remove(
+                                                          allSubCatgories[i]);
+                                                      setState(() {
+                                                        print(subCatChosen);
+                                                      });
+                                                    } else {
+                                                      subCatChosen.add(
+                                                          allSubCatgories[i]);
+                                                      setState(() {
+                                                        print(subCatChosen);
+                                                      });
+                                                    }
+                                                  },
+                                                  child: Container(
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4.0),
+                                                      child: Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Container(
+                                                            height: 20,
+                                                            width: 20,
+                                                            decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    width: 1),
+                                                                color: subCatChosen
+                                                                        .contains(
+                                                                            allSubCatgories[
+                                                                                i])
+                                                                    ? primarycolor
+                                                                    : Colors
+                                                                        .white),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 20,
+                                                          ),
+                                                          Text(allSubCatgories[i])
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          } else {
+                                            return Container();
+                                          }
+                                        }),
+                                  ))
+                            ],
+                          ),
+                        )
+                      : Container(),
+                  (widget.filters.contains('Brands'))
+                      ? Theme(
+                          data: Theme.of(context)
+                              .copyWith(accentColor: Colors.black),
+                          child: ExpansionTile(
+                            title: Text('Brands'),
+                            children: [
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(15, 0, 15, 10),
+                                  child: Container(
+                                    // color: Colors.white,
+                                    height: allbrands.length * 40.0,
+                                    child: StreamBuilder(
+                                        stream: FirebaseFirestore.instance
+                                            .collection('Brands')
+                                            .where('cats',
+                                                arrayContains: widget.catName)
+                                            .snapshots(),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<QuerySnapshot> snap) {
+                                          if (snap.hasData &&
+                                              !snap.hasError &&
+                                              snap.data != null) {
+                                            List<String>allbrands2=[];
+//                                          allbrands2.clear();
+
+                                            for (int i = 0;
+                                                i < snap.data.docs.length;
+                                                i++) {
+                                              print( snap.data.docs[i]['brandName']);
+
+                                                allbrands2.add(
+                                                  snap.data.docs[i]['brandName'],
+                                                );
+
+                                            print('====${allbrands2[i]}');
+                                            }
+                                            print(allbrands2.length);
+
+                                            return ListView.builder(
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              shrinkWrap: false,
+                                              itemCount: allbrands.length,
+                                              itemBuilder: (context, i) {
+                                                print('----------------------------');
+                                                print(allbrands.length);
+                                                return InkWell(
+                                                  onTap: () {
+                                                    if (brandsChosen
+                                                        .contains(allbrands[i])) {
+                                                      // int index=colorsChosen.indexOf('Red');
+                                                      brandsChosen
+                                                          .remove(allbrands[i]);
+                                                      setState(() {
+                                                        print(brandsChosen);
+                                                      });
+                                                    } else {
+                                                      brandsChosen
+                                                          .add(allbrands[i]);
+                                                      setState(() {
+                                                        print(brandsChosen);
+                                                      });
+                                                    }
+                                                  },
                                                   child: Padding(
                                                     padding:
-                                                        const EdgeInsets.all(
-                                                            4.0),
+                                                        const EdgeInsets.all(4.0),
                                                     child: Row(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -366,142 +514,32 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                                                   color: Colors
                                                                       .black,
                                                                   width: 1),
-                                                              color: subCatChosen
+                                                              color: brandsChosen
                                                                       .contains(
-                                                                          allSubCatgories[
+                                                                          allbrands[
                                                                               i])
                                                                   ? primarycolor
-                                                                  : Colors
-                                                                      .white),
+                                                                  : Colors.white),
                                                         ),
                                                         SizedBox(
                                                           width: 20,
                                                         ),
-                                                        Text(allSubCatgories[i])
+                                                        Text(allbrands[i],style:TextStyle(color:Colors.black))
                                                       ],
                                                     ),
                                                   ),
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        } else {
-                                          return Container();
-                                        }
-                                      }),
-                                ))
-                          ],
-                        ),
-                      )
-                    : Container(),
-                (widget.filters.contains('Brands'))
-                    ? Theme(
-                        data: Theme.of(context)
-                            .copyWith(accentColor: Colors.black),
-                        child: ExpansionTile(
-                          title: Text('Brands'),
-                          children: [
-                            Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 0, 15, 10),
-                                child: Container(
-                                  // color: Colors.white,
-                                  height: allbrands.length * 40.0,
-                                  child: StreamBuilder(
-                                      stream: FirebaseFirestore.instance
-                                          .collection('Brands')
-                                          .where('cats',
-                                              arrayContains: widget.catName)
-                                          .snapshots(),
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<QuerySnapshot> snap) {
-                                        if (snap.hasData &&
-                                            !snap.hasError &&
-                                            snap.data != null) {
-                                          List<String>allbrands2=[];
-//                                          allbrands2.clear();
-
-                                          for (int i = 0;
-                                              i < snap.data.docs.length;
-                                              i++) {
-                                            print( snap.data.docs[i]['brandName']);
-
-                                              allbrands2.add(
-                                                snap.data.docs[i]['brandName'],
-                                              );
-
-                                          print('====${allbrands2[i]}');
+                                                );
+                                              },
+                                            );
+                                          } else {
+                                            return Container();
                                           }
-                                          print(allbrands2.length);
-
-                                          return ListView.builder(
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            shrinkWrap: false,
-                                            itemCount: allbrands.length,
-                                            itemBuilder: (context, i) {
-                                              print('----------------------------');
-                                              print(allbrands.length);
-                                              return InkWell(
-                                                onTap: () {
-                                                  if (brandsChosen
-                                                      .contains(allbrands[i])) {
-                                                    // int index=colorsChosen.indexOf('Red');
-                                                    brandsChosen
-                                                        .remove(allbrands[i]);
-                                                    setState(() {
-                                                      print(brandsChosen);
-                                                    });
-                                                  } else {
-                                                    brandsChosen
-                                                        .add(allbrands[i]);
-                                                    setState(() {
-                                                      print(brandsChosen);
-                                                    });
-                                                  }
-                                                },
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(4.0),
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Container(
-                                                        height: 20,
-                                                        width: 20,
-                                                        decoration: BoxDecoration(
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .black,
-                                                                width: 1),
-                                                            color: brandsChosen
-                                                                    .contains(
-                                                                        allbrands[
-                                                                            i])
-                                                                ? primarycolor
-                                                                : Colors.white),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 20,
-                                                      ),
-                                                      Text(allbrands[i],style:TextStyle(color:Colors.black))
-                                                    ],
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        } else {
-                                          return Container();
-                                        }
-                                      }),
-                                ))
-                          ],
-                        ),
-                      )
-                    : Container(),
+                                        }),
+                                  ))
+                            ],
+                          ),
+                        )
+                      : Container(),
 //                RangeSlider(
 //                  values: _currentRangeValues,
 //                  min: 0,
@@ -518,188 +556,295 @@ class _CategoryProductsState extends State<CategoryProducts> {
 //                    });
 //                  },
 //                ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Align(alignment:Alignment.topLeft,child: Text('Prices',style:GoogleFonts.poppins(fontWeight: FontWeight.w500))),
-              ),
+                widget.sizefilters.length!=0?Theme(
+    data: Theme.of(context)
+        .copyWith(accentColor: Colors.black),
+    child: ExpansionTile(
+    title: Text('Sizes'),
+    children: [
+    Padding(
+    padding:
+    const EdgeInsets.fromLTRB(15, 0, 15, 10),
+    child: Container(
+    // color: Colors.white,
+    height: widget.sizefilters.length * 40.0,
+                   child: ListView.builder(
+                      physics:
+                      const NeverScrollableScrollPhysics(),
+                      shrinkWrap: false,
+                      itemCount: widget.sizefilters.length,
+                      itemBuilder: (context, i) {
+                        print('----------------------------');
+                        print(widget.sizefilters.length);
+                        return InkWell(
+                          onTap: () {
+                            if (sizeChosen
+                                .contains(widget.sizefilters[i])) {
+                              // int index=colorsChosen.indexOf('Red');
+                                 sizeChosen .remove(widget.sizefilters[i]);
+                              setState(() {
+                                print(sizeChosen);
+                              });
+                            } else {
+                              sizeChosen
+                                  .add(widget.sizefilters[i]);
+                              setState(() {
+                                print(sizeChosen);
+                              });
+                            }
+                          },
+                          child: Padding(
+                            padding:
+                            const EdgeInsets.all(4.0),
+                            child: Row(
+                              crossAxisAlignment:
+                              CrossAxisAlignment
+                                  .center,
+                              children: [
+                                Container(
+                                  height: 20,
+                                  width: 20,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors
+                                              .black,
+                                          width: 1),
+                                      color: sizeChosen
+                                          .contains(
+                                          widget.sizefilters[
+                                          i])
+                                          ? primarycolor
+                                          : Colors.white),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(widget.sizefilters[i],style:TextStyle(color:Colors.black))
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                ))])):Container(),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Align(alignment:Alignment.topLeft,child: Text('Prices',style:GoogleFonts.poppins(fontWeight: FontWeight.w500))),
+                ),
           frs.RangeSlider(
-            min: minPrice,
-            max: maxPrice,
-            lowerValue: _lowerValue,
-            upperValue: _upperValue,
-            divisions: 5,
-            showValueIndicator: true,
-            valueIndicatorMaxDecimals: 1,
-            onChanged: (double newLowerValue, double newUpperValue) {
-              setState(() {
-                _lowerValue = newLowerValue;
-                _upperValue = newUpperValue;
-                range1=newLowerValue;
-                range2=newUpperValue;
+              min: minPrice,
+              max: maxPrice,
+              lowerValue: _lowerValue,
+              upperValue: _upperValue,
+              divisions: 5,
+              showValueIndicator: true,
+              valueIndicatorMaxDecimals: 1,
+              onChanged: (double newLowerValue, double newUpperValue) {
+                setState(() {
+                  _lowerValue = newLowerValue;
+                  _upperValue = newUpperValue;
+                  range1=newLowerValue;
+                  range2=newUpperValue;
 
-              });
-            },
-            onChangeStart:
-                (double startLowerValue, double startUpperValue) {
-              print(
-                  'Started with values: $startLowerValue and $startUpperValue');
-            },
-            onChangeEnd: (double newLowerValue, double newUpperValue) {
-              print(
-                  'Ended with values: $newLowerValue and $newUpperValue');
-            },
+                });
+              },
+              onChangeStart:
+                  (double startLowerValue, double startUpperValue) {
+                print(
+                    'Started with values: $startLowerValue and $startUpperValue');
+              },
+              onChangeEnd: (double newLowerValue, double newUpperValue) {
+                print(
+                    'Ended with values: $newLowerValue and $newUpperValue');
+              },
           ),
 
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      InkWell(
-                        onTap: () async {
-                          print(allProducts.length);
-                          List<Products> colorList = [];
-                          List<Products>prices=[];
-                          List subCatList = [];
-                          List brandList = [];
-                          List newlist=[];
-                          if (widget.filters.contains('Colors')&&colorsChosen.length>0) {
-                            for (int j = 0; j < colorsChosen.length; j++) {
-                              var newList = allProducts
-                                  .where((element) =>
-                                      element.colors.contains(colorsChosen[j]))
-                                  .toList();
-                              for (int i = 0; i < newList.length; i++)
-                                await colorList.add(newList[i]);
-                            }
-                          } else{
-                            colorList = await allProducts;
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () async {
+                            print(allProducts.length);
+                            List<Products> colorList = [];
+                            List<Products>prices=[];
+                            List subCatList = [];
+                            List brandList = [];
+                            List sizeList=[];
+                            List newlist=[];
+//                          if (widget.filters.contains('Colors')&&colorsChosen.length>0) {
+//                            for (int j = 0; j < colorsChosen.length; j++) {
+//                              var newList = allProducts
+//                                  .where((element) =>
+//                                      element.colors.contains(colorsChosen[j]))
+//                                  .toList();
+//                              for (int i = 0; i < newList.length; i++)
+//                                await colorList.add(newList[i]);
+//                            }
+//                          } else{
+                              colorList = allProducts;
 //                            setState(() {
 //
 //                              print('hiiiiii');
 //                              print(colorList.length);
 //                            });
-                          }
 
 
-                          if (widget.filters.contains('Subcategories')&&subCatChosen.length>0) {
-                            for (int j = 0; j < subCatChosen.length; j++) {
-                              var newList = allProducts
-                                  .where((element) =>
-                                      element.subcategories == subCatChosen[j])
-                                  .toList();
-                              for (int i = 0; i < newList.length; i++)
-                                await subCatList.add(newList[i]);
+
+                            if (widget.filters.contains('Subcategories')) {
+                              if (subCatChosen.length > 0) {
+                                for (int j = 0; j < subCatChosen.length; j++) {
+                                  var newList = allProducts
+                                      .where((element) =>
+                                  element.subcategories == subCatChosen[j])
+                                      .toList();
+                                  for (int i = 0; i < newList.length; i++)
+                                     subCatList.add(newList[i]);
+                                }
+                              }
+
+                              else
+                                subCatList = allProducts;
                             }
-                          } else
-                            subCatList = await allProducts;
 
-                          if (widget.filters.contains('Brands')&&brandsChosen.length>0) {
-                            for (int j = 0; j < brandsChosen.length; j++) {
-                              var newList = allProducts
-                                  .where((element) =>
-                                      element.Brand == brandsChosen[j])
-                                  .toList();
-                              for (int i = 0; i < newList.length; i++)
-                                await brandList.add(newList[i]);
+                            if (widget.filters.contains('Brands')) {
+                              if (brandsChosen.length > 0) {
+                                for (int j = 0; j < brandsChosen.length; j++) {
+                                  var newList = allProducts
+                                      .where((element) =>
+                                  element.Brand == brandsChosen[j])
+                                      .toList();
+                                  for (int i = 0; i < newList.length; i++)
+                                     brandList.add(newList[i]);
 
-                              print(brandList);
+                                  print(brandList);
+                                }
+                              }
+
+
+                              else
+                                brandList =  allProducts;
                             }
-                          } else
-                            brandList = await allProducts;
-                          print('Printing111');
-                          colorList.forEach((element) {
-                            print('------------------');
+                            if(sizeChosen.length>0){
+    for (int j = 0; j < sizeChosen.length; j++) {
+    var newList = allProducts
+        .where((element) =>
+    element.varientsize == sizeChosen[j])
+        .toList();
+    for (int i = 0; i < newList.length; i++)
+    await sizeList.add(newList[i]);
+
+    print(sizeList);
+                            }}
+                            else{
+                              sizeList= allProducts;
+                            }
+                            print('Printing111');
+                            colorList.forEach((element) {
+                              print('------------------');
+                              print(element.name);
+                            });
+
+                            colorList.removeWhere(
+                                (item) => !subCatList.contains(item));
+                            print('Printing');
+                            newlist=colorList;
+                            colorList.forEach((element) {
+                              print(element.name);
+                            });
+                            colorList
+                                .removeWhere((item) => !brandList.contains(item));
+                            print('Printing');
+                            newlist=colorList;
+                            colorList.forEach((element) {
+                              print(element.name);
+                            });
+                            colorList
+                                .removeWhere((item) => !sizeList.contains(item));
+                            print('Printing');
+                            newlist=colorList;
+                            colorList.forEach((element) {
+                              print(element.name);
+                            });
+                         colorList.forEach((element) {
+                           print('===${range1}');
+                           if(element.disprice<range2&&element.disprice>range1){
+                           print('----------');
+                           print(element.name);
+                           }
+                           else{
+                             prices.add(element);
+                           }
+                         });
+                         setState(() {
+                           colorList.removeWhere((element) => prices.contains(element));
+                           newlist=colorList;
+                           print(colorList.length);
+                         });
+                           cleanList= newlist;
+                          cleanList.forEach((element)
+                  {
+                    print('-3-3-3');
                             print(element.name);
                           });
 
-                          colorList.removeWhere(
-                              (item) => !subCatList.contains(item));
-                          print('Printing');
-                          newlist=colorList;
-                          colorList.forEach((element) {
-                            print(element.name);
-                          });
-                          colorList
-                              .removeWhere((item) => !brandList.contains(item));
-                          print('Printing');
-                          newlist=colorList;
-                          colorList.forEach((element) {
-                            print(element.name);
-                          });
-//                       colorList.forEach((element) {
-//                         print('===${range1}');
-//                         if(element.disprice<range2&&element.disprice>range1){
-//                         print('----------');
-//                         print(element.name);
-//                         }
-//                         else{
-//                           prices.add(element);
-//                         }
-//                       });
-//                       setState(() {
-//                         colorList.removeWhere((element) => prices.contains(element));
-//                         newlist=colorList;
-//                         print(colorList.length);
-//                       });
-                         cleanList=await newlist;
-                        cleanList.forEach((element)
-                {
-                  print('-3-3-3');
-                          print(element.name);
-                        });
+                            setState(() {
+                              print('List Length-${cleanList.length}');
+                            });
+                            if (filterApplied == false)
+                              setState(() {
+                                filterApplied = true;
+                              });
 
-                          setState(() {
-                            print('List Length-${cleanList.length}');
-                          });
-                          if (filterApplied == false) filterApplied = true;
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: primarycolor,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              'Apply Filters',
-                              style: TextStyle(color: Colors.white),
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: primarycolor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text(
+                                'Apply Filters',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      InkWell(
-                        onTap: () async {
-                          subCatChosen.clear();
-                          colorsChosen.clear();
-                          brandsChosen.clear();
-                           _lowerValue=10000;
-                           _upperValue=100000;
-                           range1=10000;
-                           range2=100000;
-                          filterApplied = false;
-                          setState(() {});
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: primarycolor,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              'Clear Filters',
-                              style: TextStyle(color: Colors.white),
+                        InkWell(
+                          onTap: () async {
+                            subCatChosen.clear();
+                            colorsChosen.clear();
+                            brandsChosen.clear();
+                             _lowerValue=10000;
+                             _upperValue=100000;
+                             range1=10000;
+                             range2=100000;
+                            filterApplied = false;
+                            setState(() {});
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: primarycolor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text(
+                                'Clear Filters',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                      ],
+                    ),
+                  )
+                ],
+              ),
             )),
       ),
       appBar: AppBar(
@@ -898,43 +1043,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
                     ),
                   )
                 : Container(),
-            StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('Products')
-                    .where('newProduct', isEqualTo: true)
-                    .where('status', isEqualTo: 'active')
-                    .snapshots(),
-                builder:
-                    (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
-                  if (snap.hasData && !snap.hasError && snap.data != null) {
-                    allProducts.clear();
-
-                    for (int i = 0; i < snap.data.docs.length; i++) {
-                      allProducts.add(Products(
-                          snap.data.docs[i]['Brands'],
-                          snap.data.docs[i]['Category'],
-                          snap.data.docs[i]['SubCategories'],
-                          List.from(snap.data.docs[i]['colors']),
-                          snap.data.docs[i]['description'],
-                          snap.data.docs[i]['details'],
-                          List.from(snap.data.docs[i]['detailsGraphicURLs']),
-                          snap.data.docs[i]['disPrice'],
-                          snap.data.docs[i]['docID'],
-                          List.from(snap.data.docs[i]['imageURLs']),
-                          snap.data.docs[i]['mp'],
-                          snap.data.docs[i]['name'],
-                          snap.data.docs[i]['noOfPurchases'],
-                          snap.data.docs[i]['quantity'],
-                          snap.data.docs[i]['rating'].toString(),
-                          snap.data.docs[i]['specs'],
-                          snap.data.docs[i]['status'],
-                      snap.data.docs[i]['inStore'],
-                      snap.data.docs[i]['productId']));
-                      print(allProducts.length);
-                    }
-                    if (cleanList.isEmpty && filterApplied == false)
-                      cleanList = allProducts;
-                    return Expanded(
+            Expanded(
                       child: Container(
                         child: cleanList.length != 0
                             ? GridView.count(
@@ -958,7 +1067,8 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                         cleanList[i].rating,
                                         cleanList[i].specs,
                                         cleanList[i].quantity,
-                                    cleanList[i].inStore),
+                                    cleanList[i].inStore,
+                                    cleanList[i].varientId),
                                   );
                                 }),
                               )
@@ -966,11 +1076,8 @@ class _CategoryProductsState extends State<CategoryProducts> {
                                 child: Text('No Products Available'),
                               ),
                       ),
-                    );
-                  } else {
-                    return Container();
-                  }
-                }),
+                    )
+
           ],
         ),
       ),
