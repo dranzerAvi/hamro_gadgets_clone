@@ -1,10 +1,10 @@
 class Products {
   String Brand;
-  String category;
+  List<String> category;
   String subcategories;
 //  List<String> colors = [];
   String description;
-  Map details;
+  String details;
   List<String> detailsurls = [];
   int disprice;
   String docid;
@@ -25,7 +25,6 @@ class Products {
       this.Brand,
       this.category,
       this.subcategories,
-
       this.description,
       this.details,
       this.detailsurls,
@@ -43,8 +42,7 @@ class Products {
       this.productId,
       this.varientId,
       this.varientcolor,
-      this.varientsize
-      );
+      this.varientsize);
 }
 // class Details{
 //   String display;

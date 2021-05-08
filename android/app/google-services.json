@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "420064949623",
-    "project_id": "hamrogadgets-941ea",
-    "storage_bucket": "hamrogadgets-941ea.appspot.com"
+    "project_number": "489377143036",
+    "project_id": "hamro-d2a82",
+    "storage_bucket": "hamro-d2a82.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:420064949623:android:f65d07337c1c8994ba5d72",
+        "mobilesdk_app_id": "1:489377143036:android:07668d6e92bf216211df79",
         "android_client_info": {
-          "package_name": "com.axactstudios.hamro_gadgets"
+          "package_name": "com.axactstudios.buyeazy"
         }
       },
       "oauth_client": [
         {
-          "client_id": "420064949623-3fm5cqq4c7s8q4f5jrq83r5ekudleent.apps.googleusercontent.com",
+          "client_id": "489377143036-egr4ega93tp33oufnduhlmq60rv5pulf.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCRrIphXJTiRnQoRu9nacmfxsRupghEaz8"
+          "current_key": "AIzaSyClv455j8dWw-jFpOiPld1-OzH7m3jWwAw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "420064949623-3fm5cqq4c7s8q4f5jrq83r5ekudleent.apps.googleusercontent.com",
+              "client_id": "489377143036-egr4ega93tp33oufnduhlmq60rv5pulf.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

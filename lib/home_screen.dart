@@ -7,19 +7,14 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:getflutter/components/carousel/gf_carousel.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hamro_gadgets/Bookmarks.dart';
 import 'package:hamro_gadgets/Constants/banner.dart';
 
-import 'package:hamro_gadgets/Constants/cart.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
 import 'package:hamro_gadgets/Constants/products.dart';
-import 'package:hamro_gadgets/Constants/rewardproducts.dart';
-import 'package:hamro_gadgets/product_details_screen.dart';
-import 'package:hamro_gadgets/reward_product_details_screen.dart';
 import 'package:hamro_gadgets/search_screen.dart';
-import 'package:hamro_gadgets/services/database_helper.dart';
 import 'package:hamro_gadgets/widgets/ProductCard.dart';
 import 'package:hamro_gadgets/widgets/nav_drawer.dart';
+// import 'package:hamro_gadgets/widgets/nav_drawer2.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 import 'package:material_dialogs/widgets/buttons/icon_button.dart';
 import 'package:material_dialogs/widgets/buttons/icon_outline_button.dart';
@@ -37,29 +32,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-//    addDishParams();
+    // addDishParams();
 
-    get();
+    data();
     super.initState();
   }
 
-  final dbHelper = DatabaseHelper.instance;
-  User user;
-  void get() {
-    user = FirebaseAuth.instance.currentUser;
-  }
-
   int total = 0;
-  List<Cart> cartItems = [];
-  List<RewardProducts> rewardpro=[];
-  void getAllItems() async {
-    final allRows = await dbHelper.queryAllRows();
-    cartItems.clear();
-    allRows.forEach((row) => cartItems.add(Cart.fromMap(row)));
-    setState(() {
-      total = cartItems.length;
-    });
-  }
 
   addDishParams() {
     FirebaseFirestore.instance.collection('Products').get().then((value) {
@@ -69,8 +48,10 @@ class _HomeScreenState extends State<HomeScreen> {
             .doc(element.id)
             .update({
           'nameSearch': setSearchParam(element['name']),
-          'categorySearch': setSearchParam(element['Category']),
-          'subcategorysearch': setSearchParam(element['SubCategories'])
+          'categorySearch':
+              setSearchParamCategories(List.from(element['Category'])),
+          'subcategorysearch':
+              setSearchParamCategories(List.from(element['Category']))
         });
       });
     });
@@ -85,56 +66,112 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     return caseSearchList;
   }
-  bool yes=false;
-  void alert(int count2,BuildContext ctx){
 
+  setSearchParamCategories(List<String> caseString) {
+    List<String> caseSearchList = List();
 
+    for (int j = 0; j < caseString.length; j++) {
+      String temp = "";
+      String str = "${caseString[j]}";
+      for (int i = 0; i < str.length; i++) {
+        temp = temp + str[i];
+        caseSearchList.add(temp);
+      }
+    }
+
+    return caseSearchList;
+  }
+
+  bool yes = false;
+  void alert(int count2, BuildContext ctx) {
     print('hiiiiiiiiii');
     Dialogs.materialDialog(
-
-        color: Colors.white,
-
-        msg: 'Congratulations!, you have won ${count2.toString()} coins  on your previous order.',
-        title: 'Congratulations',
-        animation: 'assets/cong_example.json',
-barrierDismissible: true,
-        context: ctx,
-        actions: [
-          IconsButton(
-            onPressed: () {
-              Navigator.of(ctx).pop();
-            },
-            text: 'Claim',
-            iconData: Icons.done,
-            color: primarycolor,
-            textStyle: TextStyle(color: Colors.white),
-            iconColor: Colors.white,
-          ),
-
-        ],
-        );
+      color: Colors.white,
+      msg:
+          'Congratulations!, you have won ${count2.toString()} coins  on your previous order.',
+      title: 'Congratulations',
+      animation: 'assets/cong_example.json',
+      barrierDismissible: true,
+      context: ctx,
+      actions: [
+        IconsButton(
+          onPressed: () {
+            Navigator.of(ctx).pop();
+          },
+          text: 'Claim',
+          iconData: Icons.done,
+          color: primarycolor,
+          textStyle: TextStyle(color: Colors.white),
+          iconColor: Colors.white,
+        ),
+      ],
+    );
 
 //    up(count2);
-  setState(() {
-    yes=true;
-    to++;
-  });
-
+    setState(() {
+      yes = true;
+      to++;
+    });
   }
+
+  void data() {
+    print('hii');
+    allproducts.clear();
+    FirebaseFirestore.instance
+        .collection('Products')
+        .limit(10)
+        .snapshots()
+        .listen((event) {
+      print(event.docs.length);
+      for (int i = 0; i < event.docs.length; i++) {
+        // print(i.toString());
+        Products pro = Products(
+            event.docs[i]['Brands'],
+            List.from(event.docs[i]['Category']),
+            event.docs[i]['SubCategories'],
+            event.docs[i]['description'],
+            event.docs[i]['details'],
+            List.from(event.docs[i]['detailsGraphicURLs']),
+            event.docs[i]['disPrice'],
+            event.docs[i]['docID'],
+            List.from(event.docs[i]['imageURLs']),
+            event.docs[i]['mp'],
+            event.docs[i]['name'],
+            event.docs[i]['noOfPurchases'],
+            event.docs[i]['quantity'],
+            event.docs[i]['rating'].toString(),
+            event.docs[i]['specs'],
+            event.docs[i]['status'],
+            event.docs[i]['inStore'],
+            event.docs[i]['productId'],
+            event.docs[i]['varientID'],
+            event.docs[i]['varientcolor'],
+            event.docs[i]['varientsize']);
+
+        allproducts.add(pro);
+      }
+    });
+  }
+
   static const int TAB_NO = 1;
   List<Banners> imageList = [];
+
+  List<Products> allproducts = [];
   List<Products> newproducts = [];
-  List<Products>laptops=[];
-  List<Products>speakers=[];
-  List<Products>headphones=[];
+  List<Products> phones = [];
+  List<Products> accessories = [];
+  List<Products> headphones = [];
   List<Banners> banners = [];
   TextEditingController _cont = TextEditingController();
   PersistentTabController _controller = PersistentTabController();
-  List<Products>pro=[];
-  int to=0;
+  List<Products> pro = [];
+  int trend = 50;
+  int head = 50;
+  int lap = 50;
+  int speak = 50;
+  int to = 0;
   @override
   Widget build(BuildContext context) {
-    getAllItems();
 //    if(widget.count>0&&yes==false&&to==0){
 //      alert(widget.count,context);
 //
@@ -172,50 +209,7 @@ barrierDismissible: true,
           ),
         ),
         centerTitle: true,
-        actions: [
-          InkWell(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => BookmarksScreen()));
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(right: 5.0),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Icon(
-                      Icons.shopping_cart,
-                      color: Colors.white,
-                    ),
-                    total != null
-                        ? total > 0
-                            ? Positioned(
-                                bottom:
-                                    MediaQuery.of(context).size.height * 0.04,
-                                left:
-                                    MediaQuery.of(context).size.height * 0.013,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 2.0),
-                                  child: CircleAvatar(
-                                    radius: 6.0,
-                                    backgroundColor: Colors.red,
-                                    foregroundColor: Colors.white,
-                                    child: Text(
-                                      total.toString(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 8.0,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : Container()
-                        : Container(),
-                  ],
-                ),
-              )),
-        ],
+
 //       actions: [
 //
 //         Center(child: Container(width:width*0.5,child: TextFormField(controller:_cont,decoration: InputDecoration(filled: true,fillColor: Colors.white,prefixIcon: Icon(Icons.search,color:Colors.grey),hintText: 'Search here',hintStyle: TextStyle(color:Colors.grey)),)))
@@ -235,7 +229,8 @@ barrierDismissible: true,
                     imageList.clear();
                     pro.clear();
                     for (int i = 0; i < snap.data.docs.length; i++) {
-                      Banners bd=Banners(snap.data.docs[i]['imageURL'],snap.data.docs[i]['onClick']);
+                      Banners bd = Banners(snap.data.docs[i]['imageURL'],
+                          snap.data.docs[i]['onClick']);
                       imageList.add(bd);
                     }
                     return Padding(
@@ -247,36 +242,7 @@ barrierDismissible: true,
                             items: imageList.map(
                               (val) {
                                 return InkWell(
-                                  onTap:(){
-                                   FirebaseFirestore.instance.collection('Products').doc(val.onClick).get().then((value) {
-                                     Map<String,dynamic>map=value.data();
-                                     List<dynamic>images=map['imageURLs'];
-                                     List<dynamic>deturl=map['detailsGraphicURLs'];
-                                     List<String>deturls=[];
-                                     for(int i=0;i<images.length;i++){
-                                       deturls.add(images[i].toString());
-                                     }
-                                     print(map);
-                                     Navigator.push(
-                                         context,
-                                         MaterialPageRoute(
-                                             builder: (context) => ProductDetailsScreen(
-                                                 images[0],
-                                                 map['name'],
-                                                 map['mp'],
-                                                 map['disPrice'],
-                                                 map['description'],
-                                                 map['details'],
-                                                 deturls,
-                                                 map['rating'].toString(),
-                                                 map['specs'],
-                                                 map['quantity'],
-                                                 MediaQuery.of(context).size.height,
-                                                 MediaQuery.of(context).size.width,
-                                             map['varientID'])));
-
-                                   });
-                                  },
+                                  onTap: () {},
                                   child: Container(
                                     child: Padding(
                                       padding: const EdgeInsets.all(1.0),
@@ -322,24 +288,15 @@ barrierDismissible: true,
                           fontSize: height * 0.025,
                           fontWeight: FontWeight.bold)),
                 ),
-
-                //      InkWell(
-
-                //        onTap: (){
-
-                //
-
-                //        },
-
-                //      )
               ],
             ),
             SizedBox(height: height * 0.02),
             StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('Products')
-                    .where('newProduct', isEqualTo: true)
+                    .where('top', isEqualTo: true)
                     .where('status', isEqualTo: 'active')
+                    .limit(10)
                     .snapshots(),
                 builder:
                     (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
@@ -349,9 +306,8 @@ barrierDismissible: true,
                     for (int i = 0; i < snap.data.docs.length; i++) {
                       Products pro = Products(
                           snap.data.docs[i]['Brands'],
-                          snap.data.docs[i]['Category'],
+                          List.from(snap.data.docs[i]['Category']),
                           snap.data.docs[i]['SubCategories'],
-
                           snap.data.docs[i]['description'],
                           snap.data.docs[i]['details'],
                           List.from(snap.data.docs[i]['detailsGraphicURLs']),
@@ -365,105 +321,94 @@ barrierDismissible: true,
                           snap.data.docs[i]['rating'].toString(),
                           snap.data.docs[i]['specs'],
                           snap.data.docs[i]['status'],
-                        snap.data.docs[i]['inStore'],
-                        snap.data.docs[i]['productId'],
-                        snap.data.docs[i]['varientID'],
-                        snap.data.docs[i]['varientcolor'],
-                        snap.data.docs[i]['varientsize']
-                      );
+                          snap.data.docs[i]['inStore'],
+                          snap.data.docs[i]['productId'],
+                          snap.data.docs[i]['varientID'],
+                          snap.data.docs[i]['varientcolor'],
+                          snap.data.docs[i]['varientsize']);
 
                       newproducts.add(pro);
                     }
 
-                    return (newproducts.length!=0)?Container(
-                      height: height * 0.41,
-                      child: ListView.builder(
-                          itemCount: newproducts.length,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            var item = newproducts[index];
+                    return (newproducts.length != 0)
+                        ? Container(
+                            height: height * 0.46,
+                            child: ListView.builder(
+                                itemCount: newproducts.length,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  var item = newproducts[index];
 
-                            return Container(
-                              height: height * 0.4,
-                              width: width * 0.5,
-                              child: Padding(
-                                padding: EdgeInsets.all(height * 0.005),
-                                child: ProductCard(
-                                    item.imageurls[0],
-                                    item.name,
-                                    item.mp,
-                                    item.disprice,
-                                    item.description,
-                                    item.details,
-                                    item.imageurls,
-                                    item.rating,
-                                    item.specs,
-                                    item.quantity,
-                                item.inStore,
-                                item.varientId),
-                              ),
-                            );
-                          }),
-                    ):Center(
-                      child: Container(
-                        height:100,
-                        width:100,
-                        child:SpinKitWave(color:primarycolor,size:height*0.023)
-                      ),
-                    );
+                                  return Container(
+                                    height: height * 0.45,
+                                    width: width * 0.5,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(height * 0.005),
+                                      child: ProductCard(
+                                          item.imageurls[0],
+                                          item.name,
+                                          item.mp,
+                                          item.disprice,
+                                          item.description,
+                                          item.details,
+                                          item.imageurls,
+                                          item.rating,
+                                          item.specs,
+                                          item.quantity,
+                                          item.inStore,
+                                          item.varientId),
+                                    ),
+                                  );
+                                }),
+                          )
+                        : Center(
+                            child: Container(
+                                height: 100,
+                                width: 100,
+                                child: SpinKitWave(
+                                    color: primarycolor, size: height * 0.023)),
+                          );
                   } else {
                     return Center(
                       child: Container(
-                        height:100,
-                        width:100,
-                        child:SpinKitWave(color:primarycolor,size:height*0.023)
-                      ),
+                          height: 100,
+                          width: 100,
+                          child: SpinKitWave(
+                              color: primarycolor, size: height * 0.023)),
                     );
                   }
                 }),
             SizedBox(height: height * 0.02),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: 12.0),
-                  child: Text('Laptops',
+                  child: Text('Phones',
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: height * 0.025,
                           fontWeight: FontWeight.bold)),
                 ),
-
-                //      InkWell(
-
-                //        onTap: (){
-
-                //
-
-                //        },
-
-                //      )
               ],
             ),
             SizedBox(height: height * 0.02),
             StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('Products')
-
+                    .limit(50)
                     .snapshots(),
                 builder:
                     (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
                   if (snap.hasData && !snap.hasError && snap.data != null) {
-                    laptops.clear();
+                    phones.clear();
 
                     for (int i = 0; i < snap.data.docs.length; i++) {
-//                      print(snap.data.docs.length);
-//                      print('---------${snap.data.docs[i]['varientID']}yes');
                       Products pro = Products(
                           snap.data.docs[i]['Brands'],
-                          snap.data.docs[i]['Category'],
+                          List.from(snap.data.docs[i]['Category']),
                           snap.data.docs[i]['SubCategories'],
-
                           snap.data.docs[i]['description'],
                           snap.data.docs[i]['details'],
                           List.from(snap.data.docs[i]['detailsGraphicURLs']),
@@ -477,60 +422,64 @@ barrierDismissible: true,
                           snap.data.docs[i]['rating'].toString(),
                           snap.data.docs[i]['specs'],
                           snap.data.docs[i]['status'],
-                      snap.data.docs[i]['inStore'],
-                      snap.data.docs[i]['productId'],
-                      snap.data.docs[i]['varientID'],
+                          snap.data.docs[i]['inStore'],
+                          snap.data.docs[i]['productId'],
+                          snap.data.docs[i]['varientID'],
                           snap.data.docs[i]['varientcolor'],
-                          snap.data.docs[i]['varientsize']
-                      );
+                          snap.data.docs[i]['varientsize']);
 
-                      laptops.add(pro);
+                      allproducts.add(pro);
                     }
-
-                    return (laptops.length!=0)?Container(
-                      height: height * 0.41,
-                      child: ListView.builder(
-                          itemCount: laptops.length,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            var item = laptops[index];
-
-                            return Container(
-                              height: height * 0.4,
-                              width: width * 0.5,
-                              child: Padding(
-                                padding: EdgeInsets.all(height * 0.005),
-                                child: ProductCard(
-                                    item.imageurls[0],
-                                    item.name,
-                                    item.mp,
-                                    item.disprice,
-                                    item.description,
-                                    item.details,
-                                    item.imageurls,
-                                    item.rating,
-                                    item.specs,
-                                    item.quantity,
-                                item.inStore,
-                                item.varientId),
-                              ),
-                            );
-                          }),
-                    ):Center(
-                      child: Container(
-                        height:100,
-                        width:100,
-                        child:SpinKitWave(color:primarycolor,size:height*0.023)
-                      ),
-                    );
+                    for (int i = 0; i < allproducts.length; i++)
+                      if (allproducts[i].category.contains("Phones") ||
+                          allproducts[i].category.contains(" Phones")) {
+                        phones.add(allproducts[i]);
+                      }
+                    return (phones.length != 0)
+                        ? Container(
+                            height: height * 0.46,
+                            child: ListView.builder(
+                                itemCount: phones.length,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  var item = phones[index];
+                                  return Container(
+                                    height: height * 0.45,
+                                    width: width * 0.5,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(height * 0.005),
+                                      child: ProductCard(
+                                          item.imageurls[0],
+                                          item.name,
+                                          item.mp,
+                                          item.disprice,
+                                          item.description,
+                                          item.details,
+                                          item.imageurls,
+                                          item.rating,
+                                          item.specs,
+                                          item.quantity,
+                                          item.inStore,
+                                          item.varientId),
+                                    ),
+                                  );
+                                }),
+                          )
+                        : Center(
+                            child: Container(
+                                height: 100,
+                                width: 100,
+                                child: SpinKitWave(
+                                    color: primarycolor, size: height * 0.023)),
+                          );
                   } else {
                     return Center(
                       child: Container(
-                          height:100,
-                          width:100,
-                          child:SpinKitWave(color:primarycolor,size:height*0.023)
-                      ),
+                          height: 100,
+                          width: 100,
+                          child: SpinKitWave(
+                              color: primarycolor, size: height * 0.023)),
                     );
                   }
                 }),
@@ -546,113 +495,61 @@ barrierDismissible: true,
                     pro.clear();
 
                     for (int i = 0; i < snap.data.docs.length; i++) {
-                      Banners bn=Banners(snap.data.docs[i]['imageURL'],snap.data.docs[i]['onClick']);
+                      Banners bn = Banners(snap.data.docs[i]['imageURL'],
+                          snap.data.docs[i]['onClick']);
 
                       banners.add(bn);
                     }
 
-                    return(banners.length!=0)? Container(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        InkWell(
-                          onTap:(){
- FirebaseFirestore.instance.collection('Products').doc(banners[0].onClick).get().then((value) {
-                                  Map<String,dynamic>map=value.data();
-                                  List<dynamic>images=map['imageURLs'];
-                                  List<dynamic>deturl=map['detailsGraphicURLs'];
-                                  List<String>deturls=[];
-                                  for(int i=0;i<images.length;i++){
-                                    deturls.add(images[i].toString());
-                                  }
-                                  print(map);
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ProductDetailsScreen(
-                                              images[0],
-                                              map['name'],
-                                              map['mp'],
-                                              map['disPrice'],
-                                              map['description'],
-                                              map['details'],
-                                              deturls,
-                                              map['rating'].toString(),
-                                              map['specs'],
-                                              map['quantity'],
-                                              MediaQuery.of(context).size.height,
-                                              MediaQuery.of(context).size.width,
-                                          map['varientID'])));
- });
-                    },
-                          child: Image.network(
-                            banners[0].imgUrl,
-                            height: height * 0.2,
-                            width: width * 0.48,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        InkWell(
-                          onTap:(){
-                            FirebaseFirestore.instance.collection('Products').doc(banners[1].onClick).get().then((value) {
-                              Map<String,dynamic>map=value.data();
-                              List<dynamic>images=map['imageURLs'];
-                              List<dynamic>deturl=map['detailsGraphicURLs'];
-                              List<String>deturls=[];
-                              for(int i=0;i<images.length;i++){
-                                deturls.add(images[i].toString());
-                              }
-                              print(map);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ProductDetailsScreen(
-                                          images[0],
-                                          map['name'],
-                                          map['mp'],
-                                          map['disPrice'],
-                                          map['description'],
-                                          map['details'],
-                                          deturls,
-                                          map['rating'].toString(),
-                                          map['specs'],
-                                          map['quantity'],
-                                          MediaQuery.of(context).size.height,
-                                          MediaQuery.of(context).size.width,
-                                      map['varientID'])));
-                            });
-                          },
-                          child: Image.network(
-                            banners[1].imgUrl,
-                            height: height * 0.2,
-                            width: width * 0.48,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ],
-                    )):Center(
-                      child: Container(
-                          height:100,
-                          width:100,
-                          child:SpinKitWave(color:primarycolor,size:height*0.023)
-                      ),
-                    );
+                    return (banners.length != 0)
+                        ? Container(
+                            child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              InkWell(
+                                onTap: () {},
+                                child: Image.network(
+                                  banners[0].imgUrl,
+                                  height: height * 0.2,
+                                  width: width * 0.48,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {},
+                                child: Image.network(
+                                  banners[1].imgUrl,
+                                  height: height * 0.2,
+                                  width: width * 0.48,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ],
+                          ))
+                        : Center(
+                            child: Container(
+                                height: 100,
+                                width: 100,
+                                child: SpinKitWave(
+                                    color: primarycolor, size: height * 0.023)),
+                          );
                   } else {
                     return Center(
                       child: Container(
-                          height:100,
-                          width:100,
-                          child:SpinKitWave(color:primarycolor,size:height*0.023)
-                      ),
+                          height: 100,
+                          width: 100,
+                          child: SpinKitWave(
+                              color: primarycolor, size: height * 0.023)),
                     );
                   }
                 }),
             SizedBox(height: height * 0.02),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: 12.0),
-                  child: Text('Headphones',
+                  child: Text('Headsets',
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: height * 0.025,
@@ -664,7 +561,7 @@ barrierDismissible: true,
             StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('Products')
-
+                    .limit(50)
                     .snapshots(),
                 builder:
                     (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
@@ -674,9 +571,8 @@ barrierDismissible: true,
                     for (int i = 0; i < snap.data.docs.length; i++) {
                       Products pro = Products(
                           snap.data.docs[i]['Brands'],
-                          snap.data.docs[i]['Category'],
+                          List.from(snap.data.docs[i]['Category']),
                           snap.data.docs[i]['SubCategories'],
-
                           snap.data.docs[i]['description'],
                           snap.data.docs[i]['details'],
                           List.from(snap.data.docs[i]['detailsGraphicURLs']),
@@ -690,73 +586,80 @@ barrierDismissible: true,
                           snap.data.docs[i]['rating'].toString(),
                           snap.data.docs[i]['specs'],
                           snap.data.docs[i]['status'],
-                      snap.data.docs[i]['inStore'],
-                      snap.data.docs[i]['productId'],
-                      snap.data.docs[i]['varientID'],
+                          snap.data.docs[i]['inStore'],
+                          snap.data.docs[i]['productId'],
+                          snap.data.docs[i]['varientID'],
                           snap.data.docs[i]['varientcolor'],
-                          snap.data.docs[i]['varientsize']
-                      );
+                          snap.data.docs[i]['varientsize']);
 
-                      headphones.add(pro);
+                      allproducts.add(pro);
                     }
-
-                    return (headphones.length!=0)?Container(
-                      height: height * 0.41,
-                      child: ListView.builder(
-                          itemCount: headphones.length,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            var item = headphones[index];
-                            return Container(
-                              height: height * 0.4,
-                              width: width * 0.5,
-                              child: Padding(
-                                padding: EdgeInsets.all(height * 0.005),
-                                child: ProductCard(
-                                    item.imageurls[0],
-                                    item.name,
-                                    item.mp,
-                                    item.disprice,
-                                    item.description,
-                                    item.details,
-                                    item.imageurls,
-                                    item.rating,
-                                    item.specs,
-                                    item.quantity,
-                                item.inStore,
-                                item.varientId),
-                              ),
-                            );
-                          }),
-                    ):Center(
-                      child: Container(
-                          height:100,
-                          width:100,
-                          child:SpinKitWave(color:primarycolor,size:height*0.023)
-                      ),
-                    );
+                    for (int i = 0; i < allproducts.length; i++)
+                      if (allproducts[i].category.contains("Headset") ||
+                          allproducts[i].category.contains(" Headset")) {
+                        headphones.add(allproducts[i]);
+                      }
+                    return (headphones.length != 0)
+                        ? Container(
+                            height: height * 0.46,
+                            child: ListView.builder(
+                                itemCount: headphones.length,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  var item = headphones[index];
+                                  return Container(
+                                    height: height * 0.45,
+                                    width: width * 0.5,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(height * 0.005),
+                                      child: ProductCard(
+                                          item.imageurls[0],
+                                          item.name,
+                                          item.mp,
+                                          item.disprice,
+                                          item.description,
+                                          item.details,
+                                          item.imageurls,
+                                          item.rating,
+                                          item.specs,
+                                          item.quantity,
+                                          item.inStore,
+                                          item.varientId),
+                                    ),
+                                  );
+                                }),
+                          )
+                        : Center(
+                            child: Container(
+                                height: 100,
+                                width: 100,
+                                child: SpinKitWave(
+                                    color: primarycolor, size: height * 0.023)),
+                          );
                   } else {
                     return Center(
                       child: Container(
-                          height:100,
-                          width:100,
-                          child:SpinKitWave(color:primarycolor,size:height*0.023)
-                      ),
+                          height: 100,
+                          width: 100,
+                          child: SpinKitWave(
+                              color: primarycolor, size: height * 0.023)),
                     );
                   }
                 }),
             SizedBox(height: height * 0.02),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: 12.0),
-                  child: Text('Speakers',
+                  child: Text('Accessories',
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: height * 0.025,
                           fontWeight: FontWeight.bold)),
                 ),
+
 //      InkWell(
 //        onTap: (){
 //
@@ -768,19 +671,18 @@ barrierDismissible: true,
             StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('Products')
-                    .where('newProduct', isEqualTo: true)
+                    .limit(50)
                     .snapshots(),
                 builder:
                     (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
                   if (snap.hasData && !snap.hasError && snap.data != null) {
-                    speakers.clear();
+                    accessories.clear();
 
                     for (int i = 0; i < snap.data.docs.length; i++) {
                       Products pro = Products(
                           snap.data.docs[i]['Brands'],
-                          snap.data.docs[i]['Category'],
+                          List.from(snap.data.docs[i]['Category']),
                           snap.data.docs[i]['SubCategories'],
-
                           snap.data.docs[i]['description'],
                           snap.data.docs[i]['details'],
                           List.from(snap.data.docs[i]['detailsGraphicURLs']),
@@ -794,309 +696,69 @@ barrierDismissible: true,
                           snap.data.docs[i]['rating'].toString(),
                           snap.data.docs[i]['specs'],
                           snap.data.docs[i]['status'],
-                      snap.data.docs[i]['inStore'],
-                      snap.data.docs[i]['productId'],
-                      snap.data.docs[i]['varientID'],
+                          snap.data.docs[i]['inStore'],
+                          snap.data.docs[i]['productId'],
+                          snap.data.docs[i]['varientID'],
                           snap.data.docs[i]['varientcolor'],
-                          snap.data.docs[i]['varientsize']
-                      );
+                          snap.data.docs[i]['varientsize']);
 
-                      speakers.add(pro);
+                      allproducts.add(pro);
                     }
+                    for (int i = 0; i < allproducts.length; i++)
+                      if (allproducts[i].category.contains("Accessories") ||
+                          allproducts[i].category.contains(" Accessories")) {
+                        accessories.add(allproducts[i]);
+                      }
+                    return (accessories.length != 0)
+                        ? Container(
+                            height: height * 0.46,
+                            child: ListView.builder(
+                                itemCount: accessories.length,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  var item = accessories[index];
 
-                    return(speakers.length!=0)? Container(
-                      height: height * 0.41,
-                      child: ListView.builder(
-                          itemCount: speakers.length,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            var item = speakers[index];
-                            return Container(
-                              height: height * 0.4,
-                              width: width * 0.5,
-                              child: Padding(
-                                padding: EdgeInsets.all(height * 0.005),
-                                child: ProductCard(
-                                    item.imageurls[0],
-                                    item.name,
-                                    item.mp,
-                                    item.disprice,
-                                    item.description,
-                                    item.details,
-                                    item.imageurls,
-                                    item.rating,
-                                    item.specs,
-                                    item.quantity,
-                                item.inStore,
-                                item.varientId),
-                              ),
-                            );
-                          }),
-                    ):Center(
-                      child: Container(
-                          height:100,
-                          width:100,
-                          child:SpinKitWave(color:primarycolor,size:height*0.023)
-                      ),
-                    );
-                  } else {
-                    return Center(
-                      child: Container(
-                          height:100,
-                          width:100,
-                          child:SpinKitWave(color:primarycolor,size:height*0.023)
-                      ),
-                    );
-                  }
-                }),
-            SizedBox(height: height * 0.02),
-            Align(
-              alignment:Alignment.topLeft,
-              child: Padding(
-                padding: EdgeInsets.only(left: 12.0),
-                child: Text('Special Deals',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: height * 0.025,
-                        fontWeight: FontWeight.bold)),
-              ),
-            ),
-            SizedBox(height: height * 0.02),
-            StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('RewardProducts').snapshots(),
-                builder:
-                    (BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
-                  if (snap.hasData && !snap.hasError && snap.data != null) {
-                    rewardpro.clear();
-
-                    for (int i = 0; i < snap.data.docs.length; i++) {
-                      RewardProducts pro = RewardProducts(
-                          snap.data.docs[i]['Brands'],
-                          snap.data.docs[i]['Category'],
-                          snap.data.docs[i]['SubCategories'],
-                          List.from(snap.data.docs[i]['colors']),
-                          snap.data.docs[i]['description'],
-                          snap.data.docs[i]['details'],
-                          List.from(snap.data.docs[i]['detailsGraphicURLs']),
-                          snap.data.docs[i]['disPrice'],
-                          snap.data.docs[i]['docID'],
-                          List.from(snap.data.docs[i]['imageURLs']),
-                          snap.data.docs[i]['mp'],
-                          snap.data.docs[i]['name'],
-                          snap.data.docs[i]['noOfPurchases'],
-                          snap.data.docs[i]['quantity'],
-                          snap.data.docs[i]['rating'].toString(),
-                          snap.data.docs[i]['specs'],
-                          snap.data.docs[i]['status'],
-                      snap.data.docs[i]['inStore'],
-                      snap.data.docs[i]['rewardpoints']);
-
-                      rewardpro.add(pro);
-                    }
-
-                    return (rewardpro.length!=0)?Align(
-                      alignment: Alignment.topLeft,
-                      child: Container(
-                        height: height * 0.41,
-                        child: ListView.builder(
-                            itemCount: rewardpro.length,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              var item = rewardpro[index];
-                              return Align(
-                                alignment: Alignment.topLeft,
-                                child: InkWell(
-                                onTap: () {
-                            Navigator.push(
-                                  context,
-                                 MaterialPageRoute(
-                                     builder: (context) => RewardProductDetailsScreen(
-                                         item.imageurls[0],
-                                         item.name,
+                                  return Container(
+                                    height: height * 0.45,
+                                    width: width * 0.5,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(height * 0.005),
+                                      child: ProductCard(
+                                          item.imageurls[0],
+                                          item.name,
                                           item.mp,
                                           item.disprice,
-                                         item.description,
-                                         item.details,
-                                          item.detailsurls,
+                                          item.description,
+                                          item.details,
+                                          item.imageurls,
                                           item.rating,
-                                         item.specs,
+                                          item.specs,
                                           item.quantity,
-                                          MediaQuery.of(context).size.height,
-                                         MediaQuery.of(context).size.width,
-                                     item.rewardpoints)));
-                                },
-                                child: Container(
-                                height: height * 0.4,
-                                width: width*0.5,
-                                child: Card(
-                                child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      item.quantity > 0
-
-                                          ? Padding(
-                                        padding: const EdgeInsets.all(2.0),
-                                        child: Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.check_circle,
-                                                  color: Colors.green,
-                                                  size:
-                                                  MediaQuery.of(context).size.height * 0.02,
-                                                ),
-                                                SizedBox(
-                                                  width: 4,
-                                                ),
-                                                Text('in stock',
-                                                    style: TextStyle(
-                                                        color: Colors.green,
-                                                        fontSize:
-                                                        MediaQuery.of(context).size.height *
-                                                            0.02)),
-                                              ],
-                                            )),
-                                      )
-                                          : Padding(
-                                        padding: const EdgeInsets.all(2.0),
-                                        child: Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Text('Out of stock',
-                                                style: TextStyle(
-                                                    color: Colors.red,
-                                                    fontSize:
-                                                    MediaQuery.of(context).size.height *
-                                                        0.015))),
-                                      ),
-                                      (item.inStore)?Padding(
-                                        padding: const EdgeInsets.all(2.0),
-                                        child: Align(
-                                          alignment: Alignment.topRight,
-                                          child: Row(
-                                            children: [
-                                              Icon(Icons.business,
-                                                color: Colors.blue,
-                                                size:
-                                                MediaQuery.of(context).size.height * 0.02,),
-                                              Text(' In Store', style: TextStyle(
-                                                  color: Colors.blue,
-                                                  fontSize:
-                                                  MediaQuery.of(context).size.height *
-                                                      0.02))
-                                            ],
-                                          ),
-                                        ),
-                                      ):Container()
-                                    ],
-                                  ),
-
-                                SizedBox(height: height * 0.01),
-                                FancyShimmerImage(
-                                imageUrl: item.imageurls[0],
-                                shimmerDuration: Duration(seconds: 2),
-                                height: height * 0.2,
-                                // width: width * 0.47,
-                                boxFit: BoxFit.fill,
-                                ),
-                                Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Align(
-                                alignment: Alignment.topLeft,
-                                child: RatingBar.builder(
-                                initialRating: double.parse(item.rating),
-                                minRating: 0,
-                                direction: Axis.horizontal,
-                                allowHalfRating: true,
-                                itemCount: 5,
-                                itemSize: 12,
-                                itemBuilder: (context, _) => Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                                ),
-                                onRatingUpdate: (rating) {
-                                print(rating);
-                                },
-                                ),
-                                ),
-                                ),
-                                Container(
-                                height: height * 0.07,
-                                child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(item.name,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                color: Colors.black.withOpacity(0.8),
-                                fontSize: height * 0.02),
-                                maxLines: 2),
-                                ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(children: [
-                                    Text('Buy at : ',style:GoogleFonts.poppins(fontSize:height*0.02,fontWeight: FontWeight.bold)),
-                                    Text('${item.rewardpoints.toString()} coins ',style:GoogleFonts.poppins(fontSize:height*0.02)),
-                                         Image.asset('assets/images/coins.png',height:height*0.025,)
-
-//                            Padding(
-//                            padding: const EdgeInsets.all(8.0),
-//                            child: Column(
-//                            crossAxisAlignment: CrossAxisAlignment.start,
-//                            children: [
-//                            Text('Rs.${(widget.mp).toString()}',
-//                            style: TextStyle(
-//                            fontSize: height * 0.017,
-//                            decoration: TextDecoration.lineThrough,
-//                            fontWeight: FontWeight.w300)),
-//                            Text('Rs.${(widget.disprice).toString()}',
-//                            style: TextStyle(
-//                            fontSize: height * 0.02,
-//                            fontWeight: FontWeight.w500)),
-//                            ]),
-//                            ),
-//                            Spacer(),
-//                            Container(
-//                            decoration: BoxDecoration(
-//                            shape: BoxShape.circle, color: Colors.red),
-//                            child: Padding(
-//                            padding: EdgeInsets.all(height * 0.012),
-//                            child: Align(
-//                            alignment: Alignment.bottomRight,
-//                            child: Text(
-//                            ' - ${((int.parse(widget.mp.toString()) - int.parse(widget.disprice.toString())) / int.parse(widget.mp.toString()) * 100).toStringAsFixed(0)}%',
-//                            style: TextStyle(color: Colors.white),
-//                            )),
-//                            )),
-//                            ]),
-                                  ],
-                                  ),
-                                )],)))),
-                              );
-                            }),
-                      ),
-                    ):Center(
-                      child: Container(
-                          height:100,
-                          width:100,
-                          child:SpinKitWave(color:primarycolor,size:height*0.023)
-                      ),
-                    );
+                                          item.inStore,
+                                          item.varientId),
+                                    ),
+                                  );
+                                }),
+                          )
+                        : Center(
+                            child: Container(
+                                height: 100,
+                                width: 100,
+                                child: SpinKitWave(
+                                    color: primarycolor, size: height * 0.023)),
+                          );
                   } else {
                     return Center(
                       child: Container(
-                          height:100,
-                          width:100,
-                          child:SpinKitWave(color:primarycolor,size:height*0.023)
-                      ),
+                          height: 100,
+                          width: 100,
+                          child: SpinKitWave(
+                              color: primarycolor, size: height * 0.023)),
                     );
                   }
                 }),
+            SizedBox(height: height * 0.02),
           ],
         ),
       ),

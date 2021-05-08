@@ -1,9 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hamro_gadgets/home_screen.dart';
-import 'package:hamro_gadgets/login_screen.dart';
 import 'package:hamro_gadgets/splashscreen.dart';
 
 // bool USE_FIRESTORE_EMULATOR = false;

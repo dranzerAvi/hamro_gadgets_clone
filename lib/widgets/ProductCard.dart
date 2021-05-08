@@ -2,11 +2,8 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hamro_gadgets/Constants/cart.dart';
 import 'package:hamro_gadgets/Constants/colors.dart';
 import 'package:hamro_gadgets/Constants/products.dart';
-import 'package:hamro_gadgets/product_details_screen.dart';
-import 'package:hamro_gadgets/services/database_helper.dart';
 
 class ProductCard extends StatefulWidget {
   String imageUrl;
@@ -14,7 +11,7 @@ class ProductCard extends StatefulWidget {
   int mp;
   int disprice;
   String description;
-  Map details;
+  String details;
   List<String> detailsurls = [];
   String rating;
   Map specs;
@@ -40,147 +37,16 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  final dbHelper = DatabaseHelper.instance;
-  Cart item;
   var length;
   var qty = 1;
   int choice = 0;
-  List<Cart> cartItems = [];
-  static List<bool> check = [false, false, false, false, false];
-  void updateItem(
-      {int id,
-      String productDesc,
-      String name,
-      String imgUrl,
-      String price,
-      int qty,
-      String qtyTag,
-      String details}) async {
-    // row to update
-    Cart item = Cart(id, name, imgUrl, price, qty, productDesc);
-    final rowsAffected = await dbHelper.update(item);
-    Fluttertoast.showToast(msg: 'Updated', toastLength: Toast.LENGTH_SHORT);
-    getAllItems();
-  }
-
-  void removeItem(String name) async {
-    // Assuming that the number of rows is the id for the last row.
-    final rowsDeleted = await dbHelper.delete(name);
-    getAllItems();
-    setState(() {
-      check[choice] = false;
-      qty = 0;
-    });
-    Fluttertoast.showToast(
-        msg: 'Removed from cart', toastLength: Toast.LENGTH_SHORT);
-  }
-
-  void getAllItems() async {
-    final allRows = await dbHelper.queryAllRows();
-    cartItems.clear();
-    await allRows.forEach((row) => cartItems.add(Cart.fromMap(row)));
-    setState(() {
-      for (var v in cartItems) {
-        if (v.productName == widget.name) {
-          qty = v.qty;
-        }
-      }
-//      print(cartItems[1]);
-    });
-  }
-
-  String orderid;
-
-  void addToCart(
-      {String name,
-      String imgUrl,
-      String price,
-      int qty,
-      String productDesc,
-      String qtyTag}) async {
-    Map<String, dynamic> row = {
-      DatabaseHelper.columnProductName: name,
-      DatabaseHelper.columnImageUrl: imgUrl,
-      DatabaseHelper.columnProductDescription: productDesc,
-      DatabaseHelper.columnPrice: price,
-      DatabaseHelper.columnQuantity: qty,
-    };
-    Cart item = Cart.fromMap(row);
-    final id = await dbHelper.insert(item);
-    Fluttertoast.showToast(
-        msg: 'Added to cart', toastLength: Toast.LENGTH_SHORT);
-    setState(() {
-      check[choice] = true;
-    });
-    await getAllItems();
-    getCartLength();
-  }
-
-  getCartLength() async {
-    int x = await dbHelper.queryRowCount();
-    length = x;
-    setState(() {
-      print('Length Updated');
-      length;
-    });
-  }
-
-  Future<Cart> _query(String name) async {
-    final allRows = await dbHelper.queryRows(name);
-    print(allRows);
-
-    allRows.forEach((row) => item = Cart.fromMap(row));
-    setState(() {
-      item;
-//      print(item.qtyTag);
-      print('-------------Updated');
-    });
-    return item;
-  }
-
-  Future<int> getQuantity(String name) async {
-    var temp = await _query(name);
-    if (temp != null) {
-      if (temp.productName == name) {
-        print('item found');
-        qty = temp.qty;
-        return temp.qty;
-      } else {
-        return 0;
-      }
-    }
-  }
-
-  void checkInCart() async {
-    var temp = await _query(widget.name);
-    print(temp);
-    if (temp != null) {
-      if (temp.productName == widget.name) {
-        setState(() {
-          print('Item already exists');
-          check[choice] = true;
-          qty = temp.qty;
-        });
-        return;
-      } else
-        setState(() {
-          check[choice] = false;
-        });
-    }
-  }
-
-  first() async {
-    qty = await getQuantity(widget.name);
-  }
 
   @override
   void initState() {
     choice = 0;
-    first();
     print('-------------');
     print(widget.detailsurls.length);
-    checkInCart();
-    getAllItems();
+
     super.initState();
   }
 
@@ -192,25 +58,7 @@ class _ProductCardState extends State<ProductCard> {
       height: height * 0.4,
       width: double.infinity,
       child: InkWell(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ProductDetailsScreen(
-                      widget.imageUrl,
-                      widget.name,
-                      widget.mp,
-                      widget.disprice,
-                      widget.description,
-                      widget.details,
-                      widget.detailsurls,
-                      widget.rating,
-                      widget.specs,
-                      widget.quantity,
-                      MediaQuery.of(context).size.height,
-                      MediaQuery.of(context).size.width,
-                  widget.varientid)));
-        },
+        onTap: () {},
         child: Container(
             height: height * 0.4,
             width: double.infinity,
@@ -222,76 +70,82 @@ class _ProductCardState extends State<ProductCard> {
                   children: [
                     widget.quantity > 0
                         ? Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.check_circle,
-                                color: Colors.green,
-                                size:
-                                MediaQuery.of(context).size.height * 0.02,
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Text('in stock',
-                                  style: TextStyle(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.check_circle,
                                       color: Colors.green,
-                                      fontSize:
-                                      MediaQuery.of(context).size.height *
-                                          0.02)),
-                            ],
-                          )),
-                    )
+                                      size: MediaQuery.of(context).size.height *
+                                          0.02,
+                                    ),
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                    Text('in stock',
+                                        style: TextStyle(
+                                            color: Colors.green,
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.02)),
+                                  ],
+                                )),
+                          )
                         : Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.cancel,
-                                color: Colors.red,
-                                size:
-                                MediaQuery.of(context).size.height * 0.02,
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-
-                              Text('Out of stock',
-                                  style: TextStyle(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.cancel,
                                       color: Colors.red,
-                                      fontSize:
-                                      MediaQuery.of(context).size.height *
-                                          0.02)),
-                            ],
-                          )),
-                    ),
-                    (widget.inStore&&widget.quantity>0)?Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: Row(
-                          children: [
-                            Icon(Icons.business,
-                              color: Colors.blue,
-                              size:
-                              MediaQuery.of(context).size.height * 0.02,),
-                            Text(' In Store', style: TextStyle(
-                                color: Colors.blue,
-                                fontSize:
-                                MediaQuery.of(context).size.height *
-                                    0.02))
-                          ],
-                        ),
-                      ),
-                    ):Container()
+                                      size: MediaQuery.of(context).size.height *
+                                          0.02,
+                                    ),
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                    Text('Out of stock',
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.02)),
+                                  ],
+                                )),
+                          ),
+                    (widget.inStore && widget.quantity > 0)
+                        ? Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Align(
+                              alignment: Alignment.topRight,
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.business,
+                                    color: Colors.blue,
+                                    size: MediaQuery.of(context).size.height *
+                                        0.02,
+                                  ),
+                                  Text(' In Store',
+                                      style: TextStyle(
+                                          color: Colors.blue,
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.02))
+                                ],
+                              ),
+                            ),
+                          )
+                        : Container()
                   ],
                 ),
-
                 SizedBox(height: height * 0.01),
                 FancyShimmerImage(
                   imageUrl: widget.imageUrl,
@@ -352,16 +206,18 @@ class _ProductCardState extends State<ProductCard> {
                   ),
                   Spacer(),
                   Container(
-
                       decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: Colors.red,),
+                        shape: BoxShape.circle,
+                        color: Colors.red,
+                      ),
                       child: Padding(
                         padding: EdgeInsets.all(height * 0.012),
                         child: Align(
                             alignment: Alignment.bottomRight,
                             child: Text(
                               ' - ${((int.parse(widget.mp.toString()) - int.parse(widget.disprice.toString())) / int.parse(widget.mp.toString()) * 100).toStringAsFixed(0)}%',
-                              style: TextStyle(color: Colors.white,fontSize: 12),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
                             )),
                       )),
                 ]),
