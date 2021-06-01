@@ -20,6 +20,8 @@ import 'package:material_dialogs/widgets/buttons/icon_button.dart';
 import 'package:material_dialogs/widgets/buttons/icon_outline_button.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
+import 'sorting_details.dart';
+
 class HomeScreen extends StatefulWidget {
   static const int TAB_NO = 0;
   int count;
@@ -209,13 +211,22 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         centerTitle: true,
+        leading: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SortDetailsScreen()),
+              );
+            },
+            child: Icon(Icons.remove_red_eye_outlined)),
 
 //       actions: [
 //
 //         Center(child: Container(width:width*0.5,child: TextFormField(controller:_cont,decoration: InputDecoration(filled: true,fillColor: Colors.white,prefixIcon: Icon(Icons.search,color:Colors.grey),hintText: 'Search here',hintStyle: TextStyle(color:Colors.grey)),)))
 //       ],
       ),
-      drawer: CustomDrawer(),
+
+      // drawer: CustomDrawer(),
       body: SingleChildScrollView(
         child: Column(
           children: [
